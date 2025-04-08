@@ -1,0 +1,25 @@
+[project]
+name = "datascibench"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["pandas", "numpy", "matplotlib", "beautifulsoup4"]
+
+[dependency-groups]
+dev = ["jupyter", "ipykernel", "pytest", "pytest-cov", "ruff"]
+
+[tool.pytest.ini_options]
+pythonpath = ".. src"
+testpaths = "tests"
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = "-vv --capture=sys"
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["F", "E", "W", "UP"]
