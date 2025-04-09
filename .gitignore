@@ -8,3 +8,9 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Datasets
+*.csv
+*.DS_Store
+*.json
+*.log
