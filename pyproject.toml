@@ -10,7 +10,7 @@ dependencies = ["pandas", "numpy", "matplotlib", "beautifulsoup4"]
 dev = ["jupyter", "ipykernel", "pytest", "pytest-cov", "ruff"]
 
 [tool.pytest.ini_options]
-pythonpath = ".. src"
+pythonpath = ".."
 testpaths = "tests"
 python_files = "test_*.py"
 python_classes = "Test*"
