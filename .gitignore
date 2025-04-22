@@ -14,3 +14,6 @@ wheels/
 *.DS_Store
 *.json
 *.log
+
+# configuration files
+llm_interact/config.toml

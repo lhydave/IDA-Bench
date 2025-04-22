@@ -1,4 +1,4 @@
-from crawler_base import CrawlerBase
+from crawler_base import PaperCrawlerBase
 from logger import logger
 from bs4 import BeautifulSoup
 import math
@@ -6,7 +6,7 @@ from typing import Any
 from pathlib import Path
 
 
-class NaturePaperCrawler(CrawlerBase):
+class NaturePaperCrawler(PaperCrawlerBase):
     """Crawler for Nature journal articles."""
 
     def __init__(

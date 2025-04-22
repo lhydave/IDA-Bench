@@ -8,7 +8,7 @@ from pathlib import Path
 from logger import logger
 
 
-class CrawlerBase(ABC):
+class PaperCrawlerBase(ABC):
     """Abstract base class for scientific paper crawlers."""
 
     def __init__(
