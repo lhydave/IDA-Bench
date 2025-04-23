@@ -1,5 +1,5 @@
 [llm]
-# max_budget = 50
+# max_budget = 50.0
 context_window = 100000
 max_tokens = 4096
 supports_functions = false
