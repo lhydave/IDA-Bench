@@ -1,0 +1,21 @@
+[llm]
+# max_budget = 50
+context_window = 100000
+max_tokens = 4096
+supports_functions = false
+supports_vision = false
+
+[interpreter]
+max_output = 1000
+offline = false
+loop = false
+auto_run = true
+os = false
+import_computer_api = false
+user_message_template = """
+{content}
+"""
+code_output_template = """
+Code output: {content}
+Don't write new code, except it is necessary.
+"""

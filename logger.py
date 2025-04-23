@@ -4,7 +4,7 @@ import sys
 
 
 def setup_logger(
-    name: str = "crawler",
+    name: str = "bench_generator",
     level: int = logging.INFO,
     log_file: str | None = None,
     fmt: str = "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -55,10 +55,7 @@ def setup_logger(
 
     return logger
 
-
-# Create the global logger instance
-logger = setup_logger(name="crawler")
-
+logger = setup_logger(name="DataSciBench")  # type: ignore
 
 def configure_global_logger(
     level: int | str = logging.INFO,
@@ -67,7 +64,7 @@ def configure_global_logger(
     log_filename: str | None = None,
 ) -> None:
     """
-    Configure the global crawler logger.
+    Configure the global logger.
 
     Args:
         level: The minimum logging level (can be int or string level name)
@@ -85,4 +82,4 @@ def configure_global_logger(
         final_log_file = log_filename
 
     global logger
-    logger = setup_logger(name="crawler", level=level, log_file=final_log_file, mode=mode)  # type: ignore
+    logger = setup_logger(name="DataSciBench", level=level, log_file=final_log_file, mode=mode)  # type: ignore

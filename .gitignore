@@ -16,4 +16,8 @@ wheels/
 *.log
 
 # configuration files
-llm_interact/config.toml
+interpreter_config.toml
+llm_config.toml
+
+# checkpoints
+checkpoints
