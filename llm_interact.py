@@ -30,18 +30,18 @@ def initialize_interpreter(config_path: str) -> OpenInterpreter:
         return interpreter
     except Exception as e:
         logger.error(f"Failed to initialize interpreter: {str(e)}")
-        raise ImportError("The 'interpreter' package is required when run_code is enabled.")
+        raise ValueError(f"Failed to initialize interpreter: {str(e)}")
 
 
 @dataclass
 class LLMConfig:
-    api_base: str | None
     api_key: str
     model: str
     temperature: float = 0.4
     max_retries: int = 3
     retry_delay: int = 2
     run_code: bool = False
+    api_base: str | None = None
     checkpoint_path: str | None = None
 
     @classmethod
@@ -49,7 +49,11 @@ class LLMConfig:
         try:
             with open(config_path, "rb") as f:
                 config = tomllib.load(f)
-            return cls(**config)
+            ret = cls(**config)
+            # Validate the loaded configuration
+            ret.validate()
+            logger.info(f"Loaded configuration from {config_path}")
+            return ret
         except Exception as e:
             raise ValueError(f"Failed to load configuration from {config_path}: {str(e)}")
 
@@ -62,6 +66,18 @@ class LLMConfig:
             raise ValueError("API key is required.")
         if not self.model:
             raise ValueError("Model is required.")
+        if not isinstance(self.temperature, float | int):
+            raise ValueError("Temperature must be a float or int.")
+        if not isinstance(self.max_retries, int) or self.max_retries < 0:
+            raise ValueError("Max retries must be a non-negative integer.")
+        if not isinstance(self.retry_delay, int) or self.retry_delay < 0:
+            raise ValueError("Retry delay must be a non-negative integer.")
+        if not isinstance(self.run_code, bool):
+            raise ValueError("Run code must be a boolean.")
+        if not isinstance(self.api_base, str | type(None)):
+            raise ValueError("API base must be a string or None.")
+        if not isinstance(self.checkpoint_path, str | type(None)):
+            raise ValueError("Checkpoint path must be a string or None.")
 
 
 class LLMInteractor:
