@@ -12,6 +12,10 @@ dependencies = [
     "open-interpreter>=0.4.3",
     "semgrep>=1.119.0",
     "litellm>=1.67.0.post1",
+    "kagglehub>=0.3.12",
+    "kaggle>=1.7.4.2",
+    "dateparser>=1.2.1",
+    "playwright>=1.51.0",
 ]
 
 [dependency-groups]
@@ -35,3 +39,6 @@ select = ["F", "E", "W", "UP", "C901"]
 [[tool.uv.index]]
 url = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple"
 default = true
+
+[tool.ruff.analyze]
+exclude = ["archived"]
