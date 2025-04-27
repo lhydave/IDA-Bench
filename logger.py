@@ -4,7 +4,7 @@ import sys
 
 
 def setup_logger(
-    name: str = "bench_generator",
+    name: str = "DataSciBench",
     level: int = logging.INFO,
     log_file: str | None = None,
     fmt: str = "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
