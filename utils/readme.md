@@ -13,3 +13,11 @@ This is useful for simplifying notebook files, e.g., for version control or clea
 
 ```bash
 python filter.py path_to_ipynb_file
+```
+
+
+# Use nbconvert
+```bash
+ pip install nbconvert
+ python utils/converter.py --path path_to_ipynb_file
+```
