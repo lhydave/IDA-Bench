@@ -40,7 +40,7 @@ def run_text_llm(llm, params):
             content = buffered_content + content
             buffered_content = ""
 
-        if accumulated_block.endswith("`"):
+        if accumulated_block.endswith("`") and not "```" in accumulated_block:
             buffered_content = content
             # We might be writing "```" one token at a time.
             continue
