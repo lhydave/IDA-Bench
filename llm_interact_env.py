@@ -58,6 +58,7 @@ class EnvironmentConfig:
     # assistant_prompt_template: str
     max_turns: int = 20
     user_retry_prompt_template: Optional[str] = None # NOTE: this is optional, only used in version 1
+    user_continue_prompt_template: Optional[str] = None # NOTE: this is optional, only used in version 2
     checkpoint_path: Optional[str] = None
 
     @classmethod
@@ -123,6 +124,11 @@ class Environment:
             self.config.assistant_llm_config, 
             interpreter_config_path=self.config.interpreter_config_path
         )
+        
+        # Reset interpreter state if it exists
+        if hasattr(self.assistant_agent, 'interpreter'):
+            logger.debug("Resetting assistant agent's interpreter state")
+            self.assistant_agent.interpreter.reset()
     
     def _load_checkpoint(self):
         """Load environment state from checkpoint."""
@@ -147,7 +153,6 @@ class Environment:
         try:
             data = {
                 "tasks": [task.__dict__ for task in self.tasks],
-                "current_task_idx": self.current_task_idx,
                 "conversation_history": self.conversation_history
             }
             
@@ -188,13 +193,13 @@ class Environment:
             print()
 
 
-def interact_version1(env: "Environment", user_agent: LLMInteractor, assistant_agent: LLMInteractor):
+def interact_version1(env: Environment, user_agent: LLMInteractor, assistant_agent: LLMInteractor):
     """Run the environment until all tasks are completed or max turns is reached."""
     logger.info("Starting interaction using version1 strategy")
     # NOTE: version 1: Here we have several predefined tasks, where each task is already a "subtask". 
     # Here we just let the user_agent to redescribe the task, and then the assistant_agent will complete the task.
     # If the task is completed, we will continue to the next task; else, we will stay in the current task and continue to the next turn.
-    def format_user_prompt(env: "Environment", current_task: Task) -> str:
+    def format_user_prompt(env: Environment, current_task: Task) -> str:
         """Format the prompt for the user agent."""
         
         # Format the task list with completion status
@@ -211,7 +216,7 @@ def interact_version1(env: "Environment", user_agent: LLMInteractor, assistant_a
             task_list=task_list,
             current_task=current_task_details
         )
-    def format_user_retry_prompt(env: "Environment", current_task: Task, assistant_summaries: List[str]) -> str:
+    def format_user_retry_prompt(env: Environment, current_task: Task, assistant_summaries: List[str]) -> str:
         """Format the prompt for the user agent."""
 
         # Format the task list with completion status
@@ -242,6 +247,11 @@ def interact_version1(env: "Environment", user_agent: LLMInteractor, assistant_a
         retry_attempts = 0 # NOTE: this is the number of retries for the current task
         logger.info(f"Starting Task {current_task.id}: {current_task.description}")
         print(f"\n--- TASK {current_task.id}: {current_task.description} ---\n")
+        env.conversation_history.append(
+            {
+                "current_task_idx": env.current_task_idx
+            }
+        )
         
         # Generate user message based on task and conversation history
         logger.debug("Generating user prompt")
@@ -252,19 +262,21 @@ def interact_version1(env: "Environment", user_agent: LLMInteractor, assistant_a
         user_message = "\n".join([msg["content"] for msg in user_response])
         logger.debug(f"User message generated, length: {len(user_message)}")
         
-        env.conversation_history.append({"role": "user agent", "all_messages": deepcopy(user_agent.messages)})
-        
+        env.conversation_history.append({"role": "user agent", "prompt_received": user_prompt, "all_messages": deepcopy(user_response)})
+        env._save_checkpoint()
+
         # Generate assistant response
         logger.debug("Calling assistant agent with user message")
         assistant_response = assistant_agent.call_llm(user_message)
         assistant_message = assistant_response[-1]["content"] if isinstance(assistant_response[-1], dict) else assistant_response[-1]
         logger.debug(f"Assistant response generated, length: {len(assistant_message)}")
         
-        env.conversation_history.append({"role": "assistant agent", "all_messages": deepcopy(assistant_agent.messages)})
+        env.conversation_history.append({"role": "assistant agent", "prompt_received": user_message, "all_messages": deepcopy(assistant_response)})
+        env._save_checkpoint()
+
         turn_count += 1
         logger.debug(f"Turn {turn_count} completed")
 
-        env._save_checkpoint()
 
         # Check if completed, if so, move to the next task, else, stay in the current task and continue to the next turn.
         assistant_summaries = []
@@ -278,6 +290,9 @@ def interact_version1(env: "Environment", user_agent: LLMInteractor, assistant_a
             assistant_summaries.append(summary)
             logger.debug(f"Summary generated, length: {len(summary)}")
 
+            env.conversation_history.append({"role": "assistant agent", "prompt_received_for_summary": summary_prompt, "all_messages": deepcopy(summary_response)})
+            env._save_checkpoint()
+
             if env._is_task_completed(current_task, assistant_message):
                 # Mark task as completed
                 current_task.completed = True
@@ -287,6 +302,7 @@ def interact_version1(env: "Environment", user_agent: LLMInteractor, assistant_a
                 logger.info(f"Task {current_task.id} completed")
                 print(f"\n--- TASK COMPLETED ---\n")
                 print(f"SUMMARY: {summary}\n")
+
                 break
             else:
                 logger.info(f"Task {current_task.id} not completed, retrying (Attempt {retry_attempts + 1}/{env.config.max_turns})")
@@ -300,30 +316,31 @@ def interact_version1(env: "Environment", user_agent: LLMInteractor, assistant_a
                 user_message = "\n".join([msg["content"] for msg in user_response])
                 logger.debug(f"User retry message generated, length: {len(user_message)}")
                 
-                env.conversation_history.append({"role": "user", "content": deepcopy(user_agent.messages)})
-                
+                env.conversation_history.append({"role": "user agent", "prompt_received": user_prompt, "all_messages": deepcopy(user_response)})
+                env._save_checkpoint()
+
                 # Generate assistant response
                 logger.debug("Calling assistant agent with retry user message")
                 assistant_response = assistant_agent.call_llm(user_message)
                 assistant_message = assistant_response[-1]["content"] if isinstance(assistant_response[-1], dict) else assistant_response[-1]
                 logger.debug(f"Assistant retry response generated, length: {len(assistant_message)}")
                 
-                env.conversation_history.append({"role": "assistant", "content": deepcopy(assistant_agent.messages)})
+                env.conversation_history.append({"role": "assistant agent", "prompt_received": user_message, "all_messages": deepcopy(assistant_response)})
+                env._save_checkpoint()
                 retry_attempts += 1
                 turn_count += 1
                 logger.debug(f"Retry turn {turn_count} completed")
 
-                env._save_checkpoint()
     logger.info("Interaction completed, generating final report")
     env._print_final_report()
     logger.info("Environment run completed")
 
 
-def interact_version2(env: "Environment", user_agent: LLMInteractor, assistant_agent: LLMInteractor):
+def interact_version2(env: Environment, user_agent: LLMInteractor, assistant_agent: LLMInteractor):
     """Run the environment until all tasks are completed or max turns is reached."""
     logger.info("Starting interaction using version2 strategy")
     # NOTE: version 2: Here we have a single task, and the assistant will complete the task in a loop.
-    def format_user_prompt(env: "Environment", past_conversation_list: List[Tuple[str, str]]) -> str:
+    def format_user_initial_prompt(env: Environment) -> str:
         """Format the prompt for the user agent."""
         
         # Format the task list with completion status
@@ -332,47 +349,49 @@ def interact_version2(env: "Environment", user_agent: LLMInteractor, assistant_a
             for task in env.tasks
         ])
         
-        # Format the current task details
-        past_conversation_details = "\n".join([
-            f"Round {i+1}:\nUser: {user_message} \n Summary of Assistant's Operation: {assistant_summary}"
-            for i, (user_message, assistant_summary) in enumerate(past_conversation_list)
-        ])
         
         # Fill in the user prompt template
         return env.config.user_prompt_template.format(
             task_list=task_list,
-            past_conversation_details=past_conversation_details
         )
+    def format_user_continue_prompt(env: Environment, assistant_summary: str) -> str:
+        """Format the prompt for the user agent."""
+        return env.config.user_continue_prompt_template.format(
+            assistant_summary=assistant_summary
+        )
+    
     number_of_turns = 0
-    env.past_conversation_list = []
+    assistant_summary = ""
     logger.info(f"Starting task loop with max turns: {env.config.max_turns}")
     while number_of_turns < env.config.max_turns:
         logger.debug(f"Starting turn {number_of_turns+1}")
         # Generate user message based on task and conversation history
-        user_prompt = format_user_prompt(env, env.past_conversation_list)
+        if number_of_turns == 0:
+            user_prompt = format_user_initial_prompt(env)
+        else:
+            user_prompt = format_user_continue_prompt(env, assistant_summary)
         logger.debug(f"User prompt generated, length: {len(user_prompt)}")
 
         user_response = user_agent.call_llm(user_prompt)
         user_message = "\n".join([msg["content"] for msg in user_response])
         logger.debug(f"User message generated, length: {len(user_message)}")
 
+        env.conversation_history.append({"role": "user agent", "prompt_received": user_prompt, "all_messages": deepcopy(user_response)})
+        env._save_checkpoint()
+
         logger.debug("User message details for debugging:")
-        print("conversation history:", env.conversation_history)
-        print(f"User message: {user_message}")
-        print(f"user_agent.messages: {user_agent.messages}")
 
         if "##ALL_TASKS_COMPLETED##" in user_message:
             logger.info("All tasks completion marker detected, exiting loop")
             break
-        
-        env.conversation_history.append({"role": "user", "content": deepcopy(user_agent.messages)})
         
         # Generate assistant response
         logger.debug("Calling assistant agent with user message")
         assistant_response = assistant_agent.call_llm(user_message)
         logger.debug(f"Assistant response generated with {len(assistant_response)} messages")
         
-        env.conversation_history.append({"role": "assistant", "content": deepcopy(assistant_agent.messages)})
+        env.conversation_history.append({"role": "assistant agent", "prompt_received": user_message, "all_messages": deepcopy(assistant_response)})
+        env._save_checkpoint()
 
         # Generate summary
         logger.debug("Generating summary of assistant's operation")
@@ -380,18 +399,20 @@ def interact_version2(env: "Environment", user_agent: LLMInteractor, assistant_a
         summary_response = assistant_agent.call_llm(summary_prompt)
         summary = "\n".join([msg["content"] for msg in summary_response])
         logger.debug(f"Summary generated, length: {len(summary)}")
+
+        env.conversation_history.append({"role": "assistant agent", "prompt_received_for_summary": summary_prompt, "all_messages": deepcopy(summary_response)})
+        env._save_checkpoint()
         
-        env.past_conversation_list.append((user_message, summary))
+        assistant_summary = summary # update the assistant summary
         number_of_turns += 1
         logger.info(f"Turn {number_of_turns} completed")
-        env._save_checkpoint()
 
 INTERACT_VERSIONS = {
         'version1': interact_version1,
         'version2': interact_version2
     }
 
-def run(env: "Environment", version_name: str = "version1"):
+def run(env: Environment, version_name: str = "version1"):
     """Run the environment until all tasks are completed or max turns is reached."""
     logger.info(f"Starting environment run with version: {version_name}")
     # Create LLM interactors for both agents
