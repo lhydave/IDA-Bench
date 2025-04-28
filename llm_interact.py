@@ -167,7 +167,7 @@ class LLMInteractor:
                     # For litellm, we need to extract just the role and content
                     messages = self.messages + [{"role": "user", "content": message}]
 
-                    response = completion(
+                    response = litellm.completion(
                         model=self.config.model,
                         temperature=self.config.temperature,
                         messages=messages,
