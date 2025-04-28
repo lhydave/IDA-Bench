@@ -83,7 +83,7 @@ def respond(interpreter):
             interpreter.messages[-1]["type"] != "code"
         ):  # If it is, we should run the code (we do below)
             try:
-                for chunk in interpreter.llm.run(messages_for_llm):
+                for chunk in interpreter.llm.run(messages_for_llm): # NOTE: automatically stops if we exits a code block
                     yield {"role": "assistant", **chunk}
 
 
