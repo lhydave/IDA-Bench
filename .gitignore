@@ -23,3 +23,5 @@ llm_config.toml
 
 # checkpoints
 checkpoints
+
+example/walmart/llm_test/results/*
