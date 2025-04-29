@@ -1,11 +1,5 @@
-from dataclasses import dataclass, asdict
+from data_manager import NotebookManager
 
-
-@dataclass
-class test:
-    a: int | None = None
-
-b = dict()
-t = test(**b)
-print(t)
-asdict(t)
+# Initialize the NotebookManager
+notebook_manager = NotebookManager("test_data")
+notebook_manager.initialize_storage()
