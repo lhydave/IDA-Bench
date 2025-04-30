@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "pandas",
-    "numpy",
+    "numpy==1.26.4",
     "matplotlib",
     "beautifulsoup4",
     "open-interpreter>=0.4.3",
@@ -16,6 +16,8 @@ dependencies = [
     "kaggle>=1.7.4.2",
     "dateparser>=1.2.1",
     "playwright>=1.51.0",
+    "seaborn",
+    "pmdarima"
 ]
 
 [dependency-groups]
