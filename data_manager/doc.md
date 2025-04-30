@@ -20,6 +20,7 @@ It manages all notebooks. The functionality includes:
 3. access and update the meta info of a notebook.
 4. access (and automatically download) the notebook file (.ipynb).
 5. download the notebook files in batch.
+6. merge two notebook managers.
 
 The meta info is the information that can be obtained on the webpage and code itself, which are useful to select candidate notebook in the benchmark.
 
@@ -101,6 +102,7 @@ It manages datasets (i.e., inputs) of notebooks. The functionality includes:
 2. access and update the meta info of a dataset.
 3. download datasets in batch.
 4. remove the cache of a dataset.
+5. merge two dataset managers.
 
 The meta info is the information that can be obtained on the webpage, which are useful to select candidate notebook in the benchmark.
 

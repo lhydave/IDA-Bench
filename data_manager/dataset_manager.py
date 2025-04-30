@@ -213,7 +213,10 @@ class DatasetManager:
         dataset_dir = os.path.join(self.storage_path, filename)
 
         if os.path.exists(dataset_dir) and os.path.isdir(dataset_dir):
-            logger.info(f"Dataset {dataset_id} already downloaded at {dataset_dir}")
+            # If it contains at least one csv file, we assume it's already downloaded
+            if any(file.endswith(".csv") for file in os.listdir(dataset_dir)):
+                logger.info(f"Dataset {dataset_id} already downloaded at {dataset_dir}")
+                self.update_meta_info(dataset_id, {"path": dataset_dir})
             return
 
         try:
@@ -365,6 +368,19 @@ class DatasetManager:
                         f"Downloaded {success_count}/{total_datasets} datasets successfully ({completed} processed, {len(errors)} failed)"  # noqa: E501
                     )
 
+        # it seems that there is a race condition for updating the meta info, but it is okay for files,
+        # thus we update the meta info using files:
+        for dataset_id in dataset_ids:
+            # Get the path from the downloaded files
+            filename = id_to_filename(dataset_id)
+            dataset_dir = os.path.join(self.storage_path, filename)
+
+            if os.path.exists(dataset_dir) and os.path.isdir(dataset_dir):
+                # If it contains at least one csv file, we assume it's already downloaded
+                if any(file.endswith(".csv") for file in os.listdir(dataset_dir)):
+                    self.update_meta_info(dataset_id, {"path": dataset_dir})
+            else:
+                logger.warning(f"Dataset {dataset_id} not found after download, maybe cause an error")
         # Log final stats
         success_count = total_datasets - len(errors)
         logger.info(

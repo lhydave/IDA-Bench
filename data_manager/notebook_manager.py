@@ -264,6 +264,7 @@ class NotebookManager:
         notebook_path = os.path.join(self.storage_path, f"{filename}.ipynb")
         if os.path.exists(notebook_path):
             logger.info(f"Notebook {notebook_id} already downloaded")
+            self.update_meta_info(notebook_id, {"path": notebook_path})
             return
 
         try:
@@ -345,6 +346,15 @@ class NotebookManager:
                         f"Downloaded {success_count}/{total_notebooks} notebooks successfully ({completed} processed, {len(errors)} failed)"  # noqa: E501
                     )
 
+        # it seems that there is a race condition for updating the meta info, but it is okay for files,
+        # thus we update the meta info using files:
+        for notebook_id in notebook_ids:
+            filename = id_to_filename(notebook_id)
+            notebook_path = os.path.join(self.storage_path, f"{filename}.ipynb")
+            if os.path.exists(notebook_path):
+                self.update_meta_info(notebook_id, {"path": notebook_path})
+            else:
+                logger.warning(f"Notebook {notebook_id} not found after download, maybe cause an error")
         # Log final stats
         success_count = total_notebooks - len(errors)
         logger.info(

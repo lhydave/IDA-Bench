@@ -9,6 +9,7 @@ configure_global_logger(log_file="kaggle_crawler.log")
 # Import the KaggleCrawler class and managers
 from crawler.kaggle_crawler import KaggleCrawler  # noqa: E402
 from data_manager import NotebookManager, DatasetManager  # noqa: E402
+from crawler.notebook_handler import update_all_code_info  # noqa: E402
 
 
 async def main():
@@ -47,14 +48,21 @@ async def main():
         )
 
         # Step 3: Download notebook files for successfully processed notebooks
-        if notebook_infos:
-            valid_ids = list(notebook_infos.keys())
-            logger.info(f"Downloading {len(valid_ids)} notebook files...")
+        if not notebook_infos:
+            logger.warning("No notebooks found in the search results")
+            return
+        valid_ids = list(notebook_infos.keys())
+        logger.info(f"Downloading {len(valid_ids)} notebook files...")
 
-            # Download notebook files asynchronously
-            await notebook_manager.download_notebook_file_batch(notebook_ids=valid_ids, batch_size=5, log_every=2)
+        # Download notebook files asynchronously
+        await notebook_manager.download_notebook_file_batch(notebook_ids=valid_ids, batch_size=5, log_every=2)
 
-        # Step 4: Download datasets used by the notebooks
+        # Step 4: Extract code information from downloaded notebooks
+        logger.info("Extracting code information from downloaded notebooks...")
+        update_all_code_info(notebook_manager, do_filter=True)
+        logger.info("Code information extraction completed")
+
+        # Step 5: Download datasets used by the notebooks
         # NOTE: competition dataset will not accessible unless you join it
         dataset_ids = list(dataset_manager.dataset_ids)
         if dataset_ids:
@@ -68,7 +76,7 @@ async def main():
         # notebook_manager.merge(other_notebook_manager)
         # dataset_manager.merge(other_dataset_manager)
 
-        # Step 5: Print summary of processed notebooks
+        # Step 6: Print summary of processed notebooks
         logger.info(f"Successfully processed {len(notebook_infos)} notebooks")
         filtered_count = len(notebook_manager.filtered_notebooks_ids)
         logger.info(f"Filtered out {filtered_count} notebooks")

@@ -67,7 +67,11 @@ class NotebookInfo:
     @classmethod
     def from_json(cls, json_str: str) -> "NotebookInfo":
         """Create a NotebookInfo instance from a JSON string."""
-        return cls(**json.loads(json_str))
+        data = json.loads(json_str)
+        # Convert code_info to CodeInfo instance if it exists
+        if "code_info" in data and data["code_info"] is not None:
+            data["code_info"] = CodeInfo(**data["code_info"])
+        return cls(**data)
 
     def to_dict(self) -> dict:
         """Convert NotebookInfo instance to a dictionary."""

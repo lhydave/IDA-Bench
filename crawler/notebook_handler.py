@@ -3,7 +3,8 @@ import ast
 import os
 import nbformat
 from typing import Literal
-from data_manager import CodeInfo
+from data_manager import CodeInfo, NotebookManager
+from nbconvert import PythonExporter
 from crawler.utils import check_filter_keywords
 from logger import logger
 
@@ -11,6 +12,7 @@ from logger import logger
 def extract_code_and_count_features(notebook_path: str) -> tuple[str, int, int]:
     """
     Extract code from a Jupyter notebook file and count code cells and count number of 'feature' literals.
+    Uses nbconvert module to efficiently convert the notebook to Python script.
 
     Args:
         notebook_path: Path to the ipynb file
@@ -22,23 +24,54 @@ def extract_code_and_count_features(notebook_path: str) -> tuple[str, int, int]:
             - An integer representing the count of 'feature' word occurrences
     """
     logger.info(f"Starting to extract code from notebook: {notebook_path}")
+
+    # Read the original notebook to count cells and features
     with open(notebook_path, encoding="utf-8") as file:
         notebook = nbformat.read(file, as_version=4)
-
-    code_cells = [cell["source"] for cell in notebook.cells if cell["cell_type"] == "code"]
-    num_code_cells = len(code_cells)
-    code = "\n".join(code_cells)
+    # Count number of code cells
+    num_code_cells = sum(1 for cell in notebook.cells if cell["cell_type"] == "code")
 
     # Count occurrences of "feature" in all cells (both code and markdown)
     all_cell_content = "\n".join(cell["source"] for cell in notebook.cells)
-
-    # Count feature word occurrences (case insensitive)
     num_feature = len(re.findall(r"\bfeature(:?s?)\b", all_cell_content, re.IGNORECASE))
 
-    logger.info(
-        f"Successfully extracted {num_code_cells} code cells and found {num_feature} occurrences of 'feature' in {notebook_path}"  # noqa: E501
-    )
-    return code, num_code_cells, num_feature
+    # Use nbconvert module directly instead of subprocess
+    try:
+        # Extract only code cells from the notebook first to avoid nbconvert bugs
+        code_cells = [cell for cell in notebook.cells if cell["cell_type"] == "code"]
+
+        # Create a new notebook with only code cells
+        code_only_notebook = nbformat.v4.new_notebook()
+        code_only_notebook.cells = code_cells
+
+        # Use PythonExporter to convert the code-only notebook to Python code
+        python_exporter = PythonExporter()
+        code, _ = python_exporter.from_notebook_node(code_only_notebook)
+
+        logger.info(
+            f"Successfully extracted {num_code_cells} code cells and found {num_feature} occurrences of 'feature' in {notebook_path}"  # noqa: E501
+        )
+        return code, num_code_cells, num_feature
+
+    except Exception as e:
+        logger.error(f"Failed to convert notebook using nbconvert module: {e}")
+
+        # Fallback to manual extraction method if nbconvert fails
+        logger.info("Falling back to manual extraction method")
+        code_cells = []
+        for cell in notebook.cells:
+            if cell["cell_type"] == "code":
+                # Remove magic commands (lines starting with % or %%)
+                lines = cell["source"].split("\n")
+                filtered_lines = [line for line in lines if not line.strip().startswith(("%", "%%", "!"))]
+                code_cells.append("\n".join(filtered_lines))
+
+        code = "\n".join(code_cells)
+
+        logger.info(
+            f"Successfully extracted {num_code_cells} code cells and found {num_feature} occurrences of 'feature' in {notebook_path}"  # noqa: E501
+        )
+        return code, num_code_cells, num_feature
 
 
 def remove_comments_and_strings(code: str) -> str:
@@ -196,3 +229,71 @@ def extract_code_info(notebook_path: str) -> CodeInfo | Literal["Keyword found"]
     logger.info(f"Successfully extracted code info from {notebook_path}")
 
     return code_info
+
+
+def update_all_code_info(notebook_manager: NotebookManager, do_filter: bool = True):
+    """
+    Extract code information from all notebooks in the given notebook manager and update their metadata.
+
+    Args:
+        notebook_manager: The notebook manager containing notebooks to process
+        do_filter: Whether to filter notebooks based on keywords
+    """
+    logger.info("Starting to extract code info from all notebooks")
+
+    total_count = 0
+    success_count = 0
+    filtered_count = 0
+    failure_count = 0
+
+    # Get all notebook IDs from the manager
+    notebook_ids = notebook_manager.kept_list_index.copy()
+
+    for notebook_id in notebook_ids:
+        total_count += 1
+
+        try:
+            # Get notebook info
+            notebook_info = notebook_manager.get_meta_info(notebook_id)
+
+            if not notebook_info:
+                logger.warning(f"No metadata found for notebook {notebook_id}, skipping")
+                failure_count += 1
+                continue
+
+            # Check if the notebook has a local path
+            if not notebook_info.path or not os.path.exists(notebook_info.path):
+                logger.warning(f"Notebook {notebook_id} has no valid local path, skipping")
+                failure_count += 1
+                continue
+
+            # Extract code info
+            code_info = extract_code_info(notebook_info.path)
+
+            # If filtered out and filtering is enabled
+            if do_filter and code_info == "Keyword found":
+                logger.info(f"Notebook {notebook_id} filtered out due to keywords")
+                notebook_manager.remove_notebook(notebook_id, code_info)  # type: ignore
+                filtered_count += 1
+                continue
+
+            # If extraction was successful
+            if isinstance(code_info, CodeInfo):
+                # Update notebook info with code info
+                notebook_info.code_info = code_info
+                notebook_manager.update_meta_info(notebook_id, notebook_info)
+                success_count += 1
+                if total_count % 100 == 0:
+                    logger.info(f"Processed {total_count} notebooks, {success_count} successful extractions")
+            else:
+                logger.warning(f"Failed to extract code info from notebook {notebook_id}")
+                failure_count += 1
+
+        except Exception as e:
+            logger.error(f"Error processing notebook {notebook_id}: {str(e)}")
+            failure_count += 1
+
+    logger.info(
+        f"Code info extraction completed: {success_count}/{total_count} successful, "
+        f"{filtered_count} filtered, {failure_count} failed"
+    )
