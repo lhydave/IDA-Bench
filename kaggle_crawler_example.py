@@ -10,6 +10,7 @@ configure_global_logger(log_file="kaggle_crawler.log")
 from crawler.kaggle_crawler import KaggleCrawler  # noqa: E402
 from data_manager import NotebookManager, DatasetManager  # noqa: E402
 from crawler.notebook_handler import update_all_code_info  # noqa: E402
+from crawler.utils import is_all_import_supported  # noqa: E402
 
 
 async def main():
@@ -62,8 +63,19 @@ async def main():
         update_all_code_info(notebook_manager, do_filter=True)
         logger.info("Code information extraction completed")
 
+        # Step 4.1: Filter notebooks that do not have supported imports
+        # NOTE: You should first check 10% samples of the notebooks to set the proper import keywords
+        # NOTE: this is optional, you can skip this step if you don't need to filter
+        # for notebook_id in notebook_manager.kept_notebooks_ids:
+        #     notebook_info = notebook_manager.get_meta_info(notebook_id)
+        #     if not is_all_import_supported(notebook_info):
+        #         notebook_manager.remove_notebook(notebook_id, "Unsupported imports")
+        #         logger.info(f"Notebook {notebook_id} removed due to unsupported imports")
+        #         continue
+
         # Step 5: Download datasets used by the notebooks
         # NOTE: competition dataset will not accessible unless you join it
+        # if you do not have access to the dataset, this step will raise an error
         dataset_ids = list(dataset_manager.dataset_ids)
         if dataset_ids:
             logger.info(f"Downloading {len(dataset_ids)} datasets...")
