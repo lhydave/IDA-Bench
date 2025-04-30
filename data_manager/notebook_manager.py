@@ -8,7 +8,8 @@ import asyncio
 import concurrent.futures
 from kaggle.api.kaggle_api_extended import KaggleApi
 from logger import logger
-from data_manager.utils import to_filename
+from data_manager.utils import id_to_filename
+import shutil
 
 
 class NotebookManager:
@@ -134,7 +135,7 @@ class NotebookManager:
             return
 
         # Check if meta info already exists
-        filename = to_filename(notebook_id)
+        filename = id_to_filename(notebook_id)
         meta_info_file = os.path.join(self.meta_storage_path, f"{filename}.json")
 
         # Remove from filtered notebooks if present
@@ -201,7 +202,7 @@ class NotebookManager:
             return self.notebook_meta[notebook_id]
 
         # Try to load from file if not in memory
-        filename = to_filename(notebook_id)
+        filename = id_to_filename(notebook_id)
         meta_info_file = os.path.join(self.meta_storage_path, f"{filename}.json")
 
         if not os.path.exists(meta_info_file):
@@ -246,7 +247,7 @@ class NotebookManager:
                 raise
 
         # Save updated meta info using the to_dict method
-        filename = to_filename(notebook_id)
+        filename = id_to_filename(notebook_id)
         meta_info_file = os.path.join(self.meta_storage_path, f"{filename}.json")
 
         with open(meta_info_file, "w") as f:
@@ -259,7 +260,7 @@ class NotebookManager:
 
     def download_notebook_file(self, notebook_id: str) -> None:
         """Download the notebook file using Kaggle API."""
-        filename = to_filename(notebook_id)
+        filename = id_to_filename(notebook_id)
         notebook_path = os.path.join(self.storage_path, f"{filename}.ipynb")
         if os.path.exists(notebook_path):
             logger.info(f"Notebook {notebook_id} already downloaded")
@@ -378,7 +379,7 @@ class NotebookManager:
         Get the notebook file in NotebookNode form.
         If the notebook is not downloaded, download it first
         """
-        filename = to_filename(notebook_id)
+        filename = id_to_filename(notebook_id)
         notebook_path = os.path.join(self.storage_path, f"{filename}.ipynb")
 
         if not os.path.exists(notebook_path):
@@ -434,3 +435,76 @@ class NotebookManager:
                         os.remove(file_path)
 
         logger.info(f"Notebook manager reset. delete_files={delete_files}")
+
+    def merge(self, other_manager: "NotebookManager") -> None:
+        """
+        Merge another NotebookManager's data into this one.
+
+        Args:
+            other_manager: Another NotebookManager instance to merge from
+        """
+        logger.info(f"Merging notebook manager from {other_manager.store_path} into {self.store_path}")
+
+        # Merge search results IDs
+        before_count = len(self.search_results_ids)
+        self.search_results_ids.update(other_manager.search_results_ids)
+        after_count = len(self.search_results_ids)
+        logger.info(f"Added {after_count - before_count} new notebook IDs to search results")
+
+        # Merge kept notebooks IDs
+        kept_before = len(self.kept_notebooks_ids)
+        self.kept_notebooks_ids.update(other_manager.kept_notebooks_ids)
+        kept_after = len(self.kept_notebooks_ids)
+        logger.info(f"Added {kept_after - kept_before} new notebook IDs to kept notebooks")
+
+        # Merge filtered notebooks
+        filtered_before = len(self.filtered_notebooks_ids)
+        for notebook_id, reason in other_manager.filtered_notebooks_ids.items():
+            if notebook_id not in self.filtered_notebooks_ids:
+                self.filtered_notebooks_ids[notebook_id] = reason
+        filtered_after = len(self.filtered_notebooks_ids)
+        logger.info(f"Added {filtered_after - filtered_before} new notebook IDs to filtered notebooks")
+
+        # Save the merged lists to files
+        with open(self.search_results_path, "w") as f:
+            json.dump(list(self.search_results_ids), f, indent=2)
+        self._save_notebook_lists()
+
+        # Merge notebook files and metadata separately
+        notebooks_copied = 0
+        metadata_copied = 0
+
+        # First, copy all notebook files from the other manager's search results
+        # This ensures we preserve all downloaded files regardless of metadata status
+        for notebook_id in other_manager.search_results_ids:
+            filename = id_to_filename(notebook_id)
+            other_notebook_path = os.path.join(other_manager.storage_path, f"{filename}.ipynb")
+            our_notebook_path = os.path.join(self.storage_path, f"{filename}.ipynb")
+
+            if os.path.exists(other_notebook_path) and not os.path.exists(our_notebook_path):
+                # Copy the notebook file
+                shutil.copy2(other_notebook_path, our_notebook_path)
+                notebooks_copied += 1
+                logger.debug(f"Copied notebook file for {notebook_id}")
+
+        # Then, separately handle metadata
+        for notebook_id in other_manager.kept_notebooks_ids:
+            # Copy metadata if available
+            other_meta = other_manager.get_meta_info(notebook_id)
+            if not other_meta:
+                continue  # Skip if no metadata found
+            if notebook_id not in self.notebook_meta:
+                # Save the metadata using add_notebook method
+                self.add_notebook(notebook_id, other_meta)
+                metadata_copied += 1
+            else:
+                # Update path if we copied the file but already had metadata
+                filename = id_to_filename(notebook_id)
+                our_notebook_path = os.path.join(self.storage_path, f"{filename}.ipynb")
+                if os.path.exists(our_notebook_path):
+                    self.update_meta_info(notebook_id, {"path": our_notebook_path})
+
+        logger.info(f"Merge completed: Copied {notebooks_copied} notebook files and {metadata_copied} metadata entries")
+        logger.info(
+            f"Total notebooks after merge: {len(self.kept_notebooks_ids)} kept, {len(self.filtered_notebooks_ids)} filtered"
+        )

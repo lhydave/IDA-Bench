@@ -8,6 +8,7 @@ from logger import logger
 
 async def main():
     # Initialize the managers
+    # NOTE: please ensure that you have set the kaggle credentials, see https://github.com/Kaggle/kaggle-api/blob/main/docs/README.md
     notebook_manager = NotebookManager("test_data/notebooks")
     dataset_manager = DatasetManager("test_data/datasets")
 
@@ -15,6 +16,7 @@ async def main():
     notebook_manager.reset()
     dataset_manager.reset()
     # Initialize the crawler with our managers
+    # NOTE: please ensure that you have run `playwright install`
     crawler = KaggleCrawler(notebook_manager=notebook_manager, dataset_manager=dataset_manager)
     await crawler.setup()
 
@@ -29,6 +31,7 @@ async def main():
         logger.info(f"Found {len(notebook_manager.search_results_ids)} notebooks in search")
 
         # Step 2: Process the found notebooks
+        # You can split the processing into multiple batches and run on different nodes
         notebook_ids = list(notebook_manager.kept_notebooks_ids)
         logger.info(f"Processing {len(notebook_ids)} notebooks...")
 
@@ -54,6 +57,11 @@ async def main():
 
             # Download dataset files asynchronously
             await dataset_manager.download_dataset_file_batch(dataset_ids=dataset_ids, batch_size=4, log_every=2)
+
+        # Step extra: merge different data sources
+        # NOTE: this is optional, you can skip this step if you don't need to merge
+        # notebook_manager.merge(other_notebook_manager)
+        # dataset_manager.merge(other_dataset_manager)
 
         # Step 5: Print summary of processed notebooks
         logger.info(f"Successfully processed {len(notebook_infos)} notebooks")

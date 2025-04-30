@@ -6,7 +6,7 @@ import asyncio
 import concurrent.futures
 from kaggle.api.kaggle_api_extended import KaggleApi
 from logger import logger
-from data_manager.utils import to_filename
+from data_manager.utils import id_to_filename
 
 
 class DatasetManager:
@@ -17,7 +17,7 @@ class DatasetManager:
         self.meta_storage_path = os.path.join(self.meta_info_path, "storage")
         self.dataset_list_path = os.path.join(self.meta_info_path, "dataset_list.json")
 
-        # Central storage for all dataset metadata
+        # Central storage for all dataset meta info
         self.dataset_meta: dict[str, DatasetInfo] = {}  # {id: DatasetInfo}
         self.dataset_ids = set[str]()  # Set of dataset IDs
 
@@ -38,7 +38,7 @@ class DatasetManager:
                 id_list = json.load(f)
                 self.dataset_ids = set(id_list)
 
-        # Load metadata for datasets that have been processed
+        # Load meta info for datasets that have been processed
         for dataset_id in self.dataset_ids:
             self.get_meta_info(dataset_id)
 
@@ -68,7 +68,7 @@ class DatasetManager:
             ValueError: If the dataset already has meta info
         """  # noqa: E501
         # Check if meta info already exists
-        filename = to_filename(dataset_id)
+        filename = id_to_filename(dataset_id)
         meta_info_file = os.path.join(self.meta_storage_path, f"{filename}.json")
 
         # Add to dataset ids if not already there
@@ -81,7 +81,7 @@ class DatasetManager:
         with open(meta_info_file, "w") as f:
             json.dump(dataset_info.to_dict(), f, indent=2)
 
-        # Update central metadata store with the DatasetInfo object directly
+        # Update central meta info store with the DatasetInfo object directly
         self.dataset_meta[dataset_id] = dataset_info
 
         logger.info(f"Added dataset {dataset_id} to dataset list")
@@ -105,7 +105,7 @@ class DatasetManager:
         Reset all dataset data, clearing in-memory structures and resetting files.
 
         Args:
-            delete_files: If True, also delete all downloaded datasets and metadata files.
+            delete_files: If True, also delete all downloaded datasets and meta info files.
                           If False, only reset the tracking files and in-memory structures.
         """
         # Reset in-memory data structures
@@ -116,7 +116,7 @@ class DatasetManager:
         with open(self.dataset_list_path, "w") as f:
             json.dump([], f)
 
-        # Optionally delete all downloaded dataset files and metadata
+        # Optionally delete all downloaded dataset files and meta info
         if delete_files:
             # Delete all symbolic links in storage
             if os.path.exists(self.storage_path):
@@ -131,7 +131,7 @@ class DatasetManager:
                     elif os.path.isfile(item_path):
                         os.remove(item_path)
 
-            # Delete all metadata files
+            # Delete all meta info files
             if os.path.exists(self.meta_storage_path):
                 for filename in os.listdir(self.meta_storage_path):
                     file_path = os.path.join(self.meta_storage_path, filename)
@@ -150,7 +150,7 @@ class DatasetManager:
             return self.dataset_meta[dataset_id]
 
         # Try to load from file if not in memory
-        filename = to_filename(dataset_id)
+        filename = id_to_filename(dataset_id)
         meta_info_file = os.path.join(self.meta_storage_path, f"{filename}.json")
 
         if not os.path.exists(meta_info_file):
@@ -195,13 +195,13 @@ class DatasetManager:
                 raise
 
         # Save updated meta info using the to_dict method
-        filename = to_filename(dataset_id)
+        filename = id_to_filename(dataset_id)
         meta_info_file = os.path.join(self.meta_storage_path, f"{filename}.json")
 
         with open(meta_info_file, "w") as f:
             json.dump(updated_meta_info.to_dict(), f, indent=2)
 
-        # Update the central metadata store with the DatasetInfo object directly
+        # Update the central meta info store with the DatasetInfo object directly
         self.dataset_meta[dataset_id] = updated_meta_info
 
         logger.info(f"Updated meta info for dataset {dataset_id}")
@@ -209,7 +209,7 @@ class DatasetManager:
     def download_dataset_file(self, dataset_id: str) -> None:
         """Download the dataset files using Kaggle API."""
         # Define the target directory in our storage structure
-        filename = to_filename(dataset_id)
+        filename = id_to_filename(dataset_id)
         dataset_dir = os.path.join(self.storage_path, filename)
 
         if os.path.exists(dataset_dir) and os.path.isdir(dataset_dir):
@@ -262,6 +262,62 @@ class DatasetManager:
             error_msg = str(e)
             logger.error(f"Error downloading dataset {dataset_id}: {error_msg}")
             return error_msg  # Return the error message to be collected
+
+    def merge(self, source_manager: "DatasetManager") -> None:
+        """
+        Merge datasets from another DatasetManager instance into this one. This merges both in-memory data structures and physical files. Metadata and physical dataset files are merged separately - datasets can be copied even without meta info for caching purposes.
+
+        Args:
+            source_manager: Another DatasetManager instance to merge from
+        """  # noqa: E501
+        import shutil
+
+        # Track statistics for logging
+        meta_merged = 0
+        files_merged = 0
+        # First handle meta info merging
+        new_dataset_ids = source_manager.dataset_ids - self.dataset_ids
+        if not new_dataset_ids:
+            logger.info("No new datasets to merge")
+            return
+        logger.info(f"Merging meta info for {len(new_dataset_ids)} datasets from source manager")
+
+        for dataset_id in new_dataset_ids:
+            # Get meta info from source
+            source_meta_info = source_manager.get_meta_info(dataset_id)
+            if not source_meta_info:
+                logger.warning(f"Could not find meta info for dataset {dataset_id} in source manager")
+                continue
+
+            # Add dataset record using our existing method
+            self.add_dataset_record(dataset_id, source_meta_info)
+            meta_merged += 1
+
+        # Now handle the physical dataset files - only for datasets in the dataset list
+        logger.info(f"Merging dataset files from {source_manager.storage_path} to {self.storage_path}")
+
+        # Process only datasets in the source dataset list
+        for dataset_id in source_manager.dataset_ids:
+            filename = id_to_filename(dataset_id)
+            source_dataset_dir = os.path.join(source_manager.storage_path, filename)
+            target_dataset_dir = os.path.join(self.storage_path, filename)
+
+            # Skip if source directory doesn't exist or if target already exists
+            if not os.path.isdir(source_dataset_dir) or os.path.exists(target_dataset_dir):
+                continue
+
+            try:
+                shutil.copytree(source_dataset_dir, target_dataset_dir)
+                logger.info(f"Copied dataset files for {dataset_id}")
+                files_merged += 1
+
+                # If the dataset is in our meta info, update the path
+                if dataset_id in self.dataset_ids:
+                    self.update_meta_info(dataset_id, {"path": target_dataset_dir})
+            except Exception as e:
+                logger.error(f"Error copying dataset {dataset_id}: {str(e)}")
+
+        logger.info(f"Merge completed: {meta_merged} meta info files, {files_merged} dataset directories")
 
     async def download_dataset_file_batch(
         self, dataset_ids: list[str], batch_size: int = 5, log_every: int | None = 10
