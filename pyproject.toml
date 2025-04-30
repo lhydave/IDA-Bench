@@ -16,12 +16,18 @@ dependencies = [
     "kaggle>=1.7.4.2",
     "dateparser>=1.2.1",
     "playwright>=1.51.0",
-    "seaborn",
-    "pmdarima"
+    "seaborn>=0.13.2",
 ]
 
 [dependency-groups]
-dev = ["jupyter", "ipykernel", "pytest", "pytest-cov", "ruff"]
+dev = [
+    "jupyter",
+    "ipykernel",
+    "pytest",
+    "pytest-cov",
+    "ruff",
+    "pytest-asyncio>=0.26.0",
+]
 
 [tool.pytest.ini_options]
 pythonpath = ".."

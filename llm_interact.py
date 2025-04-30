@@ -1,24 +1,22 @@
 import json
 from dataclasses import dataclass, asdict
 import litellm
-from litellm import completion
 import tomllib
 from logger import logger
 import os
 from copy import deepcopy
 import time
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 from interpreter import OpenInterpreter
 import threading
-from datetime import datetime, timedelta
 
 
 class RateLimiter:
     """Simple rate limiter to enforce requests per minute (RPM) limits."""
-    
+
     def __init__(self, rpm: int = 100):
         self.rpm = rpm
-        self.request_timestamps: List[float] = []
+        self.request_timestamps: list[float] = []
         self.lock = threading.Lock()
         if self.rpm <= 0:
             raise ValueError("RPM must be a positive integer.")
@@ -36,18 +34,17 @@ class RateLimiter:
         except Exception as e:
             logger.error(f"Failed to update request timestamps: {str(e)}")
             return False
-        
+
     def wait_if_needed(self) -> None:
-            
         current_time = time.time()
-        
+
         # Calculate the sliding window (1 minute)
         one_minute_ago = current_time - 60
-        
+
         with self.lock:
             # Remove timestamps older than 1 minute
             self.request_timestamps = [t for t in self.request_timestamps if t >= one_minute_ago]
-            
+
             # Check if we've hit the limit
             if len(self.request_timestamps) >= self.rpm:
                 # Calculate how long to wait
@@ -55,7 +52,7 @@ class RateLimiter:
                 unique_timestamps = sorted(set(self.request_timestamps))
                 oldest_allowed_timestamp = unique_timestamps[len(unique_timestamps) // 2]  # median of unique timestamps
                 wait_time = 60 - (current_time - oldest_allowed_timestamp)
-                
+
                 if wait_time > 0:
                     logger.info(f"Rate limit reached. Waiting {wait_time:.2f} seconds...")
                     time.sleep(wait_time)
@@ -146,10 +143,10 @@ class LLMInteractor:
         self.messages = []
         self.send_queue = []
         self.interpreter_config_path = interpreter_config_path
-        logger.info(f"Initialized LLMInteractor with model: {config.model}, temperature: {config.temperature}") 
+        logger.info(f"Initialized LLMInteractor with model: {config.model}, temperature: {config.temperature}")
         # Initialize rate limiters
         self.default_rate_limiter = RateLimiter(rpm=config.rpm)
-            
+
         if config.run_code:
             # Initialize interpreter if run_code is enabled
             if not interpreter_config_path:
