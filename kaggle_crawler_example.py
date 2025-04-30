@@ -1,9 +1,14 @@
 import asyncio
 
+# Set up the logger, this is necessary for error recovering
+# this must be imported and configured before any other module
+from logger import logger, configure_global_logger
+
+configure_global_logger(log_file="kaggle_crawler.log")
+
 # Import the KaggleCrawler class and managers
-from crawler.kaggle_crawler import KaggleCrawler
-from data_manager import NotebookManager, DatasetManager
-from logger import logger
+from crawler.kaggle_crawler import KaggleCrawler  # noqa: E402
+from data_manager import NotebookManager, DatasetManager  # noqa: E402
 
 
 async def main():

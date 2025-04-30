@@ -506,5 +506,5 @@ class NotebookManager:
 
         logger.info(f"Merge completed: Copied {notebooks_copied} notebook files and {metadata_copied} metadata entries")
         logger.info(
-            f"Total notebooks after merge: {len(self.kept_notebooks_ids)} kept, {len(self.filtered_notebooks_ids)} filtered"
+            f"Total notebooks after merge: {len(self.kept_notebooks_ids)} kept, {len(self.filtered_notebooks_ids)} filtered"  # noqa: E501
         )
