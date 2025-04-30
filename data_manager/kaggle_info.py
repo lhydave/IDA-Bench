@@ -41,7 +41,8 @@ class CodeInfo:
     num_concat: int
     num_join: int
     num_agg: int
-    num_python_cell: int  # number of python cells
+    num_python_cells: int  # number of python cells
+    num_feature: int  # number of 'feature' liberal
     import_list: list[str]
     file_size: int  # in bytes
     pure_code_size: int  # in bytes

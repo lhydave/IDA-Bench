@@ -87,7 +87,8 @@ The `code_info` is given as json with the following attributes
 - `num_concat`: number of `concat` calling in the code.
 - `num_join`: number of `join` calling in the code.
 - `num_agg`: number of `agg` calling in the code.
-- `num_python_cell`: number of python cells in the code.
+- `num_python_cells`: number of python cells in the code.
+- `num_feature`: number of literal `feature` in the code.
 - `import_list`: list of imported python packages.
 - `file_size`: raw size (in B) of notebook.
 - `pure_code_size`: size (in B) of python scripts in the notebook.
