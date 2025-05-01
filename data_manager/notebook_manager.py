@@ -272,25 +272,14 @@ class NotebookManager:
             # the Kaggle API will download to self.storage_path/filename/xxxxx.ipynb
             # we need to move it to self.storage_path/filename.ipynb
 
-            kaggle_dir = os.path.join(self.storage_path, filename)
-            os.makedirs(kaggle_dir, exist_ok=True)
-            self.api.kernels_pull(notebook_id, path=kaggle_dir)
+            kaggle_dir = self.api.kernels_pull(notebook_id, path=self.storage_path)
 
-            # Find the notebook files in the download directory
-            ipynb_files = [file for file in os.listdir(kaggle_dir) if file.endswith(".ipynb")]
-
-            # If there are multiple notebook files, raise an error
-            if len(ipynb_files) > 1:
-                raise ValueError(f"Multiple .ipynb files found for notebook {notebook_id}")
-            elif len(ipynb_files) == 0:
-                raise ValueError(f"No .ipynb file found for notebook {notebook_id}")
+            if not kaggle_dir.endswith(".ipynb"):
+                logger.warning(f"Downloaded file is not a notebook: {kaggle_dir}")
+                return
 
             # Move the file to the desired location
-            source_path = os.path.join(kaggle_dir, ipynb_files[0])
-            os.rename(source_path, notebook_path)
-
-            # Remove the now-empty directory
-            os.rmdir(kaggle_dir)
+            os.rename(kaggle_dir, notebook_path)
 
             # update the meta info
             self.update_meta_info(notebook_id, {"path": notebook_path})
