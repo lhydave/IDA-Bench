@@ -2,7 +2,6 @@ from data_manager.kaggle_info import DatasetInfo
 from typing import Any
 import os
 import json
-import asyncio
 import concurrent.futures
 from kaggle.api.kaggle_api_extended import KaggleApi
 from logger import logger
@@ -248,18 +247,24 @@ class DatasetManager:
             logger.error(f"Error downloading dataset {dataset_id}: {str(e)}")
             raise
 
-    def _safe_download_dataset(self, dataset_id: str) -> str | None:
+    def _safe_download_dataset(self, dataset_id: str, sleep_time: float = 0.0) -> str | None:
         """
         Safely download a dataset file, catching and returning any exceptions.
+        Sleeps for sleep_time seconds after download to avoid rate limiting.
 
         Args:
             dataset_id: The ID of the dataset to download
+            sleep_time: Time to sleep after download (in seconds)
 
         Returns:
             None if successful, or error message string if failed
         """
         try:
             self.download_dataset_file(dataset_id)
+            if sleep_time > 0:
+                import time
+
+                time.sleep(sleep_time)  # Sleep after download to avoid rate limiting
             return None  # Success
         except Exception as e:
             error_msg = str(e)
@@ -322,44 +327,39 @@ class DatasetManager:
 
         logger.info(f"Merge completed: {meta_merged} meta info files, {files_merged} dataset directories")
 
-    async def download_dataset_file_batch(
-        self, dataset_ids: list[str], batch_size: int = 5, log_every: int | None = 10
+    def download_dataset_file_batch(
+        self, dataset_ids: list[str], worker_size: int = 5, log_every: int | None = 10, sleep_time: float = 2.0
     ) -> None:
         """
         Download the dataset files using Kaggle API in batch, using a worker queue model with a fixed-size process pool.
+        Each worker will sleep for sleep_time seconds between downloads to avoid rate limiting.
         If any downloads fail, the errors are collected and reported at the end, but the method continues to try
         downloading all datasets.
 
         Args:
             dataset_ids: List of dataset IDs to download
-            batch_size: Number of concurrent workers in the process pool
+            worker_size: Number of concurrent workers in the process pool
             log_every: Log progress every log_every datasets downloaded
+            sleep_time: Time to sleep between downloads (in seconds) to avoid rate limiting
         """
         total_datasets = len(dataset_ids)
         completed = 0
         errors = {}  # Dictionary to collect errors: {dataset_id: error_message}
 
-        # Create a single process pool with fixed number of workers
-        with concurrent.futures.ProcessPoolExecutor(max_workers=batch_size) as pool:
-            loop = asyncio.get_event_loop()
-
-            # Create all futures at once - they will be scheduled based on worker availability
-            futures = []
-            for dataset_id in dataset_ids:
-                future = loop.run_in_executor(pool, self._safe_download_dataset, dataset_id)
-                futures.append((dataset_id, future))
+        # Use a process pool to download datasets
+        with concurrent.futures.ProcessPoolExecutor(max_workers=worker_size) as pool:
+            # Submit all tasks to the pool
+            future_to_id = {pool.submit(self._safe_download_dataset, did, sleep_time): did for did in dataset_ids}
 
             # Process results as they complete
-            for dataset_id, future in [(did, f) for did, f in futures]:
+            for future in concurrent.futures.as_completed(future_to_id):
+                dataset_id = future_to_id[future]
                 try:
-                    error = await future
+                    error = future.result()
                     if error:  # _safe_download_dataset returns error message on failure, None on success
                         errors[dataset_id] = error
-                except Exception as e:
-                    # Catch any exceptions that might have escaped _safe_download_dataset
-                    error_msg = f"Unexpected error: {str(e)}"
-                    errors[dataset_id] = error_msg
-                    logger.error(f"Error downloading dataset {dataset_id}: {error_msg}")
+                except Exception as exc:
+                    errors[dataset_id] = str(exc)
 
                 completed += 1
                 if isinstance(log_every, int) and (completed % log_every == 0 or completed == total_datasets):
@@ -368,8 +368,7 @@ class DatasetManager:
                         f"Downloaded {success_count}/{total_datasets} datasets successfully ({completed} processed, {len(errors)} failed)"  # noqa: E501
                     )
 
-        # it seems that there is a race condition for updating the meta info, but it is okay for files,
-        # thus we update the meta info using files:
+        # Update meta info using files to avoid race conditions
         for dataset_id in dataset_ids:
             # Get the path from the downloaded files
             filename = id_to_filename(dataset_id)
@@ -381,6 +380,7 @@ class DatasetManager:
                     self.update_meta_info(dataset_id, {"path": dataset_dir})
             else:
                 logger.warning(f"Dataset {dataset_id} not found after download, maybe cause an error")
+
         # Log final stats
         success_count = total_datasets - len(errors)
         logger.info(

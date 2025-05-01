@@ -133,6 +133,7 @@ def count_patterns(code: str) -> dict[str, int]:
         "num_concat": r"\.concat\(|pd\.concat\(",
         "num_join": r"\.join\(",
         "num_agg": r"\.agg\(|\.aggregate\(",
+        "num_plots": r"\.show\(",
     }
 
     counts: dict[str, int] = {}

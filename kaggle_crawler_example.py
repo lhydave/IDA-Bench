@@ -20,8 +20,8 @@ async def main():
     dataset_manager = DatasetManager("test_data/datasets")
 
     # reset the managers to avoid conflicts
-    notebook_manager.reset()
-    dataset_manager.reset()
+    # notebook_manager.reset()
+    # dataset_manager.reset()
     # Initialize the crawler with our managers
     # NOTE: please ensure that you have run `playwright install`
     crawler = KaggleCrawler(notebook_manager=notebook_manager, dataset_manager=dataset_manager)
@@ -31,7 +31,7 @@ async def main():
         # Step 1: Search for notebooks
         logger.info("Starting notebook search...")
         search_url = "https://www.kaggle.com/search?q=data+analysis+date%3A90+in%3Anotebooks"
-        max_notebooks = 20
+        max_notebooks = 10
 
         # Search for notebooks and store results in notebook_manager
         await crawler.search_notebooks(search_url=search_url, max_notebooks=max_notebooks)
@@ -47,16 +47,16 @@ async def main():
             notebook_ids=notebook_ids,
             concurrency=4,  # Process 4 notebooks at a time
         )
-
-        # Step 3: Download notebook files for successfully processed notebooks
         if not notebook_infos:
             logger.warning("No notebooks found in the search results")
             return
-        valid_ids = list(notebook_infos.keys())
-        logger.info(f"Downloading {len(valid_ids)} notebook files...")
+
+        # Step 3: Download notebook files for successfully processed notebooks
+        kept_notebooks_ids = list(notebook_manager.kept_notebooks_ids)
+        logger.info(f"Downloading {len(kept_notebooks_ids)} notebook files...")
 
         # Download notebook files asynchronously
-        await notebook_manager.download_notebook_file_batch(notebook_ids=valid_ids, batch_size=5, log_every=2)
+        notebook_manager.download_notebook_file_batch(notebook_ids=kept_notebooks_ids, worker_size=5, log_every=2)
 
         # Step 4: Extract code information from downloaded notebooks
         logger.info("Extracting code information from downloaded notebooks...")
@@ -81,7 +81,7 @@ async def main():
             logger.info(f"Downloading {len(dataset_ids)} datasets...")
 
             # Download dataset files asynchronously
-            await dataset_manager.download_dataset_file_batch(dataset_ids=dataset_ids, batch_size=4, log_every=2)
+            dataset_manager.download_dataset_file_batch(dataset_ids=dataset_ids, worker_size=4, log_every=2)
 
         # Step extra: merge different data sources
         # NOTE: this is optional, you can skip this step if you don't need to merge

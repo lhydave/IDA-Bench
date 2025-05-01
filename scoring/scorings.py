@@ -27,6 +27,7 @@ def sample_scoring_function(
     comments: int,
     runtime: int,
     input_size: float,
+    prize: str | None,
     # CodeInfo parameters
     num_pivot_table: int,
     num_groupby: int,
@@ -43,6 +44,7 @@ def sample_scoring_function(
     num_feature: int,
     file_size: int,
     pure_code_size: int,
+    num_plots: int,
 ) -> float:
     """
     A sample scoring function that computes a score based on various notebook and dataset metrics.
@@ -73,6 +75,7 @@ def sample_scoring_function(
         num_feature: Number of feature engineering references
         file_size: Size of the notebook file in bytes
         pure_code_size: Size of the code in the notebook in bytes
+        num_plots: Number of plots in the notebook
 
     Returns:
         float: A score reflecting the overall quality and complexity of the notebook
@@ -80,27 +83,44 @@ def sample_scoring_function(
     # Base score
     score = 0.0
 
+    # prize score
+    if not prize:
+        prize_score = 0.0
+    elif "gold" in prize:
+        prize_score = 3.0
+    elif "silver" in prize:
+        prize_score = 2.0
+    elif "bronze" in prize:
+        prize_score = 1.0
+    else:
+        prize_score = 0.0
+
     # Popularity score (normalize to avoid overweighting)
     popularity_score = (
-        min(votes, 100) / 20 + min(copy_and_edit, 100) / 30 + min(views, 10000) / 2000 + min(comments, 50) / 10
+        min(votes, 100) / 20
+        + min(copy_and_edit, 100) / 30
+        + min(views, 10000) / 2000
+        + min(comments, 50) / 10
+        + prize_score
     )
 
     # Code complexity score
     complexity_score = (
-        num_pivot_table * 0.5
+        num_pivot_table * 0.7
         + num_groupby * 0.3
         + num_apply * 0.6
         + (1.0 * num_def if 1 <= num_def <= 5 else 0.0)  # Highest score for 1-5 defs, otherwise 0
-        + num_for * 0.2
+        + (0.2 * num_for if 1 <= num_for <= 4 else 0.0)  # Highest score for 1-4 for loops, otherwise 0
         + num_and * 0.1
         + num_or * 0.1
-        + num_merge * 0.4
-        + num_concat * 0.3
-        + num_join * 0.3
-        + num_agg * 0.3
-        + min(num_python_cells, 50) / 10
-        + num_feature * 0.5
-        + pure_code_size / 1000 * 0.1
+        + num_merge * 0.7
+        + num_concat * 0.7
+        + num_join * 0.7
+        + num_agg * 0.5
+        + min(num_python_cells, 30) / 15
+        + min(num_feature, 10) / 5
+        + min(pure_code_size, 12000) / 6000
+        + (pure_code_size / num_python_cells) / 150  # average size of code per cell
     )
 
     # Dataset complexity score
@@ -114,9 +134,12 @@ def sample_scoring_function(
     elif runtime < 60:
         resource_score = runtime / 12  # Linearly increasing score up to 60 seconds
     else:  # runtime > 300
-        resource_score = max(0, 5.0 - (runtime - 300) / 180)  # Decreasing score for runtimes over 5 minutes
+        resource_score = 5.0 - (runtime - 300) / 180  # Decreasing score for runtimes over 5 minutes
+
+    # heavily penalize too many plots
+    plot_penalty = max(num_plots - 15, 0) * 20.0
 
     # Compute final score as a weighted sum of individual scores
-    score = popularity_score * 2.0 + complexity_score * 5.0 + dataset_score * 2.5 + resource_score * 1.0
+    score = popularity_score * 2.0 + complexity_score * 5.0 + dataset_score * 2.5 + resource_score * 1.0 - plot_penalty
 
     return score

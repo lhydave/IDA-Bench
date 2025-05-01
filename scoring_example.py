@@ -68,7 +68,7 @@ def main():
                 logger.info(f"  - URL: {notebook_info.url}")
                 logger.info(f"  - Input datasets: {', '.join(notebook_info.input)}")
 
-        # Step 4: Sample top notebooks for manual inspection
+        # Step 4: Uniformly sample notebooks for manual inspection
         sample_count = 5
         logger.info(f"Sampling {sample_count} notebooks for inspection...")
         scoring.sample_scored_notebooks(num=sample_count, store_path="test_data/scoring/samples")

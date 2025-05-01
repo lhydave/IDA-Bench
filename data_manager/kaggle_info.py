@@ -46,6 +46,7 @@ class CodeInfo:
     import_list: list[str]
     file_size: int  # in bytes
     pure_code_size: int  # in bytes
+    num_plots: int  # number of plots
 
 
 @dataclass

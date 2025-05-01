@@ -115,6 +115,7 @@ class Scoring:
             comments=notebook_info.comments,
             runtime=notebook_info.runtime,
             input_size=notebook_info.input_size,
+            prize=notebook_info.prize,
             # CodeInfo parameters
             num_pivot_table=notebook_info.code_info.num_pivot_table,
             num_groupby=notebook_info.code_info.num_groupby,
@@ -131,6 +132,7 @@ class Scoring:
             num_feature=notebook_info.code_info.num_feature,
             file_size=notebook_info.code_info.file_size,
             pure_code_size=notebook_info.code_info.pure_code_size,
+            num_plots=notebook_info.code_info.num_plots,
         )
 
         score = round(score, 4)
@@ -277,9 +279,9 @@ class Scoring:
                 # Prepare info for JSON
                 info_dict = {
                     "score": score,
-                    "notebook_info": notebook_info.to_json(),
+                    "notebook_info": notebook_info.to_dict(),
                     "dataset_infos": {
-                        dataset_id: dataset_info.to_json() for dataset_id, dataset_info in dataset_infos.items()
+                        dataset_id: dataset_info.to_dict() for dataset_id, dataset_info in dataset_infos.items()
                     },
                 }
 

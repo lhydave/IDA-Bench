@@ -4,12 +4,12 @@ from nbformat import NotebookNode
 import nbformat
 import os
 import json
-import asyncio
 import concurrent.futures
 from kaggle.api.kaggle_api_extended import KaggleApi
 from logger import logger
 from data_manager.utils import id_to_filename
 import shutil
+import time
 
 
 class NotebookManager:
@@ -300,44 +300,39 @@ class NotebookManager:
             logger.error(f"Error downloading notebook {notebook_id}: {str(e)}")
             raise
 
-    async def download_notebook_file_batch(
-        self, notebook_ids: list[str], batch_size: int = 5, log_every: int | None = 10
+    def download_notebook_file_batch(
+        self, notebook_ids: list[str], worker_size: int = 5, log_every: int | None = 10, sleep_time: float = 2.0
     ) -> None:
         """
         Download the notebook files using Kaggle API in batch, using a worker queue model with a fixed-size process pool.
+        Each worker will sleep for sleep_time seconds between downloads to avoid rate limiting.
         If any downloads fail, the errors are collected and reported at the end, but the method continues to try
         downloading all notebooks.
 
         Args:
             notebook_ids: List of notebook IDs to download
-            batch_size: Number of concurrent workers in the process pool
+            worker_size: Number of concurrent workers in the process pool
             log_every: Log progress every log_every notebooks downloaded
+            sleep_time: Time to sleep between downloads (in seconds) to avoid rate limiting
         """  # noqa: E501
         total_notebooks = len(notebook_ids)
         completed = 0
         errors = {}  # Dictionary to collect errors: {notebook_id: error_message}
 
-        # Create a single process pool with fixed number of workers
-        with concurrent.futures.ProcessPoolExecutor(max_workers=batch_size) as pool:
-            loop = asyncio.get_event_loop()
-
-            # Create all futures at once - they will be scheduled based on worker availability
-            futures = []
-            for notebook_id in notebook_ids:
-                future = loop.run_in_executor(pool, self._safe_download_notebook, notebook_id)
-                futures.append((notebook_id, future))
+        # Use a process pool to download notebooks
+        with concurrent.futures.ProcessPoolExecutor(max_workers=worker_size) as pool:
+            # Submit all tasks to the pool
+            future_to_id = {pool.submit(self._safe_download_notebook, nid, sleep_time): nid for nid in notebook_ids}
 
             # Process results as they complete
-            for notebook_id, future in [(nid, f) for nid, f in futures]:
+            for future in concurrent.futures.as_completed(future_to_id):
+                notebook_id = future_to_id[future]
                 try:
-                    error = await future
+                    error = future.result()
                     if error:  # _safe_download_notebook returns error message on failure, None on success
                         errors[notebook_id] = error
-                except Exception as e:
-                    # Catch any exceptions that might have escaped _safe_download_notebook
-                    error_msg = f"Unexpected error: {str(e)}"
-                    errors[notebook_id] = error_msg
-                    logger.error(f"Error downloading notebook {notebook_id}: {error_msg}")
+                except Exception as exc:
+                    errors[notebook_id] = str(exc)
 
                 completed += 1
                 if isinstance(log_every, int) and (completed % log_every == 0 or completed == total_notebooks):
@@ -346,8 +341,7 @@ class NotebookManager:
                         f"Downloaded {success_count}/{total_notebooks} notebooks successfully ({completed} processed, {len(errors)} failed)"  # noqa: E501
                     )
 
-        # it seems that there is a race condition for updating the meta info, but it is okay for files,
-        # thus we update the meta info using files:
+        # Update the meta info using files to avoid race conditions
         for notebook_id in notebook_ids:
             filename = id_to_filename(notebook_id)
             notebook_path = os.path.join(self.storage_path, f"{filename}.ipynb")
@@ -355,6 +349,7 @@ class NotebookManager:
                 self.update_meta_info(notebook_id, {"path": notebook_path})
             else:
                 logger.warning(f"Notebook {notebook_id} not found after download, maybe cause an error")
+
         # Log final stats
         success_count = total_notebooks - len(errors)
         logger.info(
@@ -366,18 +361,22 @@ class NotebookManager:
             error_summary = "\n".join([f"{notebook_id}: {error}" for notebook_id, error in errors.items()])
             raise RuntimeError(f"Failed to download {len(errors)} notebooks:\n{error_summary}")
 
-    def _safe_download_notebook(self, notebook_id: str) -> str | None:
+    def _safe_download_notebook(self, notebook_id: str, sleep_time: float = 0.0) -> str | None:
         """
         Safely download a notebook file, catching and returning any exceptions.
+        Sleeps for sleep_time seconds after download to avoid rate limiting.
 
         Args:
             notebook_id: The ID of the notebook to download
+            sleep_time: Time to sleep after download (in seconds)
 
         Returns:
             None if successful, or error message string if failed
         """
         try:
             self.download_notebook_file(notebook_id)
+            if sleep_time > 0:
+                time.sleep(sleep_time)  # Sleep after download to avoid rate limiting
             return None  # Success
         except Exception as e:
             error_msg = str(e)

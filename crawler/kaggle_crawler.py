@@ -49,7 +49,7 @@ class KaggleCrawler:
 
         # Wait for the search results to load
         try:
-            await self.page.wait_for_selector("#results", timeout=10000, state="attached")
+            await self.page.wait_for_selector("#results", timeout=10000)
         except Exception as e:
             logger.error(f"Timeout waiting for search results to load: {e}")
             return
@@ -61,7 +61,7 @@ class KaggleCrawler:
         while notebook_count < max_notebooks:
             logger.info(f"Processing page {current_page}")
             # Wait for the new page to load
-            await self.page.wait_for_selector("#results", timeout=10000, state="attached")
+            await self.page.wait_for_selector("#results", timeout=10000)
 
             # Find all notebook list items on the current page
             notebook_items = await self.page.query_selector_all(
@@ -260,7 +260,7 @@ class KaggleCrawler:
         notebook_url = notebook_id_to_url(notebook_id)
         await self.page.goto(notebook_url, wait_until="domcontentloaded")
         # Wait for the notebook content to load
-        await self.page.wait_for_selector("//h2[contains(text(),'Runtime')]", timeout=10000, state="attached")
+        await self.page.wait_for_selector("//h2[contains(text(),'Runtime')]", timeout=10000)
 
         # Get the page source for BeautifulSoup parsing
         content = await self.page.content()
@@ -405,7 +405,7 @@ class KaggleCrawler:
         await self.page.goto(input_url, wait_until="domcontentloaded")
 
         # Wait for the input content to load
-        await self.page.wait_for_selector("//h2[contains(text(),'Input (')]", timeout=10000, state="attached")
+        await self.page.wait_for_selector("//h2[contains(text(),'Input (')]", timeout=10000)
 
         # Get the input size from the header
         input_size = await self.extract_notebook_input_size()
@@ -432,7 +432,7 @@ class KaggleCrawler:
 
             # Click to unfold the input details
             await input_element_button.click()
-            await self.page.wait_for_selector("div.sc-fWYtlG.ckSJKW", timeout=5000, state="attached")
+            await self.page.wait_for_selector("div.sc-fWYtlG.ckSJKW", timeout=10000)
 
             # Check if it's fully unfolded by looking for the arrow status
             unfold_status = await input_element.query_selector(".sc-isOVpk.iSVAvt")
@@ -450,7 +450,7 @@ class KaggleCrawler:
             if status_text.strip() == "arrow_right":
                 logger.warning("Input element is folded after clicking, trying to click again...")
                 await input_element_button.click()
-                await self.page.wait_for_selector("div.sc-fWYtlG.ckSJKW", timeout=5000, state="attached")
+                await self.page.wait_for_selector("div.sc-fWYtlG.ckSJKW", timeout=10000)
 
             # Get the description element
             input_description_element = await self.page.query_selector("div.sc-fWYtlG.ckSJKW")
