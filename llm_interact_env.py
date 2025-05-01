@@ -411,24 +411,22 @@ def interact_version_taubench(env: Environment, user_agent: LLMInteractor, assis
     """Run the environment until all tasks are completed or max turns is reached."""
     logger.info("Starting interaction using version2 strategy")
     # NOTE: version 2: Here we have a single task, and the assistant will complete the task in a loop.
-    def format_user_initial_prompt(env: Environment) -> str:
-        """Format the prompt for the user agent."""
-        
-        # Format the task list with completion status
-        task_specific_instruction = "\n".join([task.description for task in env.tasks])
-        
+    def user_init_prompt(env: Environment) -> str:
+        """Format the prompt for the user agent."""        
         # Fill in the user prompt template
-        return env.config.user_prompt_template.format(
-            task_specific_instruction=task_specific_instruction,
-        )
+        return "Hi! I'm your data analysis agent. How can I help you today?"
     
     number_of_turns = 0
     logger.info(f"Starting task loop with max turns: {env.config.max_turns}")
+    assistant_message = None
     while number_of_turns < env.config.max_turns:
         logger.debug(f"Starting turn {number_of_turns+1}")
         # Generate user message based on task and conversation history
         if number_of_turns == 0:
-            user_prompt = format_user_initial_prompt(env)
+            user_prompt = user_init_prompt(env)
+            task_specific_instruction = "\n".join([task.description for task in env.tasks])
+            user_agent.system_prompt = user_agent.system_prompt.format(task_specific_instruction=task_specific_instruction)
+            user_agent.reset_conversation()
         else:
             user_prompt = assistant_message
         logger.debug(f"User prompt generated, length: {len(user_prompt)}")
@@ -441,7 +439,6 @@ def interact_version_taubench(env: Environment, user_agent: LLMInteractor, assis
         env.conversation_history.append({"role": "user agent", "prompt_received": user_prompt, "all_messages": deepcopy(user_response)})
         env._save_checkpoint()
 
-        logger.debug("User message details for debugging:")
 
         if "##ALL_TASKS_COMPLETED##" in user_message:
             logger.info("All tasks completion marker detected, exiting loop")
@@ -455,19 +452,10 @@ def interact_version_taubench(env: Environment, user_agent: LLMInteractor, assis
         env.conversation_history.append({"role": "assistant agent", "prompt_received": user_message, "all_messages": deepcopy(assistant_response)})
         env._save_checkpoint()
 
-        assistant_message = "\n".join([msg["content"] for msg in assistant_response])
+        # assistant_message = "\n".join([msg["content"] for msg in assistant_response])
+        # assistant_message = assistant_message.split("Agent Response:")[-1].strip()
+        assistant_message = assistant_response[-1]["content"]
         assistant_message = assistant_message.split("Agent Response:")[-1].strip()
-
-        # # Generate summary
-        # logger.debug("Generating summary of assistant's operation")
-        # summary_prompt = f"Please provide a brief summary of what you did in response to the user's message: {user_message}. You should include all the operations you have done (including the results of your code or operations) after the user's message. For example, if you created a new file, you should include the file name and a brief description of the file; if you calculated the mean of a column in a csv file, you should include the column name, and the mean value. The summary should NOT contain any code. DO NOT hallucinate operations that you did not do."
-        # summary_response = assistant_agent.call_llm(summary_prompt)
-        # summary = "\n".join([msg["content"] for msg in summary_response])
-        # logger.debug(f"Summary generated, length: {len(summary)}")
-
-        # env.conversation_history.append({"role": "assistant agent", "prompt_received_for_summary": summary_prompt, "all_messages": deepcopy(summary_response)})
-        # env._save_checkpoint()
-        
         number_of_turns += 1
         logger.info(f"Turn {number_of_turns} completed")
 

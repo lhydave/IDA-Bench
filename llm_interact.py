@@ -43,6 +43,7 @@ class LLMConfig:
     run_code: bool = False
     api_base: str | None = None
     checkpoint_path: str | None = None
+    system_prompt: str | None = None
 
     @classmethod
     def from_toml(cls, config_path: str) -> "LLMConfig":
@@ -78,6 +79,8 @@ class LLMConfig:
             raise ValueError("API base must be a string or None.")
         if not isinstance(self.checkpoint_path, str | type(None)):
             raise ValueError("Checkpoint path must be a string or None.")
+        if not isinstance(self.system_prompt, str | type(None)):
+            raise ValueError("System prompt must be a string or None.")
 
 
 class LLMInteractor:
@@ -94,8 +97,10 @@ class LLMInteractor:
         self.send_queue = []
         self.interpreter_config_path = interpreter_config_path
         logger.info(f"Initialized LLMInteractor with model: {config.model}, temperature: {config.temperature}")
-
+        self.system_prompt = None
         if config.run_code:
+            if config.system_prompt:
+                raise ValueError("System prompt should not be in llm_config.toml when run_code is enabled.")
             # Initialize interpreter if run_code is enabled
             if not interpreter_config_path:
                 raise ValueError("interpreter_config_path is required when run_code is enabled.")
@@ -112,11 +117,16 @@ class LLMInteractor:
             if config.api_base:
                 litellm.api_base = config.api_base
             litellm.api_key = config.api_key
+            if config.system_prompt:
+                self.system_prompt = config.system_prompt
+                self.messages.append({"role": "system", "content": config.system_prompt})
 
     def reset_conversation(self):
         """Reset conversation history."""
         logger.debug("Resetting conversation history")
         self.messages = []
+        if self.system_prompt:
+            self.messages.append({"role": "system", "content": self.system_prompt})
         if hasattr(self, "interpreter"):
             # Reset interpreter conversation if using it
             self.interpreter.reset()
