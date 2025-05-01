@@ -70,9 +70,16 @@ def main():
 
         # Step 4: Uniformly sample notebooks for manual inspection
         sample_count = 5
-        logger.info(f"Sampling {sample_count} notebooks for inspection...")
-        scoring.sample_scored_notebooks(num=sample_count, store_path="test_data/scoring/samples")
-        logger.info("Sampled notebooks saved to test_data/scoring/samples")
+        logger.info(f"Uniformly sampling {sample_count} notebooks for inspection...")
+        scoring.sample_scored_notebooks(
+            num=sample_count, method="uniform", store_path="test_data/scoring/uniform_sample"
+        )
+        logger.info("Sampled notebooks saved to test_data/scoring/uniform_sample")
+
+        # Step 5: sample top 5 notebooks for manual inspection
+        logger.info(f"Sampling top {sample_count} notebooks for inspection...")
+        scoring.sample_scored_notebooks(num=sample_count, method="topk", store_path="test_data/scoring/topk_sample")
+        logger.info("Sampled notebooks saved to test_data/scoring/top_k")
 
     except Exception as e:
         logger.error(f"Error during scoring process: {str(e)}")

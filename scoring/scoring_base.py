@@ -1,13 +1,15 @@
 from data_manager import DatasetManager, NotebookManager, DatasetInfo, NotebookInfo
 from data_manager.utils import id_to_filename
 import json
-import numpy as np
 import os
 import shutil
 from scoring.scorings import sample_scoring_function, aggregrate_dataset_info
+from scoring.samplings import topk, uniform
 from logger import logger
 
 scoring_methods = {"sample": sample_scoring_function}
+
+sampling_methods = {"topk": topk, "uniform": uniform}
 
 
 class Scoring:
@@ -147,13 +149,13 @@ class Scoring:
 
         return score
 
-    def score_notebooks(self, notebook_ids: set[str], scoring_method: str) -> dict[str, float]:
+    def score_notebooks(self, notebook_ids: set[str], method: str) -> dict[str, float]:
         """
         Calculate the scores of multiple notebooks.
 
         Args:
             notebook_ids (set[str]): A set of notebook IDs to score.
-            scoring_method (str): The scoring method to use.
+            method (str): The scoring method to use.
 
         Returns:
             dict[str, float]: A dictionary mapping notebook IDs to their scores.
@@ -161,13 +163,13 @@ class Scoring:
         Raises:
             ValueError: If any of the notebooks fail to score, containing details of all failures.
         """
-        logger.info(f"Batch scoring {len(notebook_ids)} notebooks using method: {scoring_method}")
+        logger.info(f"Batch scoring {len(notebook_ids)} notebooks using method: {method}")
         scores = {}
         errors = {}
 
         for notebook_id in notebook_ids:
             try:
-                scores[notebook_id] = self.score_notebook(notebook_id, scoring_method)
+                scores[notebook_id] = self.score_notebook(notebook_id, method)
             except Exception as e:
                 logger.error(f"Failed to score notebook {notebook_id}: {str(e)}")
                 errors[notebook_id] = str(e)
@@ -221,7 +223,7 @@ class Scoring:
 
         return notebook_info, dataset_infos
 
-    def sample_scored_notebooks(self, num: int = 5, store_path: str = "notebook_samples") -> None:
+    def sample_scored_notebooks(self, num: int, method: str, store_path: str = "notebook_samples") -> None:
         """
         Sample num notebooks from self.scores and save them to store_path for human inspection.
         It will uniformly sample num notebooks from self.scores in descending order.
@@ -236,6 +238,15 @@ class Scoring:
         Raises:
             ValueError: If any of the notebooks fail to process, containing details of all failures.
         """  # noqa: E501
+        # check if method is valid
+        if method not in sampling_methods:
+            error_msg = f"Sampling method '{method}' not found in available methods: {list(sampling_methods.keys())}"
+            logger.error(error_msg)
+            raise ValueError(error_msg)
+
+        sampling_func = sampling_methods[method]
+        sampled_indices = sampling_func(len(self.scores), num)
+
         logger.info(f"Sampling {num} notebooks to {store_path}")
 
         # clean the notebooks if they are there
@@ -254,16 +265,6 @@ class Scoring:
             logger.warning("No scored notebooks available for sampling.")
             print("No scored notebooks available.")
             return
-
-        # Sample notebooks uniformly
-        if num >= len(sorted_notebooks):
-            sampled_indices = list(range(len(sorted_notebooks)))
-            logger.warning(f"Requested {num} samples but only {len(sorted_notebooks)} available. Using all.")
-        else:
-            # Calculate indices for uniform sampling
-            indices = np.linspace(0, len(sorted_notebooks) - 1, num=num, dtype=int)
-            sampled_indices = indices.tolist()
-            logger.info(f"Sampling at indices: {sampled_indices}")
 
         successful_count = 0
         errors = {}

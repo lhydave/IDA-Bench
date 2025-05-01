@@ -31,7 +31,7 @@ async def main():
         # Step 1: Search for notebooks
         logger.info("Starting notebook search...")
         search_url = "https://www.kaggle.com/search?q=data+analysis+date%3A90+in%3Anotebooks"
-        max_notebooks = 10
+        max_notebooks = 20
 
         # Search for notebooks and store results in notebook_manager
         await crawler.search_notebooks(search_url=search_url, max_notebooks=max_notebooks)
