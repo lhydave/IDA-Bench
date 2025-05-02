@@ -258,7 +258,7 @@ class NotebookManager:
 
         logger.info(f"Updated meta info for notebook {notebook_id}")
 
-    def download_notebook_file(self, notebook_id: str) -> None:
+    def download_notebook_file(self, notebook_id: str, sleep_time: float = 0.0) -> None:
         """Download the notebook file using Kaggle API."""
         filename = id_to_filename(notebook_id)
         notebook_path = os.path.join(self.storage_path, f"{filename}.ipynb")
@@ -271,7 +271,8 @@ class NotebookManager:
             # Download using Kaggle API
             # the Kaggle API will download to self.storage_path/filename/xxxxx.ipynb
             # we need to move it to self.storage_path/filename.ipynb
-
+            if sleep_time > 0:
+                time.sleep(sleep_time)  # Sleep after download to avoid rate limiting
             kaggle_dir = self.api.kernels_pull(notebook_id, path=self.storage_path)
 
             if not kaggle_dir.endswith(".ipynb"):
@@ -290,7 +291,7 @@ class NotebookManager:
             raise
 
     def download_notebook_file_batch(
-        self, notebook_ids: list[str], worker_size: int = 5, log_every: int | None = 10, sleep_time: float = 2.0
+        self, notebook_ids: list[str], worker_size: int = 1, log_every: int | None = 10, sleep_time: float = 5.0
     ) -> None:
         """
         Download the notebook files using Kaggle API in batch, using a worker queue model with a fixed-size process pool.
@@ -363,9 +364,7 @@ class NotebookManager:
             None if successful, or error message string if failed
         """
         try:
-            self.download_notebook_file(notebook_id)
-            if sleep_time > 0:
-                time.sleep(sleep_time)  # Sleep after download to avoid rate limiting
+            self.download_notebook_file(notebook_id, sleep_time)
             return None  # Success
         except Exception as e:
             error_msg = str(e)
