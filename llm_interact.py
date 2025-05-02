@@ -1,7 +1,6 @@
 import json
 from dataclasses import dataclass, asdict
 import litellm
-from litellm import completion
 import tomllib
 from logger import logger
 import os
@@ -9,6 +8,54 @@ from copy import deepcopy
 import time
 from typing import Any
 from interpreter import OpenInterpreter
+import threading
+
+
+class RateLimiter:
+    """Simple rate limiter to enforce requests per minute (RPM) limits."""
+
+    def __init__(self, rpm: int = 100):
+        self.rpm = rpm
+        self.request_timestamps: list[float] = []
+        self.lock = threading.Lock()
+        if self.rpm <= 0:
+            raise ValueError("RPM must be a positive integer.")
+        self.messages_count = 0
+
+    def update_request_timestamps(self, messages: list[dict[str, Any]]) -> bool:
+        try:
+            assistant_messages_count = sum(1 for message in messages if message["role"] == "assistant")
+            new_messages_count = assistant_messages_count - self.messages_count
+            logger.debug(f"Updating request timestamps: {new_messages_count} new messages")
+            with self.lock:
+                self.messages_count = assistant_messages_count
+                self.request_timestamps.extend([time.time()] * new_messages_count)
+                return True
+        except Exception as e:
+            logger.error(f"Failed to update request timestamps: {str(e)}")
+            return False
+
+    def wait_if_needed(self) -> None:
+        current_time = time.time()
+
+        # Calculate the sliding window (1 minute)
+        one_minute_ago = current_time - 60
+
+        with self.lock:
+            # Remove timestamps older than 1 minute
+            self.request_timestamps = [t for t in self.request_timestamps if t >= one_minute_ago]
+
+            # Check if we've hit the limit
+            if len(self.request_timestamps) >= self.rpm:
+                # Calculate how long to wait
+                # Get unique timestamps and find the median
+                unique_timestamps = sorted(set(self.request_timestamps))
+                oldest_allowed_timestamp = unique_timestamps[len(unique_timestamps) // 2]  # median of unique timestamps
+                wait_time = 60 - (current_time - oldest_allowed_timestamp)
+
+                if wait_time > 0:
+                    logger.info(f"Rate limit reached. Waiting {wait_time:.2f} seconds...")
+                    time.sleep(wait_time)
 
 
 def initialize_interpreter(config_path: str) -> OpenInterpreter:
@@ -44,6 +91,7 @@ class LLMConfig:
     api_base: str | None = None
     checkpoint_path: str | None = None
     system_prompt: str | None = None
+    rpm: int = 100
 
     @classmethod
     def from_toml(cls, config_path: str) -> "LLMConfig":
@@ -81,6 +129,8 @@ class LLMConfig:
             raise ValueError("Checkpoint path must be a string or None.")
         if not isinstance(self.system_prompt, str | type(None)):
             raise ValueError("System prompt must be a string or None.")
+        if not isinstance(self.rpm, int) or self.rpm < 0:
+            raise ValueError("RPM must be a non-negative integer.")
 
 
 class LLMInteractor:
@@ -98,6 +148,9 @@ class LLMInteractor:
         self.interpreter_config_path = interpreter_config_path
         logger.info(f"Initialized LLMInteractor with model: {config.model}, temperature: {config.temperature}")
         self.system_prompt = None
+        # Initialize rate limiters
+        self.default_rate_limiter = RateLimiter(rpm=config.rpm)
+
         if config.run_code:
             if config.system_prompt:
                 raise ValueError("System prompt should not be in llm_config.toml when run_code is enabled.")
@@ -177,7 +230,7 @@ class LLMInteractor:
                     # For litellm, we need to extract just the role and content
                     messages = self.messages + [{"role": "user", "content": message}]
 
-                    response = completion(
+                    response = litellm.completion(
                         model=self.config.model,
                         temperature=self.config.temperature,
                         messages=messages,
@@ -213,7 +266,7 @@ class LLMInteractor:
         Returns:
             List of all chat history
         """
-        logger.info(f"Sending {len(messages)} messages to LLM")
+        logger.info(f"Sending {len(messages) if isinstance(messages, list) else 1} messages to LLM")
         if isinstance(messages, str):
             messages = [messages]
         if not messages:
@@ -224,8 +277,12 @@ class LLMInteractor:
         while self.send_queue:
             message = self.send_queue.pop(0)
             logger.debug(f"Sending message: {message}")
+            # Apply rate limiting before making the request
+            self.default_rate_limiter.wait_if_needed()
             response = self.call_llm(message, retry=retry)
             logger.debug(f"Received response: {response}")
+            # Update the request timestamps
+            self.default_rate_limiter.update_request_timestamps(self.messages)
             self.store_checkpoint()
         return self.messages
 

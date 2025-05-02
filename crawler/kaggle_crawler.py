@@ -3,30 +3,22 @@ from bs4 import BeautifulSoup
 import re
 import dateparser
 from typing import Literal
-import json
-import os
 import asyncio
-
-from crawler.kaggle_info import DatasetInfo, NotebookInfo
+from data_manager import DatasetManager, NotebookManager
+from data_manager.kaggle_info import DatasetInfo, NotebookInfo
 from logger import logger
-
-
-def filtering_title_tag(content: str | list[str]) -> bool:
-    """Filter out notebooks with 'tutorial' or 'beginner' in the title or tags"""
-    if isinstance(content, str):
-        content = [content]
-    for item in content:
-        if "tutorial" in item.lower() or "beginner" in item.lower():
-            return False
-    return True
+from crawler.utils import check_filter_keywords, detect_time_series_data
+from data_manager.utils import notebook_id_to_url, url_to_notebook_id
 
 
 class KaggleCrawler:
-    def __init__(self):
+    def __init__(self, notebook_manager: NotebookManager | None = None, dataset_manager: DatasetManager | None = None):
         self.playwright = None
         self.browser = None
         self.context = None
         self.page = None
+        self.notebook_manager = notebook_manager or NotebookManager()
+        self.dataset_manager = dataset_manager or DatasetManager()
 
     async def setup(self) -> Page:
         """Initialize the Playwright browser for Kaggle crawling"""
@@ -43,20 +35,14 @@ class KaggleCrawler:
         if self.playwright:
             await self.playwright.stop()
 
-    async def search_notebooks(
-        self, search_url: str, max_notebooks: int, store_path: str | None = None
-    ) -> list[dict[str, str]]:
+    async def search_notebooks(self, search_url: str, max_notebooks: int) -> None:
         """
-        Get notebooks from Kaggle search page with pagination support using Playwright
+        Get notebooks from Kaggle search page with pagination support using Playwright and store them in the notebook manager.
 
         Args:
             search_url: The URL to search on Kaggle
             max_notebooks: Maximum number of notebooks to retrieve
-            store_path: Optional path to save search results incrementally as JSON
-
-        Returns:
-            A list of dictionaries containing notebook info (url, title, id)
-        """
+        """  # noqa: E501
         if not self.page:
             raise Exception("Playwright page not initialized. Call setup() first.")
         await self.page.goto(search_url, wait_until="domcontentloaded")
@@ -66,15 +52,11 @@ class KaggleCrawler:
             await self.page.wait_for_selector("#results", timeout=10000)
         except Exception as e:
             logger.error(f"Timeout waiting for search results to load: {e}")
-            return []
+            return
 
-        notebooks = []
+        notebook_ids = []
         notebook_count = 0
         current_page = 1
-
-        # Create directory if store_path is provided
-        if store_path and not os.path.exists(os.path.dirname(store_path)):
-            os.makedirs(os.path.dirname(store_path), exist_ok=True)
 
         while notebook_count < max_notebooks:
             logger.info(f"Processing page {current_page}")
@@ -119,22 +101,14 @@ class KaggleCrawler:
                             "Notebook title not found, possibly have issue with the page structure, skipping..."
                         )
                         continue
-                    title = title.strip()
 
                     # Skip notebooks with 'tutorial' or 'beginner' in the title
-                    if not filtering_title_tag(title):
+                    if check_filter_keywords(title):
                         logger.warning(f"Notebook {title} has unsuitable keyword in the title, skipping...")
                         continue
 
-                    code_id = "/".join(notebook_url.split("/code/")[1].split("/notebook")[0].split("/"))
-
-                    notebook_info = {
-                        "url": notebook_url,
-                        "title": title,
-                        "id": code_id,
-                    }
-
-                    notebooks.append(notebook_info)
+                    notebook_id = url_to_notebook_id(notebook_url)
+                    notebook_ids.append(notebook_id)
                     notebook_count += 1
 
                     if notebook_count >= max_notebooks:
@@ -146,11 +120,9 @@ class KaggleCrawler:
 
             # If we still need more notebooks, try to go to the next page
             if notebook_count < max_notebooks:
-                # Save the results in case of an error
-                if store_path:
-                    with open(store_path, "w") as f:
-                        json.dump(notebooks, f, indent=2)
-                    logger.info(f"Updated search results to {store_path} with {len(notebooks)} notebooks")
+                # Save the incremental results to notebook manager
+                self.notebook_manager.setup_list(notebook_ids)
+                logger.info(f"Updated search results with {len(notebook_ids)} notebooks")
 
                 # Look for the next page button with the specific xpath
                 next_button = await self.page.query_selector("button[aria-label='Go to next page']")
@@ -165,37 +137,11 @@ class KaggleCrawler:
 
         logger.info(f"Collected {notebook_count} notebooks across {current_page} pages")
 
-        # Save final results if store_path is provided
-        if store_path:
-            with open(store_path, "w") as f:
-                json.dump(notebooks, f, indent=2)
-            logger.info(f"Saved final search results to {store_path}")
+        # Save final results to notebook manager
+        self.notebook_manager.setup_list(notebook_ids)
+        logger.info(f"Saved final search results with {len(notebook_ids)} notebooks")
 
-        return notebooks
-
-    @staticmethod
-    def load_notebook_urls(file_path: str) -> list[str]:
-        """
-        Load notebook URLs from a previously saved search results file
-
-        Args:
-            file_path: Path to the JSON file containing notebook information
-
-        Returns:
-            A list of notebook URLs
-        """
-        try:
-            with open(file_path) as f:
-                notebooks = json.load(f)
-
-            urls = [notebook.get("url") for notebook in notebooks if notebook.get("url")]
-            logger.info(f"Loaded {len(urls)} notebook URLs from {file_path}")
-            return urls
-        except Exception as e:
-            logger.error(f"Error loading notebook URLs from {file_path}: {e}")
-            return []
-
-    async def extract_date(self, soup: BeautifulSoup) -> str:
+    def extract_date(self, soup: BeautifulSoup) -> str:
         """Extract the date from a notebook page"""
         try:
             date_element = soup.find("span", attrs={"aria-label": re.compile(r"ago")})
@@ -206,7 +152,7 @@ class KaggleCrawler:
             logger.error(f"Error extracting date: {e}")
             raise ValueError("Date not found") from e
 
-    async def extract_views(self, soup: BeautifulSoup) -> int:
+    def extract_views(self, soup: BeautifulSoup) -> int:
         """Extract the view count from a notebook page"""
         try:
             date_element = soup.find("span", attrs={"aria-label": re.compile(r"ago")})
@@ -219,17 +165,17 @@ class KaggleCrawler:
             logger.error(f"Error extracting views: {e}")
             raise ValueError("Views not found") from e
 
-    async def extract_language(self, soup) -> str:
+    def extract_language(self, soup: BeautifulSoup) -> str:
         """Extract the programming language from a notebook page"""
         try:
             language_heading = soup.find("h2", string="Language")
-            language = language_heading.next_sibling.text.strip() if language_heading else "Unknown"
+            language = language_heading.next_sibling.text.strip() if language_heading else "Unknown"  # type: ignore
             return language
         except Exception as e:
             logger.error(f"Error extracting language: {e}")
             raise ValueError("Language not found") from e
 
-    async def extract_runtime(self, soup: BeautifulSoup) -> None | int:
+    def extract_runtime(self, soup: BeautifulSoup) -> None | int:
         """Extract the runtime from a notebook page"""
         try:
             runtime_heading = soup.find("h2", string="Runtime")
@@ -250,7 +196,7 @@ class KaggleCrawler:
         runtime_seconds = hours * 3600 + minutes * 60 + seconds
         return runtime_seconds
 
-    async def extract_votes(self, soup: BeautifulSoup) -> int:
+    def extract_votes(self, soup: BeautifulSoup) -> int:
         """Extract the vote count from a notebook page"""
         try:
             votes_element = soup.find("button", attrs={"aria-label": re.compile(r" votes")})
@@ -261,7 +207,7 @@ class KaggleCrawler:
             logger.error(f"Error extracting votes: {e}")
             raise ValueError("Votes not found") from e
 
-    async def extract_copies(self, soup: BeautifulSoup) -> int:
+    def extract_copies(self, soup: BeautifulSoup) -> int:
         """Extract the copy & edit count from a notebook page"""
         try:
             copy_edit_element = soup.find("span", attrs={"aria-label": re.compile(r" copies")})
@@ -272,7 +218,7 @@ class KaggleCrawler:
             logger.error(f"Error extracting copies: {e}")
             raise ValueError("Copy & Edit not found") from e
 
-    async def extract_comments(self, soup: BeautifulSoup) -> int:
+    def extract_comments(self, soup: BeautifulSoup) -> int:
         """Extract the comment count from a notebook page"""
         try:
             comment_element = soup.find("a", attrs={"aria-label": re.compile(r"Comments \(")})
@@ -285,7 +231,7 @@ class KaggleCrawler:
             logger.error(f"Error extracting comments: {e}")
             raise ValueError("Comments not found") from e
 
-    async def extract_prize(self, soup: BeautifulSoup) -> str | None:
+    def extract_prize(self, soup: BeautifulSoup) -> str | None:
         """Extract the prize information (medal) from a notebook page"""
         try:
             prize_element = soup.find("img", attrs={"alt": re.compile(r"medal")})
@@ -296,7 +242,7 @@ class KaggleCrawler:
         logger.info("no prize found for this notebook")
         return None
 
-    async def extract_tags(self, soup: BeautifulSoup) -> list[str]:
+    def extract_tags(self, soup: BeautifulSoup) -> list[str]:
         """Extract the tags from a notebook page"""
         tags = []
         tags_element = soup.find("h2", string="Tags")
@@ -307,10 +253,11 @@ class KaggleCrawler:
             tags = [tag.text.strip() for tag in tag_links]
         return tags
 
-    async def extract_notebook_details(self, notebook_url: str):
+    async def extract_notebook_details(self, notebook_id: str):
         """Extract details from a Kaggle notebook page and filter it"""
         if not self.page:
             raise Exception("Playwright page not initialized. Call setup() first.")
+        notebook_url = notebook_id_to_url(notebook_id)
         await self.page.goto(notebook_url, wait_until="domcontentloaded")
         # Wait for the notebook content to load
         await self.page.wait_for_selector("//h2[contains(text(),'Runtime')]", timeout=10000)
@@ -319,19 +266,19 @@ class KaggleCrawler:
         content = await self.page.content()
         soup = BeautifulSoup(content, "html.parser")
 
-        # Extract id from URL
-        code_id = "/".join(notebook_url.split("/code/")[1].split("/notebook")[0].split("/"))
+        # Extract id from URL - use the passed notebook_id instead of parsing from URL
+        code_id = notebook_id
 
         # Extract the title
         title = await self.page.title()
 
         # Extract language
-        language = await self.extract_language(soup)
+        language = self.extract_language(soup)
         if language != "Python":
             return "Unsupported language"
 
         # Extract runtime
-        runtime_seconds = await self.extract_runtime(soup)
+        runtime_seconds = self.extract_runtime(soup)
         if runtime_seconds is None:
             logger.warning("Runtime not extracted, possibly using GPU/TPU")
             return "Unsupported device"
@@ -342,34 +289,33 @@ class KaggleCrawler:
             return "Too long runtime"
 
         # extract tags:
-        tags = await self.extract_tags(soup)
-        if not filtering_title_tag(tags):
+        tags = self.extract_tags(soup)
+        if tags and check_filter_keywords(tags):
             logger.warning(f"Notebook {code_id} has unsuitable keyword in the tags, skipping...")
             return "Unsuitable tags"
 
         # Extract date
-        date = await self.extract_date(soup)
+        date = self.extract_date(soup)
 
         # Extract views
-        views = await self.extract_views(soup)
+        views = self.extract_views(soup)
 
         # Extract votes
-        votes = await self.extract_votes(soup)
+        votes = self.extract_votes(soup)
 
         # Extract copy & edit
-        copies = await self.extract_copies(soup)
+        copies = self.extract_copies(soup)
 
         # Extract comments
-        comments = await self.extract_comments(soup)
+        comments = self.extract_comments(soup)
 
         # Extract prize, okay to be None
-        prize = await self.extract_prize(soup)
+        prize = self.extract_prize(soup)
 
         # Create a NotebookInfo object with the extracted information
         notebook_info = NotebookInfo(
             url=notebook_url,
             title=title,
-            id=code_id,
             date=date,
             votes=votes,
             copy_and_edit=copies,
@@ -380,46 +326,52 @@ class KaggleCrawler:
             input=[],  # Will be populated later
             prize=prize,
             path=None,
+            code_info=None,  # Will be populated later if needed
         )
 
-        return notebook_info
+        return code_id, notebook_info
 
-    async def extract_dataset_from_input(
+    def extract_dataset_from_input(
         self,
         input_url: str,
         input_title: str,
         input_description: str,
         input_date: str,
-        input_type: Literal["competition", "dataset"],
         filename_list: list[str],
-    ) -> DatasetInfo:
+    ) -> tuple[str, DatasetInfo]:
         """Extract dataset information from an input element"""
         # Create dataset ID from URL
         # For competition, extract ID from URL format: https://www.kaggle.com/competitions/[id]
         # For dataset, extract ID from URL format: https://www.kaggle.com/datasets/[id]
         if "/competitions/" in input_url:
             dataset_id = input_url.split("/competitions/")[1]
+            input_type = "competition"
         else:
             dataset_id = input_url.split("/datasets/")[1]
+            input_type = "dataset"
 
         date = dateparser.parse(input_date)
         if not date:
             date = input_date
         else:
             date = date.strftime("%Y-%m-%d %H:%M:%S")
+
+        # Determine if the dataset might contain time series data
+        contain_time_series = detect_time_series_data(input_title, input_description)
+
         # Create a DatasetInfo object
         dataset_info = DatasetInfo(
             url=input_url,
             name=input_title,
-            id=dataset_id,
             type=input_type,
             description=input_description,
             date=date,
+            contain_time_series=contain_time_series,
             filename_list=filename_list,
             path=None,
         )
 
-        return dataset_info
+        return dataset_id, dataset_info
 
     async def extract_notebook_input_size(self) -> float:
         """Extract the input size from the input page."""
@@ -443,11 +395,10 @@ class KaggleCrawler:
             input_size = input_size * 1000.0
         return input_size
 
-    async def extract_notebook_inputs(
-        self, notebook_url: str
-    ) -> None | tuple[float, list[DatasetInfo]] | Literal["Too large input size"]:
+    async def extract_notebook_inputs(self, notebook_id: str):
         """Extract datasets used in a Kaggle notebook and filter it"""
-        input_url = notebook_url + "/input"
+        notebook_url = notebook_id_to_url(notebook_id)
+        input_url = f"{notebook_url}/input"
         if not self.page:
             raise Exception("Playwright page not initialized. Call setup() first.")
 
@@ -464,7 +415,7 @@ class KaggleCrawler:
 
         # Find all input elements in the list
         input_elements = await self.page.query_selector_all("ul.sc-jfcjWG.gLZigm > li")
-        input_list = []
+        input_dict: dict[str, DatasetInfo] = {}  # Changed from list to dictionary
         all_inputs_valid = True
 
         for input_element in input_elements:
@@ -524,7 +475,6 @@ class KaggleCrawler:
                 logger.error("Input URL not found, possibly have issue with the page structure, skipping...")
                 raise ValueError("Input URL not found")
             input_url = f"https://www.kaggle.com{input_url}" if not input_url.startswith("http") else input_url
-            input_type = "competition" if "/competitions/" in input_url else "dataset"
 
             # Get date
             date_element = await input_description_element.query_selector("span[aria-label*='ago']")
@@ -557,72 +507,82 @@ class KaggleCrawler:
                 break
 
             # This is a valid dataset
-            input_info = await self.extract_dataset_from_input(
+            dataset_id, input_info = self.extract_dataset_from_input(
                 input_url=input_url,
                 input_title=input_title,
                 input_description=input_description,
                 input_date=input_date,
-                input_type=input_type,
                 filename_list=filename_list,
             )
 
-            input_list.append(input_info)
+            # Add dataset to dataset manager
+            try:
+                self.dataset_manager.add_dataset_record(dataset_id, input_info)
+            except ValueError:
+                # If already exists, update with new info
+                self.dataset_manager.update_meta_info(dataset_id, input_info)
+
+            # Add to dictionary instead of list
+            input_dict[dataset_id] = input_info
 
         if not all_inputs_valid:
             logger.warning("Not all inputs are valid, skipping...")
-            return None
+            return "Not all datasets are suitable"
         else:
             logger.info("All inputs are valid, we can proceed...")
-            return input_size, input_list
+            return input_size, input_dict
 
-    async def process_notebook(self, notebook_url: str, store_path: str | None = None):
+    async def process_notebook(
+        self, notebook_id: str
+    ) -> (
+        tuple[str, NotebookInfo]
+        | Literal["Unsupported language"]
+        | Literal["Unsupported device"]
+        | Literal["Too long runtime"]
+        | Literal["Unsuitable tags"]
+        | Literal["Not all datasets are suitable"]
+        | Literal["Too large input size"]
+    ):
         """Process a notebook completely - extract details and inputs"""
-        notebook_info = await self.extract_notebook_details(notebook_url)
-        if isinstance(notebook_info, str):
-            logger.warning(f"Notebook {notebook_url} is not suitable: {notebook_info}")
-            return notebook_info
+        notebook_info_result = await self.extract_notebook_details(notebook_id)
+        if isinstance(notebook_info_result, str):
+            logger.warning(f"Notebook {notebook_id} is not suitable: {notebook_info_result}")
+            return notebook_info_result
+
+        code_id, notebook_info = notebook_info_result  # Unpack the tuple
+
         # Extract inputs and set input_size
-        inputs_data = await self.extract_notebook_inputs(notebook_url)
+        inputs_data = await self.extract_notebook_inputs(notebook_id)
         if not inputs_data:
-            logger.warning(f"Notebook {notebook_url} has non-valid inputs, skipping...")
-            return "Not all datasets are valid"
+            logger.warning(f"Notebook {notebook_id} has non-valid inputs, skipping...")
+            return "Not all datasets are suitable"
         if isinstance(inputs_data, str):
-            logger.warning(f"Notebook {notebook_url} is not suitable: {inputs_data}")
+            logger.warning(f"Notebook {notebook_id} is not suitable: {inputs_data}")
             return inputs_data
 
         input_size, inputs = inputs_data
-        notebook_info.input = inputs
+        input_ids = list(inputs.keys())  # Get dataset IDs from the dictionary keys
+        notebook_info.input = input_ids  # Store just the IDs in the notebook info
         notebook_info.input_size = input_size
 
-        # Save path if store_path is provided
-        if store_path:
-            notebook_info.path = os.path.join(store_path, f"{notebook_info.id.replace('/', '_')}.json")
-            # Save the notebook info to a JSON file
-            os.makedirs(store_path, exist_ok=True)
-            with open(notebook_info.path, "w") as f:
-                json.dump(notebook_info.to_dict(), f, indent=2)
-            logger.info(f"Saved notebook info to {notebook_info.path}")
-
-        return notebook_info
+        # Save the notebook info to the notebook manager
+        # note, it must be a new notebook, otherwise there is a problem
+        self.notebook_manager.add_notebook(code_id, notebook_info)
+        return code_id, notebook_info
 
     async def process_multiple_notebooks(
         self,
-        notebook_urls,
-        concurrency=8,
-        store_path: str | None = None,
-        filtered_path: str | None = None,
+        notebook_ids: list[str],
+        concurrency: int = 8,
     ):
         """Process multiple notebooks concurrently and collect their information"""
         # Limit the number of notebooks to process
-        urls_to_process = notebook_urls
-        logger.info(f"Processing {len(urls_to_process)} notebooks with concurrency {concurrency}")
+        ids_to_process = notebook_ids
+        logger.info(f"Processing {len(ids_to_process)} notebooks with concurrency {concurrency}")
 
-        results = []
-        failed_urls = []
+        results: dict[str, NotebookInfo] = {}
+        failed_notebooks: dict[str, str] = {}  # Dictionary mapping IDs to reasons
 
-        # Create directories if they don't exist
-        if store_path:
-            os.makedirs(store_path, exist_ok=True)
         if not self.browser:
             logger.error("Playwright browser not initialized, please call setup() first.")
             raise Exception("Playwright browser not initialized")
@@ -631,14 +591,16 @@ class KaggleCrawler:
         unsuitable_num = 0
         valid_num = 0
 
-        for i in range(0, len(urls_to_process), concurrency):
-            batch_urls = urls_to_process[i : i + concurrency]
-            logger.info(f"Processing batch {i // concurrency + 1}: {len(batch_urls)} notebooks")
+        for i in range(0, len(ids_to_process), concurrency):
+            batch_ids = ids_to_process[i : i + concurrency]
+            logger.info(
+                f"Processing batch {i // concurrency + 1}/{(len(ids_to_process) + concurrency - 1) // concurrency}, {len(batch_ids)} notebooks"  # noqa: E501
+            )
 
             # Create a new browser context for each batch
             contexts = []
             pages = []
-            for _ in range(len(batch_urls)):
+            for _ in range(len(batch_ids)):
                 context = await self.browser.new_context()
                 page = await context.new_page()
                 contexts.append(context)
@@ -646,13 +608,13 @@ class KaggleCrawler:
 
             # Create tasks for each notebook
             tasks = []
-            for j, url in enumerate(batch_urls):
+            for j, notebook_id in enumerate(batch_ids):
                 # Create a new crawler instance with the page
-                crawler = KaggleCrawler()
+                crawler = KaggleCrawler(self.notebook_manager, self.dataset_manager)
                 crawler.browser = self.browser
                 crawler.context = contexts[j]
                 crawler.page = pages[j]
-                tasks.append(crawler.process_notebook(url, store_path))
+                tasks.append(crawler.process_notebook(notebook_id))  # Removed store_path parameter
 
             # Wait for all tasks to complete
             batch_results = await asyncio.gather(*tasks, return_exceptions=True)
@@ -663,29 +625,42 @@ class KaggleCrawler:
 
             # Process results
             for idx, result in enumerate(batch_results):
+                notebook_id = batch_ids[idx]
+
                 if isinstance(result, Exception):
-                    logger.error(f"Error processing notebook {batch_urls[idx]}: {result}")
-                    failed_urls.append({"url": batch_urls[idx], "error": str(result)})
+                    error_message = f"Error: {str(result)}"
+                    logger.error(f"Error processing notebook {notebook_id}: {result}")
+                    # Add to filtered notebooks with error reason
+                    self.notebook_manager.remove_notebook(notebook_id, error_message)
+                    failed_notebooks[notebook_id] = error_message
                     error_num += 1
                 elif isinstance(result, str):
-                    logger.warning(f"Notebook {batch_urls[idx]} is unsuitable: {result}")
-                    failed_urls.append({"url": batch_urls[idx], "reason": result})
+                    # Unsuitable notebook with reason
+                    logger.warning(f"Notebook {notebook_id} is unsuitable: {result}")
+                    # Add to filtered notebooks with filter reason
+                    self.notebook_manager.remove_notebook(notebook_id, result)
+                    failed_notebooks[notebook_id] = result
                     unsuitable_num += 1
                 else:
-                    logger.info(f"Successfully processed notebook {batch_urls[idx]}")
-                    results.append(result)
+                    # Successfully processed notebook
+                    code_id, notebook_info = result # type: ignore
+                    logger.info(f"Successfully processed notebook {notebook_id}")
+
+                    # Make sure all referenced datasets are tracked in dataset_manager
+                    for dataset_id in notebook_info.input:
+                        if not self.dataset_manager.dataset_ids or dataset_id not in self.dataset_manager.dataset_ids:
+                            logger.warning(
+                                f"Dataset {dataset_id} referenced by notebook {code_id} not found in dataset manager"
+                            )
+
+                    # Add to results
+                    results[code_id] = notebook_info
                     valid_num += 1
 
-        # Save failed URLs if a path is provided
-        if filtered_path and failed_urls:
-            failed_dir = os.path.dirname(filtered_path)
-            if failed_dir:
-                os.makedirs(failed_dir, exist_ok=True)
-            with open(filtered_path, "w") as f:
-                json.dump(failed_urls, f, indent=2)
-            logger.info(f"Saved {len(failed_urls)} failed notebook URLs to {filtered_path}")
+        # The kept and filtered notebook records are now managed by NotebookManager
+        logger.info(f"Completed processing {len(ids_to_process)} notebooks:")
+        logger.info(f"- Valid: {valid_num}")
+        logger.info(f"- Unsuitable: {unsuitable_num}")
+        logger.info(f"- Errors: {error_num}")
 
-        logger.info(
-            f"Completed processing {len(urls_to_process)} notebooks, valid: {valid_num}, unsuitable: {unsuitable_num}, errors: {error_num}"  # noqa: E501
-        )
         return results

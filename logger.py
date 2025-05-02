@@ -61,7 +61,6 @@ def configure_global_logger(
     level: int | str = logging.INFO,
     log_file: str | None = None,
     mode: str = "a",
-    log_filename: str | None = None,
 ) -> None:
     """
     Configure the global logger.
@@ -70,16 +69,10 @@ def configure_global_logger(
         level: The minimum logging level (can be int or string level name)
         log_file: Optional file path to write logs to
         mode: The mode for the log file ('a' for append, 'w' for overwrite)
-        log_filename: Optional custom log filename to use instead of default
     """
     # Convert string level to int if needed
     if isinstance(level, str):
         level = getattr(logging, level.upper(), logging.INFO)
 
-    # If log_filename is specified and log_file is not, use log_filename
-    final_log_file = log_file
-    if log_filename and not log_file:
-        final_log_file = log_filename
-
     global logger
-    logger = setup_logger(name="DataSciBench", level=level, log_file=final_log_file, mode=mode)  # type: ignore
+    logger = setup_logger(name="DataSciBench", level=level, log_file=log_file, mode=mode)  # type: ignore
