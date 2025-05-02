@@ -7,10 +7,10 @@ import json
 class DatasetInfo:
     url: str
     name: str
-    id: str
     type: Literal["dataset", "competition"]
     description: str
     date: str
+    contain_time_series: bool
     filename_list: list[str]
     path: str | None = None  # local path if available
 
@@ -21,12 +21,7 @@ class DatasetInfo:
 
     def to_dict(self) -> dict:
         """Convert DatasetInfo instance to a dictionary."""
-        result = {}
-        for k, v in asdict(self).items():
-            # Skip None values except for fields that can be None
-            if v is not None or k in ["dataset_path"]:
-                result[k] = v
-        return result
+        return asdict(self)
 
     def to_json(self, indent: int = 2) -> str:
         """Convert DatasetInfo instance to a JSON string."""
@@ -34,10 +29,30 @@ class DatasetInfo:
 
 
 @dataclass
+class CodeInfo:
+    num_pivot_table: int
+    num_groupby: int
+    num_apply: int
+    num_def: int
+    num_for: int
+    num_and: int
+    num_or: int
+    num_merge: int
+    num_concat: int
+    num_join: int
+    num_agg: int
+    num_python_cells: int  # number of python cells
+    num_feature: int  # number of 'feature' liberal
+    import_list: list[str]
+    file_size: int  # in bytes
+    pure_code_size: int  # in bytes
+    num_plots: int  # number of plots
+
+
+@dataclass
 class NotebookInfo:
     url: str
     title: str
-    id: str
     date: str
     votes: int
     copy_and_edit: int
@@ -45,24 +60,23 @@ class NotebookInfo:
     comments: int
     runtime: int  # in seconds
     input_size: float  # in B
-    input: list[DatasetInfo]  # list of dataset json
+    input: list[str]  # list of input dataset ID
     prize: str | None = None  # if available
     path: str | None = None  # local path if available
+    code_info: CodeInfo | None = None  # code info json
 
     @classmethod
     def from_json(cls, json_str: str) -> "NotebookInfo":
         """Create a NotebookInfo instance from a JSON string."""
-        return cls(**json.loads(json_str))
+        data = json.loads(json_str)
+        # Convert code_info to CodeInfo instance if it exists
+        if "code_info" in data and data["code_info"] is not None:
+            data["code_info"] = CodeInfo(**data["code_info"])
+        return cls(**data)
 
     def to_dict(self) -> dict:
         """Convert NotebookInfo instance to a dictionary."""
-        result = {}
-        for k, v in asdict(self).items():
-            # Special handling for input list
-            # Skip None values except for fields that can be None
-            if v is not None or k in ["prize", "path"]:
-                result[k] = v
-        return result
+        return asdict(self)
 
     def to_json(self, indent: int = 2) -> str:
         """Convert NotebookInfo instance to a JSON string."""

@@ -1,7 +1,6 @@
 import json
 from dataclasses import dataclass, asdict
 import litellm
-from litellm import completion
 import tomllib
 from logger import logger
 import os
@@ -44,6 +43,7 @@ class LLMConfig:
     api_base: str | None = None
     checkpoint_path: str | None = None
     system_prompt: str | None = None
+    rpm: int = 100
 
     @classmethod
     def from_toml(cls, config_path: str) -> "LLMConfig":
@@ -81,6 +81,8 @@ class LLMConfig:
             raise ValueError("Checkpoint path must be a string or None.")
         if not isinstance(self.system_prompt, str | type(None)):
             raise ValueError("System prompt must be a string or None.")
+        if not isinstance(self.rpm, int) or self.rpm < 0:
+            raise ValueError("RPM must be a non-negative integer.")
 
 
 class LLMInteractor:
@@ -98,6 +100,9 @@ class LLMInteractor:
         self.interpreter_config_path = interpreter_config_path
         logger.info(f"Initialized LLMInteractor with model: {config.model}, temperature: {config.temperature}")
         self.system_prompt = None
+        # Initialize rate limiters
+        self.default_rate_limiter = RateLimiter(rpm=config.rpm)
+
         if config.run_code:
             if config.system_prompt:
                 raise ValueError("System prompt should not be in llm_config.toml when run_code is enabled.")
@@ -177,7 +182,7 @@ class LLMInteractor:
                     # For litellm, we need to extract just the role and content
                     messages = self.messages + [{"role": "user", "content": message}]
 
-                    response = completion(
+                    response = litellm.completion(
                         model=self.config.model,
                         temperature=self.config.temperature,
                         messages=messages,
@@ -224,7 +229,7 @@ class LLMInteractor:
         Returns:
             List of all chat history
         """
-        logger.info(f"Sending {len(messages)} messages to LLM")
+        logger.info(f"Sending {len(messages) if isinstance(messages, list) else 1} messages to LLM")
         if isinstance(messages, str):
             messages = [messages]
         if not messages:
@@ -235,8 +240,12 @@ class LLMInteractor:
         while self.send_queue:
             message = self.send_queue.pop(0)
             logger.debug(f"Sending message: {message}")
+            # Apply rate limiting before making the request
+            self.default_rate_limiter.wait_if_needed()
             response = self.call_llm(message, retry=retry)
             logger.debug(f"Received response: {response}")
+            # Update the request timestamps
+            self.default_rate_limiter.update_request_timestamps(self.messages)
             self.store_checkpoint()
         return self.messages
 

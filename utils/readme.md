@@ -21,3 +21,8 @@ python filter.py path_to_ipynb_file
  pip install nbconvert
  python utils/converter.py --path path_to_ipynb_file
 ```
+
+Tianyu: I use
+```bash
+python /home/tianyu/DataSciBench/utils/formatter.py --input_file /home/tianyu/DataSciBench/example/walmart/llm_test/results/walmart_analysis_4.json
+```
