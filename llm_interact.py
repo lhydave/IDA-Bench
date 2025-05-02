@@ -9,7 +9,7 @@ from copy import deepcopy
 import time
 from typing import Any
 from interpreter import OpenInterpreter
-
+import re
 
 def initialize_interpreter(config_path: str) -> OpenInterpreter:
     try:
@@ -181,6 +181,7 @@ class LLMInteractor:
                         model=self.config.model,
                         temperature=self.config.temperature,
                         messages=messages,
+                        api_base=self.config.api_base,
                     )
                     logger.info(f"LLM API call successful on attempt {attempt + 1}")
 
@@ -193,12 +194,22 @@ class LLMInteractor:
                     return [response_messages]
 
             except Exception as e:
-                last_exception = e
-                logger.warning(f"LLM API call failed (attempt {attempt + 1}/{max_attempts}): {str(e)}")
-                if attempt < max_attempts - 1 and retry:
-                    backoff_time = self.config.retry_delay * (attempt + 1)
-                    logger.info(f"Retrying in {backoff_time} seconds...")
-                    time.sleep(backoff_time)
+                try:
+                    retryDelay = re.search(r"retryDelay\": \"(\d+)s\"", str(e.message))
+                    if retryDelay:
+                        retryDelay = int(retryDelay.group(1))
+                    else:
+                        retryDelay = self.config.retry_delay
+                    logger.info(f"Retry delay: {retryDelay} seconds")
+                    time.sleep(retryDelay)
+                except Exception as e:
+                    logger.warning(f"Failed to parse retry delay from error: {str(e)}")
+                    last_exception = e
+                    logger.warning(f"LLM API call failed (attempt {attempt + 1}/{max_attempts}): {str(e)}")
+                    if attempt < max_attempts - 1 and retry:
+                        backoff_time = self.config.retry_delay * (attempt + 1)
+                        logger.info(f"Retrying in {backoff_time} seconds...")
+                        time.sleep(backoff_time)
 
         # If we get here, all attempts failed
         logger.error(f"All {max_attempts} attempts to call LLM API failed. Last error: {str(last_exception)}")

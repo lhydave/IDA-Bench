@@ -6,7 +6,7 @@ from dataclasses import dataclass, asdict
 from typing import List, Dict, Any, Optional, Tuple
 from copy import deepcopy
 from logger import logger
-
+import re
 from llm_interact import LLMInteractor, LLMConfig
 
 @dataclass
@@ -452,10 +452,24 @@ def interact_version_taubench(env: Environment, user_agent: LLMInteractor, assis
         env.conversation_history.append({"role": "assistant agent", "prompt_received": user_message, "all_messages": deepcopy(assistant_response)})
         env._save_checkpoint()
 
-        # assistant_message = "\n".join([msg["content"] for msg in assistant_response])
-        # assistant_message = assistant_message.split("Agent Response:")[-1].strip()
-        assistant_message = assistant_response[-1]["content"]
-        assistant_message = assistant_message.split("Agent Response:")[-1].strip()
+        assistant_message = "\n".join([msg["content"] for msg in assistant_response])
+        
+        # Extract content between <response> and </response> tags if present
+        if "<response>" in assistant_message and "</response>" in assistant_message:
+            response_match = re.search(r"<response>(.*?)</response>", assistant_message, re.DOTALL)
+            if response_match:
+                assistant_message = response_match.group(1).strip()
+        else:
+            assistant_message = assistant_response[-1]["content"]
+            # Fallback to previous behavior if response tags not found
+            # user_message = "Please provide a summary of what you did. Put it between <response> and </response> tags."
+            # assistant_response = assistant_agent.call_llm(user_message)
+            # assistant_message = assistant_response[-1]["content"]
+            # response_match = re.search(r"<response>(.*?)</response>", assistant_message, re.DOTALL)
+            # if response_match:
+            #     assistant_message = response_match.group(1).strip()
+            # else:
+            #     raise ValueError("No response tags found in assistant message")
         number_of_turns += 1
         logger.info(f"Turn {number_of_turns} completed")
 

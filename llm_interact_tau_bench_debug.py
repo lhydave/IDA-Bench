@@ -24,18 +24,24 @@ user_config = LLMConfig.from_toml("./llm_config_user.toml")
 assistant_config = LLMConfig.from_toml("./llm_config_agent.toml")
 assistant_config.run_code = True
 
+i = 0
+checkpoint_path=f"walmart_data/trajactory_walmart_{i}.json"
+while os.path.exists(checkpoint_path):
+    i += 1
+    checkpoint_path=f"walmart_data/trajactory_walmart_{i}.json"
+
 # Define environment configuration
 env_config = EnvironmentConfig(
     user_llm_config=user_config,
     assistant_llm_config=assistant_config,
-    interpreter_config_path="sample_interpreter_config.toml",
+    interpreter_config_path="interpreter_config_agent.toml",
     user_prompt_template="""
     You are a data analyst for Walmart.
     
     {task_specific_instruction}
     """,
     max_turns=30,
-    checkpoint_path="trajactory_walmart.json"
+    checkpoint_path=checkpoint_path
 )
 
 # Define tasks
@@ -43,19 +49,20 @@ tasks = [
     Task(
         id="1", 
         description=
-        """**background**:
-        Walmart is a renowned retail corporation that operates a chain of hypermarkets. Here, Walmart has provided a data combining of 45 stores including store information and monthly sales. The data is provided on weekly basis. You received the data walmart_data/walmart.csv and your Main Objective is to predict sales of store in a week. You just joined Walmart and you are excited to start your first project.
+        """**Background**:
+        You are James, a data analyst for Walmart. Walmart is a renowned retail corporation that operates a chain of hypermarkets. Here, Walmart has provided walmart_data/walmart.csv combining 45 stores including store information and monthly sales. The data is provided on a weekly basis. Your main objective is to predict sales of stores in a week. You want to focus on your goal and do not want to be distracted by other tasks.
         
         
-        **knowledge**:
+        **your knowledge**:
         
-        Impute missing values with zero; 
+        Missing values should be imputed with zero; 
         Sales should be positive; 
-        The holidays might have a significant impact on sales;
-        The four holidays are Super Bowl, Labor Day, Thanksgiving, and Christmas; 
+        The holidays (Super Bowl, Labor Day, Thanksgiving, and Christmas) have a significant impact on sales;
         The Holt-Winters exponential smoothing model is the best model for this task;
-        Make the data more stationary by computing a differenced series and resampling the data to weekly frequency by averaging values;
-        Calculate the weighted mean absolute error of the model, the weight on the holiday weeks should be 5, and the weight on the non-holiday weeks should be 1.""",
+        The seasonal period of the Holt-Winters exponential smoothing model should be determined by the agent;
+        Make the data more stationary by computing a differenced series and resampling the data to weekly frequency with averaging values;
+        Use the first 70% of the data in time for training and the rest for testing;
+        Calculate the weighted mean absolute error on the test set, the weight on the holiday weeks should be 5, and the weight on the non-holiday weeks should be 1.""",
         success_criteria=""
     )
 ]
