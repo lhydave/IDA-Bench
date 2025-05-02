@@ -43,7 +43,6 @@ class LLMConfig:
     api_base: str | None = None
     checkpoint_path: str | None = None
     system_prompt: str | None = None
-    rpm: int = 100
 
     @classmethod
     def from_toml(cls, config_path: str) -> "LLMConfig":
@@ -81,8 +80,6 @@ class LLMConfig:
             raise ValueError("Checkpoint path must be a string or None.")
         if not isinstance(self.system_prompt, str | type(None)):
             raise ValueError("System prompt must be a string or None.")
-        if not isinstance(self.rpm, int) or self.rpm < 0:
-            raise ValueError("RPM must be a non-negative integer.")
 
 
 class LLMInteractor:
@@ -101,7 +98,6 @@ class LLMInteractor:
         logger.info(f"Initialized LLMInteractor with model: {config.model}, temperature: {config.temperature}")
         self.system_prompt = None
         # Initialize rate limiters
-        self.default_rate_limiter = RateLimiter(rpm=config.rpm)
 
         if config.run_code:
             if config.system_prompt:
