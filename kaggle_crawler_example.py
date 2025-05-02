@@ -9,6 +9,8 @@ configure_global_logger(log_file="kaggle_crawler.log")
 # Import the KaggleCrawler class and managers
 from crawler.kaggle_crawler import KaggleCrawler  # noqa: E402
 from data_manager import NotebookManager, DatasetManager  # noqa: E402
+from crawler.notebook_handler import update_all_code_info  # noqa: E402
+from crawler.utils import is_all_import_supported  # noqa: E402
 
 
 async def main():
@@ -18,8 +20,8 @@ async def main():
     dataset_manager = DatasetManager("test_data/datasets")
 
     # reset the managers to avoid conflicts
-    notebook_manager.reset()
-    dataset_manager.reset()
+    # notebook_manager.reset()
+    # dataset_manager.reset()
     # Initialize the crawler with our managers
     # NOTE: please ensure that you have run `playwright install`
     crawler = KaggleCrawler(notebook_manager=notebook_manager, dataset_manager=dataset_manager)
@@ -45,30 +47,48 @@ async def main():
             notebook_ids=notebook_ids,
             concurrency=4,  # Process 4 notebooks at a time
         )
+        if not notebook_infos:
+            logger.warning("No notebooks found in the search results")
+            return
 
         # Step 3: Download notebook files for successfully processed notebooks
-        if notebook_infos:
-            valid_ids = list(notebook_infos.keys())
-            logger.info(f"Downloading {len(valid_ids)} notebook files...")
+        kept_notebooks_ids = list(notebook_manager.kept_notebooks_ids)
+        logger.info(f"Downloading {len(kept_notebooks_ids)} notebook files...")
 
-            # Download notebook files asynchronously
-            await notebook_manager.download_notebook_file_batch(notebook_ids=valid_ids, batch_size=5, log_every=2)
+        # Download notebook files asynchronously
+        notebook_manager.download_notebook_file_batch(notebook_ids=kept_notebooks_ids, worker_size=5, log_every=2)
 
-        # Step 4: Download datasets used by the notebooks
+        # Step 4: Extract code information from downloaded notebooks
+        logger.info("Extracting code information from downloaded notebooks...")
+        update_all_code_info(notebook_manager, do_filter=True)
+        logger.info("Code information extraction completed")
+
+        # Step 4.1: Filter notebooks that do not have supported imports
+        # NOTE: You should first check 10% samples of the notebooks to set the proper import keywords
+        # NOTE: this is optional, you can skip this step if you don't need to filter
+        # for notebook_id in notebook_manager.kept_notebooks_ids:
+        #     notebook_info = notebook_manager.get_meta_info(notebook_id)
+        #     if not is_all_import_supported(notebook_info):
+        #         notebook_manager.remove_notebook(notebook_id, "Unsupported imports")
+        #         logger.info(f"Notebook {notebook_id} removed due to unsupported imports")
+        #         continue
+
+        # Step 5: Download datasets used by the notebooks
         # NOTE: competition dataset will not accessible unless you join it
+        # if you do not have access to the dataset, this step will raise an error
         dataset_ids = list(dataset_manager.dataset_ids)
         if dataset_ids:
             logger.info(f"Downloading {len(dataset_ids)} datasets...")
 
             # Download dataset files asynchronously
-            await dataset_manager.download_dataset_file_batch(dataset_ids=dataset_ids, batch_size=4, log_every=2)
+            dataset_manager.download_dataset_file_batch(dataset_ids=dataset_ids, worker_size=4, log_every=2)
 
         # Step extra: merge different data sources
         # NOTE: this is optional, you can skip this step if you don't need to merge
         # notebook_manager.merge(other_notebook_manager)
         # dataset_manager.merge(other_dataset_manager)
 
-        # Step 5: Print summary of processed notebooks
+        # Step 6: Print summary of processed notebooks
         logger.info(f"Successfully processed {len(notebook_infos)} notebooks")
         filtered_count = len(notebook_manager.filtered_notebooks_ids)
         logger.info(f"Filtered out {filtered_count} notebooks")

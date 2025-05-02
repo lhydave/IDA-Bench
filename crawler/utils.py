@@ -1,3 +1,5 @@
+from data_manager import NotebookInfo
+
 # Keywords that indicate the notebook should be filtered out
 FILTER_KEYWORDS = [
     "beginner",
@@ -55,3 +57,33 @@ def detect_time_series_data(title: str, description: str) -> bool:
     """
     return any(keyword in description.lower() or keyword in title.lower() for keyword in TIME_SERIES_KEYWORDS)
 
+
+SUPPORTED_IMPORTS = [
+    "pandas",
+    "numpy",
+    "matplotlib",
+    "seaborn",
+    "plotly",
+    "scikit-learn",
+    "statsmodels",
+    "scipy",
+    "xgboost",
+]
+
+
+def is_all_import_supported(notebook_info: NotebookInfo) -> bool:
+    """
+    Check if all imports in the notebook are supported.
+
+    Args:
+        notebook_info: The NotebookInfo object containing the notebook's metadata.
+
+    Returns:
+        bool: True if all imports are supported, False otherwise.
+    """
+    if not notebook_info.code_info:
+        raise ValueError("code_info is not available in notebook_info")
+    for import_name in notebook_info.code_info.import_list:
+        if import_name not in SUPPORTED_IMPORTS:
+            return False
+    return True

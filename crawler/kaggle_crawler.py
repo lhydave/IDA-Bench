@@ -432,7 +432,7 @@ class KaggleCrawler:
 
             # Click to unfold the input details
             await input_element_button.click()
-            await self.page.wait_for_selector("div.sc-fWYtlG.ckSJKW", timeout=5000)
+            await self.page.wait_for_selector("div.sc-fWYtlG.ckSJKW", timeout=10000)
 
             # Check if it's fully unfolded by looking for the arrow status
             unfold_status = await input_element.query_selector(".sc-isOVpk.iSVAvt")
@@ -450,7 +450,7 @@ class KaggleCrawler:
             if status_text.strip() == "arrow_right":
                 logger.warning("Input element is folded after clicking, trying to click again...")
                 await input_element_button.click()
-                await self.page.wait_for_selector("div.sc-fWYtlG.ckSJKW", timeout=5000)
+                await self.page.wait_for_selector("div.sc-fWYtlG.ckSJKW", timeout=10000)
 
             # Get the description element
             input_description_element = await self.page.query_selector("div.sc-fWYtlG.ckSJKW")
@@ -643,7 +643,7 @@ class KaggleCrawler:
                     unsuitable_num += 1
                 else:
                     # Successfully processed notebook
-                    code_id, notebook_info = result # type: ignore
+                    code_id, notebook_info = result  # type: ignore
                     logger.info(f"Successfully processed notebook {notebook_id}")
 
                     # Make sure all referenced datasets are tracked in dataset_manager
