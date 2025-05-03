@@ -8,6 +8,7 @@ from copy import deepcopy
 from llm_interact import LLMInteractor, LLMConfig
 from llm_interact_env import Environment, EnvironmentConfig, Task, run
 from logger import logger  # Import the logger
+import subprocess  # Added for running the script
 
 # Set logger to DEBUG level
 logger.setLevel(logging.DEBUG)
@@ -70,3 +71,19 @@ tasks = [
 # Create and run the environment
 environment = Environment(env_config, tasks)
 completed_tasks = run(environment, "taubench")
+
+# Automatically convert the JSON file to markdown
+print(f"\nConverting {checkpoint_path} to markdown format...")
+try:
+    # Option 1: Using subprocess to call the script directly
+    subprocess.run(["python", "utils/trajactory_to_markdown.py", "--input", checkpoint_path], check=True)
+    print(f"Successfully converted {checkpoint_path} to markdown!")
+
+    # Option 2 (Alternative): Import and call the function directly
+    # Uncomment these lines if you prefer direct import instead of subprocess
+    # from trajactory_to_markdown import trajactory_to_markdown
+    # markdown_path = trajactory_to_markdown(checkpoint_path)
+    # print(f"Successfully converted to: {markdown_path}")
+
+except Exception as e:
+    print(f"Error converting to markdown: {str(e)}")

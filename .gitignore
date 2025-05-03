@@ -21,6 +21,8 @@ wheels/
 # configuration files
 interpreter_config.toml
 llm_config.toml
+sample_llm_config_user.toml
+sample_llm_config_agent.toml
 
 # checkpoints
 checkpoints

@@ -8,6 +8,7 @@ from copy import deepcopy
 from logger import logger
 import re
 from llm_interact import LLMInteractor, LLMConfig
+import datetime
 
 
 @dataclass
@@ -111,6 +112,10 @@ class Environment:
         self.tasks = tasks
         self.current_task_idx = 0
 
+        # Record starting time
+        self.start_time = datetime.datetime.now().isoformat()
+        logger.info(f"Environment initialization started at {self.start_time}")
+
         # Initialize conversation history
         self.conversation_history = []
 
@@ -144,9 +149,11 @@ class Environment:
                 self.tasks = [Task(**t) for t in data["tasks"]]
                 self.current_task_idx = data["current_task_idx"]
                 self.conversation_history = data["conversation_history"]
+                self.start_time = data.get("start_time", datetime.datetime.now().isoformat())
                 logger.info(
                     f"Checkpoint loaded successfully. Current task: {self.current_task_idx + 1}/{len(self.tasks)}"
                 )
+                logger.info(f"Original run started at: {self.start_time}")
         except Exception as e:
             logger.error(f"Failed to load checkpoint: {str(e)}")
             print(f"Failed to load checkpoint: {str(e)}")
@@ -158,14 +165,39 @@ class Environment:
             return
 
         try:
-            data = {"tasks": [task.__dict__ for task in self.tasks], "conversation_history": self.conversation_history}
+            # Record current timestamp
+            current_time = datetime.datetime.now().isoformat()
+            logger.debug(f"Saving checkpoint at {current_time}")
+
+            # Create data dictionary including tasks and conversation history
+            data = {
+                "tasks": [task.__dict__ for task in self.tasks],
+                # Add backbone LLM information for both agents
+                "user_agent_model": self.config.user_llm_config.model,
+                "assistant_agent_model": self.config.assistant_llm_config.model,
+                # Add additional LLM configuration info that might be useful
+                "user_agent_config": {
+                    "model": self.config.user_llm_config.model,
+                    "temperature": self.config.user_llm_config.temperature,
+                    "api_base": self.config.user_llm_config.api_base
+                },
+                "assistant_agent_config": {
+                    "model": self.config.assistant_llm_config.model,
+                    "temperature": self.config.assistant_llm_config.temperature,
+                    "api_base": self.config.assistant_llm_config.api_base
+                },
+                "conversation_history": self.conversation_history,
+                # Add timestamp information
+                "start_time": self.start_time,
+                "checkpoint_time": current_time
+            }
 
             os.makedirs(os.path.dirname(os.path.abspath(self.config.checkpoint_path)), exist_ok=True)
 
             logger.debug(f"Saving checkpoint to {self.config.checkpoint_path}")
             with open(self.config.checkpoint_path, "w") as f:
                 json.dump(data, f, indent=2)
-            logger.info("Checkpoint saved successfully")
+            logger.info(f"Checkpoint saved successfully at {current_time}")
         except Exception as e:
             logger.error(f"Failed to save checkpoint: {str(e)}")
             print(f"Failed to save checkpoint: {str(e)}")
