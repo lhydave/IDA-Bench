@@ -269,7 +269,7 @@ class NotebookManager:
 
         try:
             # Download using Kaggle API
-            # the Kaggle API will download to self.storage_path/filename/xxxxx.ipynb
+            # the Kaggle API will download to self.storage_path/xxxxx.ipynb
             # we need to move it to self.storage_path/filename.ipynb
             if sleep_time > 0:
                 time.sleep(sleep_time)  # Sleep after download to avoid rate limiting
