@@ -25,13 +25,17 @@ I use tmux to keep the proxy running. Run the following command to start and att
 tmux new-session -A -s proxy
 ```
 
-In the session, run
+In the session, first activate the correct virtual environment if we are in `base`.
 
 ```sh
-uv pip intall litellm[proxy]
+source .venv/bin/activate
+```
+then run
+```sh
+uv pip install litellm[proxy]
 litellm --config llm_config_proxy.yaml
 ```
-Press ``Ctrl+b``, then press ``d`` to detach from the session.
+Press ``Ctrl+b`` (press those two keys together), then release your fingers and press ``d`` to detach from the session.
 
 I have changed ``llm_config_user.toml`` and ``llm_config_agent.toml``. Simply run ``python llm_interact_tau_bench_debug.py``.
 
