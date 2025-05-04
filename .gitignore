@@ -33,3 +33,7 @@ test_data/
 source/
 
 example/walmart/llm_test/results/*
+
+base_config.toml
+agent_configs/*
+!agent_configs/sample_agent_config.toml

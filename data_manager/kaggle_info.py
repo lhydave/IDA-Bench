@@ -81,3 +81,30 @@ class NotebookInfo:
     def to_json(self, indent: int = 2) -> str:
         """Convert NotebookInfo instance to a JSON string."""
         return json.dumps(self.to_dict(), indent=indent)
+
+
+@dataclass
+class BenchmarkInfo:
+    url: str  # URL of original notebook
+    title: str  # Title of original notebook
+    input: list[str]  # List of input dataset IDs
+    path: str | None = None  # Local path of benchmark data if available
+    # TODO: Add more benchmark-specific attributes as needed
+    # This could include metadata like:
+    # - Number of benchmark rounds
+    # - Difficulty level
+    # - Types of data analysis tasks covered
+    # - Evaluation metrics
+
+    @classmethod
+    def from_json(cls, json_str: str) -> "BenchmarkInfo":
+        """Create a BenchmarkInfo instance from a JSON string."""
+        return cls(**json.loads(json_str))
+
+    def to_dict(self) -> dict:
+        """Convert BenchmarkInfo instance to a dictionary."""
+        return asdict(self)
+
+    def to_json(self, indent: int = 2) -> str:
+        """Convert BenchmarkInfo instance to a JSON string."""
+        return json.dumps(self.to_dict(), indent=indent)

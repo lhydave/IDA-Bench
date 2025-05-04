@@ -271,6 +271,68 @@ class DatasetManager:
             logger.error(f"Error downloading dataset {dataset_id}: {error_msg}")
             return error_msg  # Return the error message to be collected
 
+    def subset(
+        self,
+        dataset_ids: set[str],
+        store_path: str,
+        clean_store: bool = False,
+    ) -> "DatasetManager":
+        """
+        Create a subset of the current DatasetManager with the specified dataset IDs.
+        This will create a new DatasetManager instance with the specified dataset IDs,
+        and copy the relevant dataset files and metadata to the new instance's storage path.
+        If clean_store is True, it will first delete all existing files in store_path.
+
+        Args:
+            dataset_ids: Set of dataset IDs to include in the subset
+            store_path: Path where the new DatasetManager will store its data
+            clean_store: If True, delete all existing files in store_path; if False and
+                         files exist in store_path, raises an error
+
+        Returns:
+            A new DatasetManager instance containing only the specified datasets
+
+        Raises:
+            ValueError: If clean_store is False and store_path contains existing files
+        """
+        # Create a new DatasetManager with the specified store_path
+        new_manager = DatasetManager(store_path=store_path)
+
+        # If clean_store is True, reset the new manager and delete its files
+        if clean_store:
+            new_manager.reset(delete_files=True)
+        # Check if the store_path is empty when clean_store is False
+        else:
+            storage_files = os.listdir(new_manager.storage_path) if os.path.exists(new_manager.storage_path) else []
+            meta_files = (
+                os.listdir(new_manager.meta_storage_path) if os.path.exists(new_manager.meta_storage_path) else []
+            )
+
+            if storage_files or meta_files:
+                raise ValueError(
+                    f"Store path {store_path} is not empty and clean_store is False. "
+                    f"Set clean_store=True to overwrite existing files."
+                )
+
+        # Make a copy of the input dataset_ids to avoid modifying the original set
+        target_ids = dataset_ids.copy()
+
+        # Cache the current manager's dataset sets
+        original_dataset_ids = self.dataset_ids.copy()
+
+        # Filter the current manager's sets to only include the target dataset IDs
+        self.dataset_ids = self.dataset_ids.intersection(target_ids)
+
+        # Merge the filtered current manager into the new manager
+        new_manager.merge(self)
+
+        # Restore the original manager's dataset sets
+        self.dataset_ids = original_dataset_ids
+
+        logger.info(f"Created subset manager at {store_path} with {len(new_manager.dataset_ids)} datasets")
+
+        return new_manager
+
     def merge(self, source_manager: "DatasetManager") -> None:
         """
         Merge datasets from another DatasetManager instance into this one. This merges both in-memory data structures and physical files. Metadata and physical dataset files are merged separately - datasets can be copied even without meta info for caching purposes.

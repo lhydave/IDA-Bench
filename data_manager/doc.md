@@ -93,7 +93,7 @@ The `code_info` is given as json with the following attributes
 - `import_list`: list of imported python packages.
 - `file_size`: raw size (in B) of notebook.
 - `pure_code_size`: size (in B) of python scripts in the notebook.
-
+- `num_plots`: number of plots in the notebook.
 
 ## Dataset Manager
 
@@ -158,3 +158,55 @@ We record the following meta info for the datasets, given as json:
 - `contain_time_series`: whether the dataset contains time series attribute. Ideally, this attribute should be provided by LLMs. However, for efficiency, this attribute is actually rule-based extracted using keywords and thus has no guarantee on the accuracy.
 - `filename_list`: list of filenames in the dataset.
 - `path`: local path of the dataset, if available.
+
+## Benchmark Manager
+
+It manages the benchmark data. The functionality includes:
+1. add/remove a benchmark record.
+2. access and update the meta info of a benchmark.
+3. store a piece of benchmark data.
+4. load a piece of benchmark data.
+5. merge two benchmark managers.
+
+The meta info is the information that used for benchmarking and result analysis.
+
+### File Organization
+
+You can configure the path of all data to store in `store_path` (default: `data/benchmark`). After doing so, the benchmark manager will create a folder named `store_path`. The file organization is then as follows.
+
+```
+store_path/
+├── meta_info/
+│   ├── benchmark_list.json
+│   ├── storage/
+│   │   ├── author1#####notebook1.json
+│   │   ├── author2#####notebook2.json
+│   │   ├── ...
+│
+├── storage/
+│   ├── author1#####notebook1/...
+│   ├── author2#####notebook2/...
+│   ├── ...
+```
+# TODO: specify the benchmark data format in storage and json
+
+The meaning of each file is as follows.
+
+- `benchmark_list.json`: list of benchmark index (ID) information. The format is `["ID1", "ID2", ...]`.
+- `meta_info/storage/`: store the meta info of all benchmarks in json files. The meta info is given in Meta Info Attributes part.
+- `storage/`: store benchmark data.
+
+### Naming Rule for Benchmark Records
+
+Since our benchmark is constructed from Kaggle notebooks, we use the same naming rule as notebooks. The Kaggle naming rule of notebooks are like GitHub repository, `[username]/[notebook_name]`. However, as a filename, `/` is an invalid character. Thus, we replace `/` by `#####`. For example, a notebook with ID `author1/notebook1` will be given a filename of `author1#####notebook1.json` for meta info and `author1#####notebook1/` for benchmark data itself.
+
+The Benchmark Manager will automatically do this transformation.
+
+### Meta Info Attributes
+
+We record the following meta info for the benchmark, given as json:
+- `url`: URL of the original notebook.
+- `title`: title of the original notebook.
+- `input`: list of input dataset ID.
+- `path`: local path of the benchmark, if available.
+

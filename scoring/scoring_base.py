@@ -245,7 +245,7 @@ class Scoring:
             raise ValueError(error_msg)
 
         sampling_func = sampling_methods[method]
-        sampled_indices = sampling_func(len(self.scores), num)
+        sampled_indices = sampling_func(num, len(self.scores))
 
         logger.info(f"Sampling {num} notebooks to {store_path}")
 
