@@ -505,3 +505,73 @@ class NotebookManager:
         logger.info(
             f"Total notebooks after merge: {len(self.kept_notebooks_ids)} kept, {len(self.filtered_notebooks_ids)} filtered"  # noqa: E501
         )
+
+    def subset(
+        self,
+        notebook_ids: set[str],
+        store_path: str,
+        clean_store: bool = False,
+    ) -> "NotebookManager":
+        """
+        Create a subset of the current NotebookManager with the specified notebook IDs.
+        This will create a new NotebookManager instance with the specified notebook IDs,
+        and copy the relevant notebook files and metadata to the new instance's storage path.
+        If clean_store is True, it will first delete all existing files in store_path.
+
+        Args:
+            notebook_ids: Set of notebook IDs to include in the subset
+            store_path: Path where the new NotebookManager will store its data
+            clean_store: If True, delete all existing files in store_path; if False and
+                         files exist in store_path, raises an error
+
+        Returns:
+            A new NotebookManager instance containing only the specified notebooks
+
+        Raises:
+            ValueError: If clean_store is False and store_path contains existing files
+        """
+        # Create a new NotebookManager with the specified store_path
+        new_manager = NotebookManager(store_path=store_path)
+
+        # If clean_store is True, reset the new manager and delete its files
+        if clean_store:
+            new_manager.reset(delete_files=True)
+        # Check if the store_path is empty when clean_store is False
+        else:
+            storage_files = os.listdir(new_manager.storage_path) if os.path.exists(new_manager.storage_path) else []
+            meta_files = (
+                os.listdir(new_manager.meta_storage_path) if os.path.exists(new_manager.meta_storage_path) else []
+            )
+
+            if storage_files or meta_files:
+                raise ValueError(
+                    f"Store path {store_path} is not empty and clean_store is False. "
+                    f"Set clean_store=True to overwrite existing files."
+                )
+
+        # Make a copy of the input notebook_ids to avoid modifying the original set
+        target_ids = notebook_ids.copy()
+
+        # Cache the current manager's notebook sets
+        original_search_ids = self.search_results_ids.copy()
+        original_kept_ids = self.kept_notebooks_ids.copy()
+        original_filtered_ids = self.filtered_notebooks_ids.copy()
+
+        # Filter the current manager's sets to only include the target notebook IDs
+        self.search_results_ids = self.search_results_ids.intersection(target_ids)
+        self.kept_notebooks_ids = self.kept_notebooks_ids.intersection(target_ids)
+        self.filtered_notebooks_ids = {
+            nid: reason for nid, reason in self.filtered_notebooks_ids.items() if nid in target_ids
+        }
+
+        # Merge the filtered current manager into the new manager
+        new_manager.merge(self)
+
+        # Restore the original manager's notebook sets
+        self.search_results_ids = original_search_ids
+        self.kept_notebooks_ids = original_kept_ids
+        self.filtered_notebooks_ids = original_filtered_ids
+
+        logger.info(f"Created subset manager at {store_path} with {len(new_manager.kept_notebooks_ids)} notebooks")
+
+        return new_manager

@@ -248,6 +248,68 @@ class BenchmarkManager:
 
         logger.info(f"Benchmark manager reset. delete_files={delete_files}")
 
+    def subset(
+        self,
+        benchmark_ids: set[str],
+        store_path: str,
+        clean_store: bool = False,
+    ) -> "BenchmarkManager":
+        """
+        Create a subset of the current BenchmarkManager with the specified benchmark IDs.
+        This will create a new BenchmarkManager instance with the specified benchmark IDs,
+        and copy the relevant benchmark files and metadata to the new instance's storage path.
+        If clean_store is True, it will first delete all existing files in store_path.
+
+        Args:
+            benchmark_ids: Set of benchmark IDs to include in the subset
+            store_path: Path where the new BenchmarkManager will store its data
+            clean_store: If True, delete all existing files in store_path; if False and
+                         files exist in store_path, raises an error
+
+        Returns:
+            A new BenchmarkManager instance containing only the specified benchmarks
+
+        Raises:
+            ValueError: If clean_store is False and store_path contains existing files
+        """
+        # Create a new BenchmarkManager with the specified store_path
+        new_manager = BenchmarkManager(store_path=store_path)
+
+        # If clean_store is True, reset the new manager and delete its files
+        if clean_store:
+            new_manager.reset(delete_files=True)
+        # Check if the store_path is empty when clean_store is False
+        else:
+            storage_files = os.listdir(new_manager.storage_path) if os.path.exists(new_manager.storage_path) else []
+            meta_files = (
+                os.listdir(new_manager.meta_storage_path) if os.path.exists(new_manager.meta_storage_path) else []
+            )
+
+            if storage_files or meta_files:
+                raise ValueError(
+                    f"Store path {store_path} is not empty and clean_store is False. "
+                    f"Set clean_store=True to overwrite existing files."
+                )
+
+        # Make a copy of the input benchmark_ids to avoid modifying the original set
+        target_ids = benchmark_ids.copy()
+
+        # Cache the current manager's benchmark IDs
+        original_benchmark_ids = self.benchmark_ids.copy()
+
+        # Filter the current manager's IDs to only include the target benchmark IDs
+        self.benchmark_ids = self.benchmark_ids.intersection(target_ids)
+
+        # Merge the filtered current manager into the new manager
+        new_manager.merge(self)
+
+        # Restore the original manager's benchmark IDs
+        self.benchmark_ids = original_benchmark_ids
+
+        logger.info(f"Created subset manager at {store_path} with {len(new_manager.benchmark_ids)} benchmarks")
+
+        return new_manager
+
     def merge(self, source_manager: "BenchmarkManager") -> None:
         """
         Merge benchmarks from another BenchmarkManager instance into this one.
