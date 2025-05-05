@@ -5,11 +5,11 @@ def aggregrate_dataset_info(dataset_info_dict: dict[str, DatasetInfo]):
     """
     One notebook usually have multiple datasets. This function aggregates the dataset info into a single dict so that the scoring function can be much simpler.
     """  # noqa: E501
-    is_compeition: bool = any(dataset_info.type == "competition" for dataset_info in dataset_info_dict.values())
+    is_competition: bool = any(dataset_info.type == "competition" for dataset_info in dataset_info_dict.values())
     num_csvs: int = sum(len(dataset_info.filename_list) for dataset_info in dataset_info_dict.values())
     contain_time_series: bool = any(dataset_info.contain_time_series for dataset_info in dataset_info_dict.values())
     return {
-        "is_compeition": is_compeition,
+        "is_competition": is_competition,
         "num_csvs": num_csvs,
         "contain_time_series": contain_time_series,
     }
@@ -17,7 +17,7 @@ def aggregrate_dataset_info(dataset_info_dict: dict[str, DatasetInfo]):
 
 def sample_scoring_function(
     # Dataset aggregated info
-    is_compeition: bool,
+    is_competition: bool,
     num_csvs: int,
     contain_time_series: bool,
     # NotebookInfo parameters
@@ -124,7 +124,7 @@ def sample_scoring_function(
     )
 
     # Dataset complexity score
-    dataset_score = (1.0 if is_compeition else 0.0) + min(num_csvs, 10) * 1.0 + (3.0 if contain_time_series else 0.0)
+    dataset_score = (1.0 if is_competition else 0.0) + min(num_csvs, 10) * 1.0 + (3.0 if contain_time_series else 0.0)
 
     # Resource usage score (normalized)
     resource_score = 0.0
