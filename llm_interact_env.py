@@ -536,13 +536,13 @@ def interact_version_taubench(env: Environment, user_agent: LLMInteractor, assis
         )
         env._save_checkpoint()
 
-        assistant_message = "\n".join([msg["content"] for msg in assistant_response])
+        assistant_message = assistant_response[-1]["content"]
 
-        # Extract content between <response> and </response> tags if present
+        # Extract content between the last <response> and </response> tags if present
         if "<response>" in assistant_message and "</response>" in assistant_message:
-            response_match = re.search(r"<response>(.*?)</response>", assistant_message, re.DOTALL)
-            if response_match:
-                assistant_message = response_match.group(1).strip()
+            response_matches = re.findall(r"<response>(.*?)</response>", assistant_message, re.DOTALL)
+            if response_matches:
+                assistant_message = response_matches[-1].strip()  # Get the last match
         else:
             assistant_message = assistant_response[-1]["content"]
             # Fallback to previous behavior if response tags not found
