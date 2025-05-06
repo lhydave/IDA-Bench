@@ -142,7 +142,7 @@ The meaning of each file is as follows.
 
 ### Naming Rule for Dataset Records
 
-The Kaggle naming rule of datasets are like GitHub repository, `[username]/[dataset_name]`; for competitions, it is simply `[comeptition_name]`. However, as a filename, `/` is an invalid character. Thus, we replace `/` by `#####` for the meta info and the dataset file path. For example, a notebook with ID `author1/dataset1` will be given a filename of `author1#####dataset1.json` for meta info and `author1#####dataset1/` for dataset file path; `competition1` will be given a filename of `competition1.json` for meta info and `competition1/` for dataset file path.
+The Kaggle naming rule of datasets are like GitHub repository, `[username]/[dataset_name]`; for competitions, it is simply `[comeptition_name]`. However, as a filename, `/` is an invalid character. Thus, we replace `/` by `#####` for the meta info, but NOT for the dataset file path. For example, a notebook with ID `author1/dataset1` will be given a filename of `author1#####dataset1.json` for meta info and `author1/dataset1/` for dataset file path; `competition1` will be given a filename of `competition1.json` for meta info and `competition1/` for dataset file path.
 
 The Dataset Manager will automatically do this transformation.
 
@@ -179,34 +179,54 @@ store_path/
 ├── meta_info/
 │   ├── benchmark_list.json
 │   ├── storage/
-│   │   ├── author1#####notebook1.json
-│   │   ├── author2#####notebook2.json
+│   │   ├── benchmark1.json
+│   │   ├── benchmark2.json
 │   │   ├── ...
 │
 ├── storage/
-│   ├── author1#####notebook1/...
-│   ├── author2#####notebook2/...
+│   ├── benchmark1/
+│   │   ├── datasets/
+│   │   │   ├── author1/dataset1/
+│   │   │   ├── competition1/
+│   │   │   ├── ...
+│   │   ├── instructions?
+│   │   ├── ground_truths?
+│   ├── benchmark2/
+│   │   ├── datasets/
+│   │   │   ├── author2/dataset2/
+│   │   │   ├── competition2/
+│   │   │   ├── ...
+│   │   ├── instructions?
+│   │   ├── ground_truths?
 │   ├── ...
 ```
-# TODO: specify the benchmark data format in storage and json
 
 The meaning of each file is as follows.
 
 - `benchmark_list.json`: list of benchmark index (ID) information. The format is `["ID1", "ID2", ...]`.
 - `meta_info/storage/`: store the meta info of all benchmarks in json files. The meta info is given in Meta Info Attributes part.
-- `storage/`: store benchmark data.
+- `storage/`: store benchmark data. Inside each benchmark folder, there are three subfolders:
+    - `datasets/`: store the datasets that are given to the test agent. 
+        - The datasets are stored in the same format as the dataset manager, i.e., `author1/dataset1/` or `competition1/`.
+        - It could be different from the original datasets, since the datasets may be preprocessed for the benchmark.
+    - `instructions?`: store the instructions for data analysis agents (LLM agents).
+        - TODO: It could be just a markdown file.
+    - `ground_truths?`: store the ground truths of the code-running result.
+        - TODO: You should consider the prediction task, which may need a test set.
+
+# TODO: specify the benchmark data format that is given with ?
 
 ### Naming Rule for Benchmark Records
 
-Since our benchmark is constructed from Kaggle notebooks, we use the same naming rule as notebooks. The Kaggle naming rule of notebooks are like GitHub repository, `[username]/[notebook_name]`. However, as a filename, `/` is an invalid character. Thus, we replace `/` by `#####`. For example, a notebook with ID `author1/notebook1` will be given a filename of `author1#####notebook1.json` for meta info and `author1#####notebook1/` for benchmark data itself.
+The benchmark naming rule is simply an incremental number, starting from 1. For example, the first benchmark will be given a filename of `benchmark1.json` for meta info and `benchmark1/` for benchmark data itself.
 
 The Benchmark Manager will automatically do this transformation.
 
 ### Meta Info Attributes
 
 We record the following meta info for the benchmark, given as json:
-- `url`: URL of the original notebook.
-- `title`: title of the original notebook.
-- `input`: list of input dataset ID.
-- `path`: local path of the benchmark, if available.
-
+- `notebook_id`: the ID of the original notebook.
+- `input_ids`: list of input dataset IDs.
+- `eval_metric`: evaluation metric of the benchmark. # TODO: specify the format
+- `num_rounds`: number of interaction rounds in the benchmark.
+# TODO: specify other attributes

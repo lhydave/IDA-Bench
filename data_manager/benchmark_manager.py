@@ -1,10 +1,11 @@
+from data_manager.dataset_manager import DatasetManager
 from data_manager.kaggle_info import BenchmarkInfo
 from typing import Any
 import os
 import json
 import shutil
 from logger import logger
-from data_manager.utils import id_to_filename
+import concurrent.futures
 
 
 class BenchmarkManager:
@@ -61,7 +62,7 @@ class BenchmarkManager:
         If storage/xxxx.json already exists, it will override it.
         """
         # Check if meta info already exists
-        filename = id_to_filename(benchmark_id)
+        filename = benchmark_id
         meta_info_file = os.path.join(self.meta_storage_path, f"{filename}.json")
 
         # Add to benchmark ids if not already there
@@ -103,7 +104,7 @@ class BenchmarkManager:
             return self.benchmark_meta[benchmark_id]
 
         # Try to load from file if not in memory
-        filename = id_to_filename(benchmark_id)
+        filename = benchmark_id
         meta_info_file = os.path.join(self.meta_storage_path, f"{filename}.json")
 
         if not os.path.exists(meta_info_file):
@@ -148,7 +149,7 @@ class BenchmarkManager:
                 raise
 
         # Save updated meta info using the to_dict method
-        filename = id_to_filename(benchmark_id)
+        filename = benchmark_id
         meta_info_file = os.path.join(self.meta_storage_path, f"{filename}.json")
 
         with open(meta_info_file, "w") as f:
@@ -159,58 +160,320 @@ class BenchmarkManager:
 
         logger.info(f"Updated meta info for benchmark {benchmark_id}")
 
-    def store_benchmark_data(self, benchmark_id: str, benchmark_data: Any) -> None:
+    def _get_benchmark_dir(self, benchmark_id: str) -> str:
         """
-        Store benchmark data for the given benchmark_id.
+        Get the directory path for a benchmark's storage.
 
         Args:
             benchmark_id: ID of the benchmark
-            benchmark_data: Dictionary containing benchmark data
 
-        # TODO: Define the exact structure of benchmark_data once it's determined
+        Returns:
+            Path to the benchmark directory
         """
+        return os.path.join(self.storage_path, benchmark_id)
+
+    def store_instruction(self, benchmark_id: str, instructions: str | list[str]) -> None:
+        """
+        Store instructions for a specific benchmark.
+
+        Args:
+            benchmark_id: ID of the benchmark
+            instructions: String or list of strings containing instructions for each round
+        """
+        # TODO: specify the format of instructions and modify this function accordingly
         # Create directory for benchmark data if it doesn't exist
-        filename = id_to_filename(benchmark_id)
-        benchmark_dir = os.path.join(self.storage_path, filename)
+        benchmark_dir = self._get_benchmark_dir(benchmark_id)
         os.makedirs(benchmark_dir, exist_ok=True)
 
-        # TODO: Implement proper storage logic once the benchmark data format is defined
-        # Suggestion: we need to store markdown files so that human can check and revise
-        # NOTE: this part only stores the benchmark data, not the evaluation results
+        # Setup instructions directory
+        instructions_dir = os.path.join(benchmark_dir, "instructions")
+        os.makedirs(instructions_dir, exist_ok=True)
 
-        # For now, just store the entire data as a single JSON file
-        benchmark_file = os.path.join(benchmark_dir, "data.json")
-        with open(benchmark_file, "w") as f:
-            json.dump(benchmark_data, f, indent=2)
+        if isinstance(instructions, str):
+            # Single instruction file (markdown)
+            instruction_path = os.path.join(instructions_dir, "instructions.md")
+            with open(instruction_path, "w") as f:
+                f.write(instructions)
+            logger.info(f"Stored single instruction file for benchmark {benchmark_id}")
+        else:
+            # Multiple instructions (one per round)
+            for i, instruction in enumerate(instructions):
+                round_file = os.path.join(instructions_dir, f"round_{i + 1}.md")
+                with open(round_file, "w") as f:
+                    f.write(instruction)
+            logger.info(f"Stored {len(instructions)} round instructions for benchmark {benchmark_id}")
 
-        # Update the benchmark meta info to include the path
-        self.update_meta_info(benchmark_id, {"path": benchmark_dir})
+    def copy_dataset(self, dataset_manager: DatasetManager, benchmark_id: str, dataset_id: str) -> None:
+        """
+        Copy a dataset from the dataset manager to the benchmark storage.
+        If the dataset hasn't been downloaded yet, it will be downloaded first.
 
-        logger.info(f"Stored benchmark data for {benchmark_id}")
+        Args:
+            dataset_manager: DatasetManager instance that contains the dataset
+            benchmark_id: ID of the benchmark
+            dataset_id: ID of the dataset to copy
+        """
+        # Create directory for benchmark data if it doesn't exist
+        benchmark_dir = self._get_benchmark_dir(benchmark_id)
+        os.makedirs(benchmark_dir, exist_ok=True)
 
-    def load_benchmark_data(self, benchmark_id: str) -> Any:
+        # Setup datasets directory
+        datasets_dir = os.path.join(benchmark_dir, "datasets")
+        os.makedirs(datasets_dir, exist_ok=True)
+
+        # First ensure the dataset is downloaded in the dataset manager
+        try:
+            # Download if needed (this is a no-op if already downloaded)
+            dataset_manager.download_dataset_file(dataset_id)
+
+            # Get meta info to find the path
+            dataset_meta = dataset_manager.get_meta_info(dataset_id)
+            if dataset_meta is None or dataset_meta.path is None:
+                raise ValueError(f"Dataset {dataset_id} not found or path not available")
+
+            # Create the target directory - using ID without any transformation
+            # to maintain the original dataset structure
+            target_path = os.path.join(datasets_dir, dataset_id.replace("/", os.sep))
+
+            # Copy the dataset if it doesn't already exist
+            if not os.path.exists(target_path):
+                shutil.copytree(dataset_meta.path, target_path)
+                logger.info(f"Copied dataset {dataset_id} to benchmark {benchmark_id}")
+            else:
+                logger.info(f"Dataset {dataset_id} already exists in benchmark {benchmark_id}")
+
+        except Exception as e:
+            logger.error(f"Error copying dataset {dataset_id} to benchmark {benchmark_id}: {str(e)}")
+            raise
+
+    def _safe_copy_dataset(self, benchmark_id: str, dataset_manager: DatasetManager, dataset_id: str):
+        """
+        Helper method for copying a single dataset.
+
+        Args:
+            benchmark_id: ID of the benchmark
+            dataset_manager: DatasetManager instance that contains the dataset
+            dataset_id: ID of the dataset to copy
+
+        Returns:
+            Tuple of (success, dataset_id)
+        """
+        try:
+            self.copy_dataset(dataset_manager, benchmark_id, dataset_id)
+            return True, dataset_id
+        except Exception as e:
+            logger.error(f"Error copying dataset {dataset_id}: {str(e)}")
+            return False, dataset_id
+
+    def copy_all_datasets(
+        self,
+        dataset_manager: DatasetManager,
+        benchmark_ids: list[str] | None = None,
+        worker_size: int = 4,
+        show_progress: bool = True,
+    ) -> None:
+        """
+        Copy multiple datasets from the dataset manager to the benchmark storage.
+        If any dataset hasn't been downloaded yet, it will be downloaded first.
+
+        If benchmark_ids is None, this will process all benchmarks in parallel.
+
+        Args:
+            benchmark_ids: IDs of the benchmark, or None to process all benchmarks
+            dataset_manager: DatasetManager instance that contains the datasets
+            worker_size: Number of concurrent workers for copying using ThreadPoolExecutor
+            show_progress: Whether to show progress logs
+        """
+        # If benchmark_ids is None, use all benchmark IDs
+        if benchmark_ids is None:
+            benchmark_ids = list(self.benchmark_ids)
+
+        if not benchmark_ids:
+            logger.info("No benchmarks to process")
+            return
+
+        # Collect all dataset copy tasks
+        copy_tasks = []
+        for benchmark_id in benchmark_ids:
+            # Get meta info for the benchmark
+            benchmark_info = self.get_meta_info(benchmark_id)
+            if not benchmark_info or not benchmark_info.input_ids:
+                if show_progress:
+                    logger.warning(f"No dataset IDs found for benchmark {benchmark_id}")
+                continue
+
+            # Add copy tasks for each dataset in this benchmark
+            for dataset_id in benchmark_info.input_ids:
+                copy_tasks.append((benchmark_id, dataset_manager, dataset_id))
+
+        if not copy_tasks:
+            logger.info("No datasets to copy for the specified benchmarks")
+            return
+
+        if show_progress:
+            logger.info(f"Copying {len(copy_tasks)} datasets for {len(benchmark_ids)} benchmarks")
+
+        # Use ThreadPoolExecutor to copy datasets in parallel
+        results = []
+        with concurrent.futures.ThreadPoolExecutor(max_workers=worker_size) as executor:
+            # Submit all tasks to the executor
+            future_to_task = {
+                executor.submit(self._safe_copy_dataset, *task): task for task in copy_tasks
+            }
+
+            # Process results as they complete
+            for future in concurrent.futures.as_completed(future_to_task):
+                task = future_to_task[future]
+                benchmark_id, _, dataset_id = task
+                try:
+                    success, _ = future.result()
+                    results.append((benchmark_id, dataset_id, success))
+                    if show_progress:
+                        status = "Success" if success else "Failed"
+                        logger.info(f"[{status}] Copied dataset {dataset_id} for benchmark {benchmark_id}")
+                except Exception as e:
+                    logger.error(f"Exception while copying dataset {dataset_id} for benchmark {benchmark_id}: {str(e)}")
+                    results.append((benchmark_id, dataset_id, False))
+
+        # Summarize results
+        successful = sum(1 for _, _, success in results if success)
+        if show_progress:
+            logger.info(f"Dataset copy completed: {successful}/{len(copy_tasks)} successful")
+
+    def store_ground_truth(self, benchmark_id: str, ground_truths: Any) -> None:
+        """
+        Store ground truth data for a specific benchmark.
+
+        Args:
+            benchmark_id: ID of the benchmark
+            ground_truths: Ground truth data for evaluation
+        """
+        # TODO: specify the format of ground truths and modify this function accordingly
+        # Create directory for benchmark data if it doesn't exist
+        benchmark_dir = self._get_benchmark_dir(benchmark_id)
+        os.makedirs(benchmark_dir, exist_ok=True)
+
+        # Setup ground truths directory
+        ground_truths_dir = os.path.join(benchmark_dir, "ground_truths")
+        os.makedirs(ground_truths_dir, exist_ok=True)
+
+        # Save ground truth data
+        ground_truth_path = os.path.join(ground_truths_dir, "ground_truth.json")
+        with open(ground_truth_path, "w") as f:
+            json.dump(ground_truths, f, indent=2)
+
+        logger.info(f"Stored ground truths for benchmark {benchmark_id}")
+
+    def load_benchmark_data(
+        self,
+        benchmark_id: str,
+        load_datasets: bool = True,
+        load_instructions: bool = True,
+        load_ground_truths: bool = True,
+    ) -> dict[str, Any]:
         """
         Load benchmark data for the given benchmark_id.
 
+        Args:
+            benchmark_id: ID of the benchmark
+            load_datasets: Whether to load dataset information
+            load_instructions: Whether to load instructions
+            load_ground_truths: Whether to load ground truths
+
         Returns:
-            Dictionary containing benchmark data
-
-        # TODO: Define the exact structure of returned data once it's determined
+            Dictionary containing requested benchmark components
         """
-        # Get meta info to determine path
-        meta_info = self.get_meta_info(benchmark_id)
-        if meta_info is None or meta_info.path is None:
-            raise ValueError(f"No benchmark data found for {benchmark_id}")
+        benchmark_data = {}
 
-        # For now, just load from the single JSON file
-        benchmark_file = os.path.join(meta_info.path, "data.json")
-        if not os.path.exists(benchmark_file):
-            raise FileNotFoundError(f"Benchmark data file not found for {benchmark_id}")
+        # Load datasets
+        if load_datasets:
+            try:
+                datasets = self.get_datasets(benchmark_id)
+                benchmark_data["datasets"] = datasets
+            except ValueError as e:
+                logger.error(f"Error loading datasets for benchmark {benchmark_id}: {str(e)}")
 
-        with open(benchmark_file) as f:
-            benchmark_data = json.load(f)
+        # Load instructions
+        if load_instructions:
+            try:
+                instructions = self.get_instruction(benchmark_id)
+                benchmark_data["instructions"] = instructions
+            except Exception as e:
+                logger.error(f"Error loading instructions for benchmark {benchmark_id}: {str(e)}")
+
+        # Load ground truths
+        if load_ground_truths:
+            try:
+                ground_truths = self.get_ground_truth(benchmark_id)
+                benchmark_data["ground_truths"] = ground_truths
+            except Exception as e:
+                logger.error(f"Error loading ground truths for benchmark {benchmark_id}: {str(e)}")
 
         return benchmark_data
+
+    def get_instruction(self, benchmark_id: str) -> Any | None:
+        """
+        Get instruction for a specific benchmark.
+
+        Args:
+            benchmark_id: ID of the benchmark
+            round_num: Optional round number (1-based). If None, returns all instructions
+                       or the single instruction file
+
+        Returns:
+            Instruction string or None if not found
+        """
+        # TODO: specify the format of instructions and modify this function accordingly
+        pass
+
+    def get_ground_truth(self, benchmark_id: str) -> Any:
+        """
+        Get ground truth data for a specific benchmark.
+
+        Args:
+            benchmark_id: ID of the benchmark
+
+        Returns:
+            Ground truth data or None if not found
+        """
+        # TODO: specify the format of ground truths and modify this function accordingly
+        pass
+
+    def get_datasets(self, benchmark_id: str) -> list[str]:
+        """
+        Get all CSV files within the datasets directory for a specific benchmark.
+
+        Args:
+            benchmark_id: ID of the benchmark
+
+        Returns:
+            List of CSV file paths relative to the datasets directory
+            (e.g., ["file.csv", "subdir/file.csv", ...])
+
+        Raises:
+            ValueError: If no datasets directory exists for the benchmark
+        """
+        # Get the datasets directory path
+        benchmark_dir = self._get_benchmark_dir(benchmark_id)
+        datasets_dir = os.path.join(benchmark_dir, "datasets")
+
+        # Check if datasets directory exists
+        if not os.path.exists(datasets_dir):
+            raise ValueError(f"No datasets directory found for benchmark {benchmark_id}")
+
+        # List to store all CSV file paths
+        csv_files = []
+
+        # Walk through all subdirectories
+        for root, _, files in os.walk(datasets_dir):
+            # Filter for CSV files
+            for file in files:
+                if file.lower().endswith(".csv"):
+                    # Get path relative to datasets directory
+                    rel_path = os.path.relpath(os.path.join(root, file), datasets_dir)
+                    csv_files.append(rel_path)
+
+        return csv_files
 
     def reset(self, delete_files: bool = False) -> None:
         """
@@ -346,9 +609,8 @@ class BenchmarkManager:
 
         # Process only benchmarks in the source benchmark list
         for benchmark_id in source_manager.benchmark_ids:
-            filename = id_to_filename(benchmark_id)
-            source_benchmark_dir = os.path.join(source_manager.storage_path, filename)
-            target_benchmark_dir = os.path.join(self.storage_path, filename)
+            source_benchmark_dir = os.path.join(source_manager.storage_path, benchmark_id)
+            target_benchmark_dir = os.path.join(self.storage_path, benchmark_id)
 
             # Skip if source directory doesn't exist or if target already exists
             if not os.path.isdir(source_benchmark_dir) or os.path.exists(target_benchmark_dir):
@@ -358,10 +620,6 @@ class BenchmarkManager:
                 shutil.copytree(source_benchmark_dir, target_benchmark_dir)
                 logger.info(f"Copied benchmark files for {benchmark_id}")
                 files_merged += 1
-
-                # If the benchmark is in our meta info, update the path
-                if benchmark_id in self.benchmark_ids:
-                    self.update_meta_info(benchmark_id, {"path": target_benchmark_dir})
             except Exception as e:
                 logger.error(f"Error copying benchmark {benchmark_id}: {str(e)}")
 

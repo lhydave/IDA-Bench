@@ -6,6 +6,7 @@ import concurrent.futures
 from kaggle.api.kaggle_api_extended import KaggleApi
 from logger import logger
 from data_manager.utils import id_to_filename
+import zipfile
 
 
 class DatasetManager:
@@ -208,7 +209,7 @@ class DatasetManager:
     def download_dataset_file(self, dataset_id: str) -> None:
         """Download the dataset files using Kaggle API."""
         # Define the target directory in our storage structure
-        filename = id_to_filename(dataset_id)
+        filename = id_to_filename(dataset_id, False)
         dataset_dir = os.path.join(self.storage_path, filename)
 
         if os.path.exists(dataset_dir) and os.path.isdir(dataset_dir):
@@ -234,6 +235,20 @@ class DatasetManager:
                 self.api.dataset_download_files(dataset_id, path=dataset_dir, unzip=True, quiet=False)
             elif meta_info.type == "competition":
                 self.api.competition_download_files(dataset_id, path=dataset_dir, quiet=False)
+                # unzip the downloaded files
+                zip_files = [f for f in os.listdir(dataset_dir) if f.endswith(".zip")]
+                if zip_files:
+                    logger.info(f"Extracting {len(zip_files)} zip files for competition dataset {dataset_id}")
+                    for zip_file in zip_files:
+                        zip_path = os.path.join(dataset_dir, zip_file)
+                        try:
+                            with zipfile.ZipFile(zip_path, "r") as zip_ref:
+                                zip_ref.extractall(dataset_dir)
+                            # Remove the zip file after successful extraction
+                            os.remove(zip_path)
+                            logger.info(f"Extracted and removed zip file: {zip_file}")
+                        except Exception as e:
+                            logger.error(f"Error extracting zip file {zip_file}: {str(e)}")
             else:
                 logger.error(f"Unknown dataset type for {dataset_id}: {meta_info.type}")
                 return
