@@ -3,11 +3,14 @@ from data_manager.utils import id_to_filename
 import json
 import os
 import shutil
-from scoring.scorings import sample_scoring_function, aggregrate_dataset_info
+from scoring.scorings import sample_scoring_function, aggregrate_dataset_info, hard_package_plot_penalty_scoring_function, hard_code_size_plot_penalty_scoring_function, sample_scoring_function_with_code_size  # noqa: E501
 from scoring.samplings import topk, uniform
 from logger import logger
 
-scoring_methods = {"sample": sample_scoring_function}
+scoring_methods = {"sample": sample_scoring_function,
+                   "hard_package_plot_penalty": hard_package_plot_penalty_scoring_function,
+                   "hard_code_size_plot_penalty": hard_code_size_plot_penalty_scoring_function,
+                   "sample_with_code_size": sample_scoring_function_with_code_size}
 
 sampling_methods = {"topk": topk, "uniform": uniform}
 
@@ -18,7 +21,9 @@ class Scoring:
     It also supports batch scoring of multiple notebooks and the interaction with
     `DatasetManager` and `NotebookManager` classes in the `data_manager` module.
 
-    The scoring data will be stored by a json dict in the format of {'notebook_id': score}
+    The scoring data will be stored by a json dict in the format of {'notebook_id': score_data}
+    where score_data can be either a float (for backward compatibility) or
+    a dict containing the total score and component scores.
     """
 
     def __init__(
@@ -26,7 +31,7 @@ class Scoring:
     ):
         self.dataset_manager = dataset_manager
         self.notebook_manager = notebook_manager
-        self.scores: dict[str, float] = {}
+        self.scores: dict[str, float | dict[str, float]] = {}
         self.store_path = store_path
         logger.info(f"Initializing Scoring module with store_path: {store_path}")
         self.sync(True)
@@ -64,7 +69,7 @@ class Scoring:
             except Exception as e:
                 logger.error(f"Error saving scores to {self.store_path}: {str(e)}")
 
-    def score_notebook(self, notebook_id: str, scoring_method) -> float:
+    def score_notebook(self, notebook_id: str, scoring_method) -> float | dict[str, float]:
         """
         Calculate the score of a given notebook.
 
@@ -74,7 +79,8 @@ class Scoring:
                                  Defaults to "sample".
 
         Returns:
-            float: The score of the notebook.
+            Union[float, dict[str, float]]: The score of the notebook, either as a float or a dictionary with
+                                           component scores.
 
         Raises:
             ValueError: If the scoring method is not found or required information is missing.
@@ -107,7 +113,7 @@ class Scoring:
         scoring_function = scoring_methods[scoring_method]
 
         # Extract parameters for scoring function
-        score = scoring_function(
+        score_result = scoring_function(
             # Dataset aggregated parameters
             **aggregated_dataset_info,
             # NotebookInfo parameters
@@ -135,21 +141,25 @@ class Scoring:
             file_size=notebook_info.code_info.file_size,
             pure_code_size=notebook_info.code_info.pure_code_size,
             num_plots=notebook_info.code_info.num_plots,
+            import_list=notebook_info.code_info.import_list,
         )
 
-        score = round(score, 4)
-
-        logger.info(f"Notebook {notebook_id} scored: {score}")
+        # Handle both dictionary and float return types
+        if isinstance(score_result, dict):
+            logger.info(f"Notebook {notebook_id} scored: {score_result['total_score']} (with component scores)")
+        else:
+            score_result = round(score_result, 4)
+            logger.info(f"Notebook {notebook_id} scored: {score_result}")
 
         # Update scores dictionary
-        self.scores[notebook_id] = score
+        self.scores[notebook_id] = score_result
 
         # Sync to file
         self.sync(False)
 
-        return score
+        return score_result
 
-    def score_notebooks(self, notebook_ids: set[str], method: str) -> dict[str, float]:
+    def score_notebooks(self, notebook_ids: set[str], method: str) -> dict[str, float | dict[str, float]]:
         """
         Calculate the scores of multiple notebooks.
 
@@ -158,7 +168,7 @@ class Scoring:
             method (str): The scoring method to use.
 
         Returns:
-            dict[str, float]: A dictionary mapping notebook IDs to their scores.
+            Dict[str, Union[float, Dict[str, float]]]: A dictionary mapping notebook IDs to their scores.
 
         Raises:
             ValueError: If any of the notebooks fail to score, containing details of all failures.
@@ -177,7 +187,7 @@ class Scoring:
         if errors:
             error_count = len(errors)
             error_details = "\n".join([f"{nb_id}: {error}" for nb_id, error in errors.items()])
-            logger.info(f"Completed batch scoring: {len(scores)} successful, {error_count} failed")
+            logger.info(f"Completed batch scoring: {len(scores)} successful, {error_count} failed. Details:\n{error_details}")  # noqa: E501
             # raise ValueError(
             #     f"Failed to score {error_count} notebooks out of {len(notebook_ids)}.\nDetails:\n{error_details}"
             # )
@@ -223,7 +233,7 @@ class Scoring:
 
         return notebook_info, dataset_infos
 
-    def sample_scored_notebooks(self, num: int, method: str, store_path: str = "notebook_samples") -> None:
+    def sample_scored_notebooks(self, num: int, method: str, store_path: str = "notebook_samples") -> None:  # noqa: C901
         """
         Sample num notebooks from self.scores and save them to store_path for human inspection.
         It will uniformly sample num notebooks from self.scores in descending order.
@@ -258,8 +268,19 @@ class Scoring:
         logger.info(f"Creating directory: {store_path}")
         os.makedirs(store_path)
 
+        # Helper function to extract score for sorting
+        def get_score_value(item: tuple[str, float | dict[str, float]]) -> float:
+            _, score_data = item
+            if isinstance(score_data, dict) and "total_score" in score_data:
+                return float(score_data["total_score"])
+            elif isinstance(score_data, float | int):
+                return float(score_data)
+            else:
+                # Fallback for any unexpected types
+                return 0.0
+
         # Sort notebooks by score in descending order
-        sorted_notebooks = sorted(self.scores.items(), key=lambda x: x[1], reverse=True)
+        sorted_notebooks = sorted(self.scores.items(), key=get_score_value, reverse=True)
 
         if len(sorted_notebooks) == 0:
             logger.warning("No scored notebooks available for sampling.")
@@ -270,8 +291,14 @@ class Scoring:
         errors = {}
 
         for idx in sampled_indices:  # type: ignore
-            notebook_id, score = sorted_notebooks[idx]
-            logger.info(f"Processing sample notebook {notebook_id} with score {score}")
+            notebook_id, score_data = sorted_notebooks[idx]
+            # Extract the total score for display
+            if isinstance(score_data, dict) and "total_score" in score_data:
+                total_score = score_data["total_score"]
+            else:
+                total_score = score_data
+
+            logger.info(f"Processing sample notebook {notebook_id} with score {total_score}")
 
             try:
                 # Get notebook info and dataset infos
@@ -279,7 +306,7 @@ class Scoring:
 
                 # Prepare info for JSON
                 info_dict = {
-                    "score": score,
+                    "score_data": score_data,
                     "notebook_info": notebook_info.to_dict(),
                     "dataset_infos": {
                         dataset_id: dataset_info.to_dict() for dataset_id, dataset_info in dataset_infos.items()
@@ -300,8 +327,8 @@ class Scoring:
                 if notebook_path and os.path.exists(notebook_path):
                     dest_path = os.path.join(store_path, f"{notebook_filename}.ipynb")
                     shutil.copy2(notebook_path, dest_path)
-                    logger.info(f"Saved notebook {notebook_id} (score: {score}) to {dest_path}")
-                    print(f"Saved notebook {notebook_id} (score: {score}) to {dest_path}")
+                    logger.info(f"Saved notebook {notebook_id} (score: {total_score}) to {dest_path}")
+                    print(f"Saved notebook {notebook_id} (score: {total_score}) to {dest_path}")
                     successful_count += 1
                 else:
                     error_msg = f"Notebook file for {notebook_id} not found at {notebook_path}"
