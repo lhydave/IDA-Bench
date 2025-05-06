@@ -15,17 +15,21 @@ wheels/
 *.csv
 *.DS_Store
 *.json
+!walmart_data/*.json
 *.log
 
 # configuration files
 interpreter_config.toml
 llm_config.toml
+llm_config_user.toml
+llm_config_agent.toml
 
 # checkpoints
 checkpoints
 
 # generated test files
 test/
+test_data/
 source/
 
 example/walmart/llm_test/results/*

@@ -69,7 +69,6 @@ class Llm:
         self.api_key = None
         self.api_version = None
         self._is_loaded = False
-
         # Budget manager powered by LiteLLM
         self.max_budget = None
 
@@ -299,7 +298,6 @@ Continuing...
             params["temperature"] = self.temperature
         if hasattr(self.interpreter, "conversation_id"):
             params["conversation_id"] = self.interpreter.conversation_id
-
         # Set some params directly on LiteLLM
         if self.max_budget:
             litellm.max_budget = self.max_budget

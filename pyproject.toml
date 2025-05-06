@@ -17,6 +17,9 @@ dependencies = [
     "dateparser>=1.2.1",
     "playwright>=1.51.0",
     "seaborn>=0.13.2",
+    "statsmodels>=0.14.4",
+    "nbconvert>=7.16.6",
+    "scikit-learn>=1.6.1",
 ]
 
 [dependency-groups]

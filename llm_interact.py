@@ -8,55 +8,7 @@ from copy import deepcopy
 import time
 from typing import Any
 from interpreter import OpenInterpreter
-import threading
-
-
-class RateLimiter:
-    """Simple rate limiter to enforce requests per minute (RPM) limits."""
-
-    def __init__(self, rpm: int = 100):
-        self.rpm = rpm
-        self.request_timestamps: list[float] = []
-        self.lock = threading.Lock()
-        if self.rpm <= 0:
-            raise ValueError("RPM must be a positive integer.")
-        self.messages_count = 0
-
-    def update_request_timestamps(self, messages: list[dict[str, Any]]) -> bool:
-        try:
-            assistant_messages_count = sum(1 for message in messages if message["role"] == "assistant")
-            new_messages_count = assistant_messages_count - self.messages_count
-            logger.debug(f"Updating request timestamps: {new_messages_count} new messages")
-            with self.lock:
-                self.messages_count = assistant_messages_count
-                self.request_timestamps.extend([time.time()] * new_messages_count)
-                return True
-        except Exception as e:
-            logger.error(f"Failed to update request timestamps: {str(e)}")
-            return False
-
-    def wait_if_needed(self) -> None:
-        current_time = time.time()
-
-        # Calculate the sliding window (1 minute)
-        one_minute_ago = current_time - 60
-
-        with self.lock:
-            # Remove timestamps older than 1 minute
-            self.request_timestamps = [t for t in self.request_timestamps if t >= one_minute_ago]
-
-            # Check if we've hit the limit
-            if len(self.request_timestamps) >= self.rpm:
-                # Calculate how long to wait
-                # Get unique timestamps and find the median
-                unique_timestamps = sorted(set(self.request_timestamps))
-                oldest_allowed_timestamp = unique_timestamps[len(unique_timestamps) // 2]  # median of unique timestamps
-                wait_time = 60 - (current_time - oldest_allowed_timestamp)
-
-                if wait_time > 0:
-                    logger.info(f"Rate limit reached. Waiting {wait_time:.2f} seconds...")
-                    time.sleep(wait_time)
-
+import re
 
 def initialize_interpreter(config_path: str) -> OpenInterpreter:
     try:
@@ -90,7 +42,7 @@ class LLMConfig:
     run_code: bool = False
     api_base: str | None = None
     checkpoint_path: str | None = None
-    rpm: int = 100
+    system_prompt: str | None = None
 
     @classmethod
     def from_toml(cls, config_path: str) -> "LLMConfig":
@@ -126,8 +78,8 @@ class LLMConfig:
             raise ValueError("API base must be a string or None.")
         if not isinstance(self.checkpoint_path, str | type(None)):
             raise ValueError("Checkpoint path must be a string or None.")
-        if not isinstance(self.rpm, int) or self.rpm < 0:
-            raise ValueError("RPM must be a non-negative integer.")
+        if not isinstance(self.system_prompt, str | type(None)):
+            raise ValueError("System prompt must be a string or None.")
 
 
 class LLMInteractor:
@@ -144,10 +96,12 @@ class LLMInteractor:
         self.send_queue = []
         self.interpreter_config_path = interpreter_config_path
         logger.info(f"Initialized LLMInteractor with model: {config.model}, temperature: {config.temperature}")
+        self.system_prompt = None
         # Initialize rate limiters
-        self.default_rate_limiter = RateLimiter(rpm=config.rpm)
 
         if config.run_code:
+            if config.system_prompt:
+                raise ValueError("System prompt should not be in llm_config.toml when run_code is enabled.")
             # Initialize interpreter if run_code is enabled
             if not interpreter_config_path:
                 raise ValueError("interpreter_config_path is required when run_code is enabled.")
@@ -164,11 +118,16 @@ class LLMInteractor:
             if config.api_base:
                 litellm.api_base = config.api_base
             litellm.api_key = config.api_key
+            if config.system_prompt:
+                self.system_prompt = config.system_prompt
+                self.messages.append({"role": "system", "content": config.system_prompt})
 
     def reset_conversation(self):
         """Reset conversation history."""
         logger.debug("Resetting conversation history")
         self.messages = []
+        if self.system_prompt:
+            self.messages.append({"role": "system", "content": self.system_prompt})
         if hasattr(self, "interpreter"):
             # Reset interpreter conversation if using it
             self.interpreter.reset()
@@ -223,6 +182,7 @@ class LLMInteractor:
                         model=self.config.model,
                         temperature=self.config.temperature,
                         messages=messages,
+                        api_base=self.config.api_base,
                     )
                     logger.info(f"LLM API call successful on attempt {attempt + 1}")
 
@@ -235,12 +195,22 @@ class LLMInteractor:
                     return [response_messages]
 
             except Exception as e:
-                last_exception = e
-                logger.warning(f"LLM API call failed (attempt {attempt + 1}/{max_attempts}): {str(e)}")
-                if attempt < max_attempts - 1 and retry:
-                    backoff_time = self.config.retry_delay * (attempt + 1)
-                    logger.info(f"Retrying in {backoff_time} seconds...")
-                    time.sleep(backoff_time)
+                try:
+                    retryDelay = re.search(r"retryDelay\": \"(\d+)s\"", str(e.message))
+                    if retryDelay:
+                        retryDelay = int(retryDelay.group(1))
+                    else:
+                        retryDelay = self.config.retry_delay
+                    logger.info(f"Retry delay: {retryDelay} seconds")
+                    time.sleep(retryDelay)
+                except Exception as e:
+                    logger.warning(f"Failed to parse retry delay from error: {str(e)}")
+                    last_exception = e
+                    logger.warning(f"LLM API call failed (attempt {attempt + 1}/{max_attempts}): {str(e)}")
+                    if attempt < max_attempts - 1 and retry:
+                        backoff_time = self.config.retry_delay * (attempt + 1)
+                        logger.info(f"Retrying in {backoff_time} seconds...")
+                        time.sleep(backoff_time)
 
         # If we get here, all attempts failed
         logger.error(f"All {max_attempts} attempts to call LLM API failed. Last error: {str(last_exception)}")

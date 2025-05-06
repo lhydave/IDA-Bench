@@ -1,0 +1,9 @@
+api_base ="http://localhost:4000"
+api_key = "test-123"
+model = "litellm_proxy/your-model"
+temperature = 0.4
+max_retries = 3
+retry_delay = 2
+run_code = false
+checkpoint_path = "checkpoints/agent_checkpoint.json"
+# rpm = 10
