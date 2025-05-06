@@ -210,7 +210,7 @@ The meaning of each file is as follows.
         - The datasets are stored in the same format as the dataset manager, i.e., `author1/dataset1/` or `competition1/`.
         - It could be different from the original datasets, since the datasets may be preprocessed for the benchmark.
     - `instructions?`: store the instructions for data analysis agents (LLM agents).
-        - TODO: It could be just a markdown file.
+        - TODO: It could be just a markdown file. SUGGESTION: single file (even with multiple tasks that will be parsed later) is far easier to manage.
     - `ground_truths?`: store the ground truths of the code-running result.
         - TODO: You should consider the prediction task, which may need a test set.
 
