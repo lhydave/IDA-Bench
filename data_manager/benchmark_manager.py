@@ -1,5 +1,5 @@
 from data_manager.dataset_manager import DatasetManager
-from data_manager.kaggle_info import BenchmarkInfo
+from data_manager.meta_info import BenchmarkInfo
 from typing import Any
 import os
 import json

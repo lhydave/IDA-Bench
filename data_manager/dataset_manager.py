@@ -1,4 +1,4 @@
-from data_manager.kaggle_info import DatasetInfo
+from data_manager.meta_info import DatasetInfo
 from typing import Any
 import os
 import json
@@ -383,7 +383,7 @@ class DatasetManager:
 
         # Process only datasets in the source dataset list
         for dataset_id in source_manager.dataset_ids:
-            filename = id_to_filename(dataset_id)
+            filename = id_to_filename(dataset_id,False)
             source_dataset_dir = os.path.join(source_manager.storage_path, filename)
             target_dataset_dir = os.path.join(self.storage_path, filename)
 
@@ -448,7 +448,7 @@ class DatasetManager:
         # Update meta info using files to avoid race conditions
         for dataset_id in dataset_ids:
             # Get the path from the downloaded files
-            filename = id_to_filename(dataset_id)
+            filename = id_to_filename(dataset_id, False)
             dataset_dir = os.path.join(self.storage_path, filename)
 
             if os.path.exists(dataset_dir) and os.path.isdir(dataset_dir):

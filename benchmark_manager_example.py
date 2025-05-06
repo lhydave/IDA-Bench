@@ -6,7 +6,7 @@ configure_global_logger(log_file="benchmark_manager.log")
 
 # Import the necessary classes and modules
 from data_manager import BenchmarkManager, DatasetManager  # noqa: E402
-from data_manager.kaggle_info import BenchmarkInfo, DatasetInfo  # noqa: E402
+from data_manager.meta_info import BenchmarkInfo, DatasetInfo  # noqa: E402
 
 
 def main():
