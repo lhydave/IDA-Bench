@@ -52,7 +52,7 @@ def sample_scoring_function(
     Higher score indicates a more complex, popular, and feature-rich notebook.
 
     Args:
-        is_compeition: Whether the notebook uses competition datasets
+        is_competition: Whether the notebook uses competition datasets
         num_csvs: Number of CSV files in the datasets
         contain_time_series: Whether the datasets contain time series data
         votes: Number of votes the notebook has received
@@ -125,7 +125,7 @@ def sample_scoring_function(
     )
 
     # Dataset complexity score
-    dataset_score = (1.0 if is_compeition else 0.0) + min(num_csvs, 10) * 1.0 + (3.0 if contain_time_series else 0.0)
+    dataset_score = (1.0 if is_competition else 0.0) + min(num_csvs, 10) * 1.0 + (3.0 if contain_time_series else 0.0)
 
     # Resource usage score (normalized)
     resource_score = 0.0
@@ -156,7 +156,7 @@ def sample_scoring_function(
 
 def sample_scoring_function_with_code_size(
     # Dataset aggregated info
-    is_compeition: bool,
+    is_competition: bool,
     num_csvs: int,
     contain_time_series: bool,
     # NotebookInfo parameters
@@ -191,7 +191,7 @@ def sample_scoring_function_with_code_size(
     Higher score indicates a more complex, popular, and feature-rich notebook.
 
     Args:
-        is_compeition: Whether the notebook uses competition datasets
+        is_competition: Whether the notebook uses competition datasets
         num_csvs: Number of CSV files in the datasets
         contain_time_series: Whether the datasets contain time series data
         votes: Number of votes the notebook has received
@@ -264,7 +264,7 @@ def sample_scoring_function_with_code_size(
     )
 
     # Dataset complexity score
-    dataset_score = (1.0 if is_compeition else 0.0) + min(num_csvs, 10) * 1.0 + (3.0 if contain_time_series else 0.0)
+    dataset_score = (1.0 if is_competition else 0.0) + min(num_csvs, 10) * 1.0 + (3.0 if contain_time_series else 0.0)
 
     # Resource usage score (normalized)
     resource_score = 0.0
@@ -301,7 +301,7 @@ def sample_scoring_function_with_code_size(
 
 def hard_package_plot_penalty_scoring_function(
     # Dataset aggregated info
-    is_compeition: bool,
+    is_competition: bool,
     num_csvs: int,
     contain_time_series: bool,
     # NotebookInfo parameters
@@ -336,7 +336,7 @@ def hard_package_plot_penalty_scoring_function(
     Higher score indicates a more complex, popular, and feature-rich notebook.
 
     Args:
-        is_compeition: Whether the notebook uses competition datasets
+        is_competition: Whether the notebook uses competition datasets
         num_csvs: Number of CSV files in the datasets
         contain_time_series: Whether the datasets contain time series data
         votes: Number of votes the notebook has received
@@ -453,7 +453,7 @@ def hard_package_plot_penalty_scoring_function(
 
 def hard_code_size_plot_penalty_scoring_function(
     # Dataset aggregated info
-    is_compeition: bool,
+    is_competition: bool,
     num_csvs: int,
     contain_time_series: bool,
     # NotebookInfo parameters
@@ -533,7 +533,7 @@ def hard_code_size_plot_penalty_scoring_function(
     )
 
     # Dataset complexity score
-    dataset_score = (1.0 if is_compeition else 0.0) + min(num_csvs, 10) * 1.0 + (3.0 if contain_time_series else 0.0)
+    dataset_score = (1.0 if is_competition else 0.0) + min(num_csvs, 10) * 1.0 + (3.0 if contain_time_series else 0.0)
 
     # Resource usage score (normalized)
     resource_score = 0.0
