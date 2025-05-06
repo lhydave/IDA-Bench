@@ -8,7 +8,25 @@ from copy import deepcopy
 import time
 from typing import Any
 from interpreter import OpenInterpreter
-import re
+from typing_extensions import Protocol
+
+
+class AgentClass(Protocol):
+    """
+    Protocol for the agent class. It should implement the call_llm method and system_prompt property.
+    """
+
+    # call the LLM with the given prompt and return the response
+    def call_llm(self, message: str, retry: bool = True) -> list[dict[str, Any]]: ...
+
+    # return the system prompt
+    @property
+    def system_prompt(self) -> str | None: ...
+
+    # set the system prompt
+    @system_prompt.setter
+    def system_prompt(self, value: str): ...
+
 
 def initialize_interpreter(config_path: str) -> OpenInterpreter:
     try:
@@ -82,7 +100,7 @@ class LLMConfig:
             raise ValueError("System prompt must be a string or None.")
 
 
-class LLMInteractor:
+class LLMInteractor(AgentClass):
     """A simplified class for handling multi-round interactions with an LLM."""
 
     def __init__(self, config: LLMConfig, interpreter_config_path: str | None = None):
@@ -96,7 +114,7 @@ class LLMInteractor:
         self.send_queue = []
         self.interpreter_config_path = interpreter_config_path
         logger.info(f"Initialized LLMInteractor with model: {config.model}, temperature: {config.temperature}")
-        self.system_prompt = None
+        self._system_prompt = None
         # Initialize rate limiters
 
         if config.run_code:
@@ -119,8 +137,18 @@ class LLMInteractor:
                 litellm.api_base = config.api_base
             litellm.api_key = config.api_key
             if config.system_prompt:
-                self.system_prompt = config.system_prompt
+                self._system_prompt = config.system_prompt
                 self.messages.append({"role": "system", "content": config.system_prompt})
+
+    @property
+    def system_prompt(self) -> str | None:
+        """Get the system prompt."""
+        return self._system_prompt
+
+    @system_prompt.setter
+    def system_prompt(self, value: str):
+        """Set the system prompt."""
+        self._system_prompt = value
 
     def reset_conversation(self):
         """Reset conversation history."""
@@ -195,22 +223,22 @@ class LLMInteractor:
                     return [response_messages]
 
             except Exception as e:
-                try:
-                    retryDelay = re.search(r"retryDelay\": \"(\d+)s\"", str(e.message))
-                    if retryDelay:
-                        retryDelay = int(retryDelay.group(1))
-                    else:
-                        retryDelay = self.config.retry_delay
-                    logger.info(f"Retry delay: {retryDelay} seconds")
-                    time.sleep(retryDelay)
-                except Exception as e:
-                    logger.warning(f"Failed to parse retry delay from error: {str(e)}")
-                    last_exception = e
-                    logger.warning(f"LLM API call failed (attempt {attempt + 1}/{max_attempts}): {str(e)}")
-                    if attempt < max_attempts - 1 and retry:
-                        backoff_time = self.config.retry_delay * (attempt + 1)
-                        logger.info(f"Retrying in {backoff_time} seconds...")
-                        time.sleep(backoff_time)
+                # try:
+                #     retryDelay = re.search(r"retryDelay\": \"(\d+)s\"", str(e.message))
+                #     if retryDelay:
+                #         retryDelay = int(retryDelay.group(1))
+                #     else:
+                #         retryDelay = self.config.retry_delay
+                #     logger.info(f"Retry delay: {retryDelay} seconds")
+                #     time.sleep(retryDelay)
+                # except Exception as e:
+                logger.warning(f"Failed to parse retry delay from error: {str(e)}")
+                last_exception = e
+                logger.warning(f"LLM API call failed (attempt {attempt + 1}/{max_attempts}): {str(e)}")
+                if attempt < max_attempts - 1 and retry:
+                    backoff_time = self.config.retry_delay * (attempt + 1)
+                    logger.info(f"Retrying in {backoff_time} seconds...")
+                    time.sleep(backoff_time)
 
         # If we get here, all attempts failed
         logger.error(f"All {max_attempts} attempts to call LLM API failed. Last error: {str(last_exception)}")
@@ -237,11 +265,11 @@ class LLMInteractor:
             message = self.send_queue.pop(0)
             logger.debug(f"Sending message: {message}")
             # Apply rate limiting before making the request
-            self.default_rate_limiter.wait_if_needed()
+            # self.default_rate_limiter.wait_if_needed()
             response = self.call_llm(message, retry=retry)
             logger.debug(f"Received response: {response}")
             # Update the request timestamps
-            self.default_rate_limiter.update_request_timestamps(self.messages)
+            # self.default_rate_limiter.update_request_timestamps(self.messages)
             self.store_checkpoint()
         return self.messages
 
@@ -304,3 +332,7 @@ class LLMInteractor:
         except Exception as e:
             logger.error(f"Failed to load checkpoint from {checkpoint_path}: {str(e)}")
             raise ValueError(f"Could not load checkpoint: {str(e)}")
+
+
+agent_dict = {"pure-model": LLMInteractor}
+# TODO: Add more agent classes to this dictionary as needed

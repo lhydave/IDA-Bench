@@ -1,4 +1,4 @@
-from data_manager.kaggle_info import NotebookInfo
+from data_manager.meta_info import NotebookInfo
 from typing import Any
 from nbformat import NotebookNode
 import nbformat

@@ -55,7 +55,9 @@ def setup_logger(
 
     return logger
 
+
 logger = setup_logger(name="DataSciBench")  # type: ignore
+
 
 def configure_global_logger(
     level: int | str = logging.INFO,

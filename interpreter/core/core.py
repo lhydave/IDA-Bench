@@ -47,6 +47,7 @@ class OpenInterpreter:
         verbose=False,
         debug=False,
         max_output=2800,
+        max_code_blocks=5,
         safe_mode="off",
         shrink_images=True,
         loop=False,
@@ -92,6 +93,7 @@ class OpenInterpreter:
         self.verbose = verbose
         self.debug = debug
         self.max_output = max_output
+        self.max_code_blocks = max_code_blocks
         self.safe_mode = safe_mode
         self.shrink_images = shrink_images
         self.disable_telemetry = disable_telemetry

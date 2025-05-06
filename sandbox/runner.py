@@ -1,0 +1,292 @@
+import os
+import sys
+import tomllib
+import shutil
+import traceback
+from typing import Any
+
+# Add the current directory to the Python path to import local modules
+sys.path.append("/app")
+
+from logger import logger, configure_global_logger
+
+
+def load_config(config_path: str) -> dict[str, Any]:
+    """Load a TOML configuration file."""
+    try:
+        with open(config_path, "rb") as f:
+            return tomllib.load(f)
+    except Exception as e:
+        logger.error(f"Failed to load config from {config_path}: {e}")
+        raise
+
+
+def setup_environment(test_case_id: str) -> dict[str, Any]:
+    """
+    Set up the runtime environment by loading configurations and
+    preparing directories for interaction.
+
+    Args:
+        test_case_id: ID of the test case to run
+
+    Returns:
+        Dictionary containing environment configuration
+    """
+    try:
+        # Load the agent configuration
+        agent_config = load_config("/app/agent_config.toml")
+        logger.info(f"Loaded agent config for {agent_config.get('id', 'unnamed_agent')}")
+
+        # Load the base configuration
+        base_config = load_config("/app/configs/base_config.toml")
+        logger.info("Loaded base configuration")
+
+        # Load interpreter configuration if needed
+        # TODO: If you implement other agent frameworks, you may need to load different configs
+        interpreter_config_path = "/app/configs/interpreter_config.toml"
+        if os.path.exists(interpreter_config_path):
+            interpreter_config = load_config(interpreter_config_path)
+            logger.info("Loaded interpreter configuration")
+        else:
+            interpreter_config = None
+            logger.warning("No interpreter configuration found")
+
+        # Set up checkpoint and log paths
+        checkpoint_path = f"/app/checkpoints/{test_case_id}_{agent_config.get('id', 'unnamed_agent')}.json"
+        log_path = f"/app/logs/{test_case_id}_{agent_config.get('id', 'unnamed_agent')}.log"
+
+        # Configure logging for the runner
+        configure_global_logger(level=os.environ.get("LOG_LEVEL", "INFO"), log_file=log_path)
+
+        return {
+            "test_case_id": test_case_id,
+            "agent_config": agent_config,
+            "base_config": base_config,
+            "interpreter_config": interpreter_config,
+            "checkpoint_path": checkpoint_path,
+            "log_path": log_path,
+        }
+
+    except Exception as e:
+        logger.error(f"Failed to set up environment: {e}")
+        traceback.print_exc()
+        raise
+
+
+def setup_task(test_case_id: str) -> list[dict[str, Any]]:
+    """
+    Set up the task by loading instruction material.
+
+    Args:
+        test_case_id: ID of the test case to run
+
+    Returns:
+        List of task dictionaries
+    """
+    try:
+        # TODO: it would be far simpler if the instructions are given in a single markdown file,
+        # that is, even if the task is multi-round, we can just have a single file with all the instructions
+        # and then parse it into rounds
+        # Check if we have a dedicated instructions directory for this test case
+        instructions_dir = f"/app/instructions/{test_case_id}"
+        if os.path.exists(instructions_dir):
+            # Look for instructions.md or round_*.md files
+            if os.path.exists(os.path.join(instructions_dir, "instructions.md")):
+                with open(os.path.join(instructions_dir, "instructions.md")) as f:
+                    instruction_text = f.read()
+
+                # Create a single task from the instruction
+                tasks = [
+                    {
+                        "id": test_case_id,
+                        "description": instruction_text,
+                        "success_criteria": "Complete the data analysis task as instructed.",
+                        "completed": False,
+                        "summary": "",
+                    }
+                ]
+
+            else:
+                # Look for round_*.md files for multi-round instructions
+                tasks = []
+                round_files = sorted(
+                    [f for f in os.listdir(instructions_dir) if f.startswith("round_") and f.endswith(".md")]
+                )
+
+                for i, round_file in enumerate(round_files):
+                    with open(os.path.join(instructions_dir, round_file)) as f:
+                        instruction_text = f.read()
+
+                    tasks.append(
+                        {
+                            "id": f"{test_case_id}_round_{i + 1}",
+                            "description": instruction_text,
+                            "success_criteria": f"Complete round {i + 1} of the task as instructed.",
+                            "completed": False,
+                            "summary": "",
+                        }
+                    )
+        else:
+            # If no specific instructions directory, look for a general instructions file
+            instructions_file = "/app/instructions/instructions.md"
+            if os.path.exists(instructions_file):
+                with open(instructions_file) as f:
+                    instruction_text = f.read()
+
+                tasks = [
+                    {
+                        "id": test_case_id,
+                        "description": instruction_text,
+                        "success_criteria": "Complete the data analysis task as instructed.",
+                        "completed": False,
+                        "summary": "",
+                    }
+                ]
+            else:
+                logger.error(f"No instructions found for test case {test_case_id}")
+                tasks = [
+                    {
+                        "id": test_case_id,
+                        "description": "No instructions available. Please analyze the provided data.",
+                        "success_criteria": "Complete the data analysis task.",
+                        "completed": False,
+                        "summary": "",
+                    }
+                ]
+
+        logger.info(f"Set up {len(tasks)} tasks for test case {test_case_id}")
+        return tasks
+
+    except Exception as e:
+        logger.error(f"Failed to set up task: {e}")
+        traceback.print_exc()
+        raise
+
+
+def run_interaction(env_config: dict[str, Any], tasks: list[dict[str, Any]]):
+    """
+    Run the interaction between the user agent and assistant agent.
+
+    Args:
+        env_config: Environment configuration
+        tasks: List of tasks to complete
+    """
+    from llm_interact_env import Task, Environment, EnvironmentConfig
+    from llm_interact import LLMConfig
+
+    logger.info("Starting interaction")
+    try:
+        # Create LLM configs
+        user_llm_config = LLMConfig(
+            api_key=env_config["base_config"]["llm"]["api_key"],
+            model=env_config["base_config"]["llm"]["model"],
+            temperature=env_config["base_config"]["llm"]["temperature"],
+            max_retries=env_config["base_config"]["llm"].get("max_retries", 3),
+            retry_delay=env_config["base_config"]["llm"].get("retry_delay", 2),
+            run_code=False,  # User agent doesn't run code
+            api_base=env_config["base_config"]["llm"].get("api_base"),
+            system_prompt=env_config["base_config"]["llm"].get("system_prompt"),
+        )
+
+        # Convert agent_config to LLMConfig
+        assistant_llm_config = LLMConfig(
+            api_key=env_config["agent_config"]["api_key"],
+            model=env_config["agent_config"]["model"],
+            temperature=env_config["agent_config"].get("temperature", 0.4),
+            max_retries=env_config["agent_config"].get("max_retries", 3),
+            retry_delay=env_config["agent_config"].get("retry_delay", 2),
+            run_code=True,  # Assistant agent runs code
+            api_base=env_config["agent_config"].get("api_base"),
+            checkpoint_path=env_config["checkpoint_path"],
+        )
+
+        # TODO: config these parameters properly
+        # Create environment config
+        env_configuration = EnvironmentConfig(
+            user_llm_config=user_llm_config,
+            assistant_llm_config=assistant_llm_config,
+            assistant_agent_type=env_config["agent_config"].get("framework", "pure-model"),
+            interpreter_config_path="/app/configs/interpreter_config.toml",
+            user_prompt_template="You are a data scientist. You need to help solve this task:\n\n{task_list}\n\n{current_task}",
+            max_turns=20,
+            user_continue_prompt_template="The assistant has provided analysis: {assistant_summary}\n\nPlease provide further instructions or indicate if all tasks are completed by including '##ALL_TASKS_COMPLETED##' in your message.",
+            checkpoint_path=env_config["checkpoint_path"],
+        )
+
+        # Convert tasks to Task objects
+        task_objects = [Task(**task) for task in tasks]
+
+        # Create and run the environment
+        environment = Environment(env_configuration, task_objects)
+
+        # TODO: choose the right running mode
+        # Run interaction based on the structure of tasks
+        if len(task_objects) > 1:
+            # Multiple tasks/rounds, use version1
+            from llm_interact_env import run
+
+            run(environment, version_name="version1")
+        else:
+            # Single task, use taubench mode
+            from llm_interact_env import run
+
+            run(environment, version_name="taubench")
+
+        # Interaction completed
+        logger.info("Interaction completed successfully")
+
+    except Exception as e:
+        logger.error(f"Error during interaction: {e}")
+        traceback.print_exc()
+        raise
+
+
+def cleanup_instruction_material():
+    """Remove instruction material after initialization to ensure agent can't access it."""
+    try:
+        if os.path.exists("/app/instructions"):
+            logger.info("Cleaning up instruction material")
+            shutil.rmtree("/app/instructions")
+        else:
+            logger.warning("No instructions directory found to clean up")
+    except Exception as e:
+        logger.error(f"Error cleaning up instruction material: {e}")
+
+
+def main():
+    """Main entry point for the runner script."""
+    logger.info("Starting runner script")
+
+    try:
+        # Get test case ID from environment variable
+        test_case_id = os.environ.get("TEST_CASE_ID")
+        if not test_case_id:
+            logger.error("No TEST_CASE_ID environment variable set")
+            sys.exit(1)
+
+        logger.info(f"Running test case {test_case_id}")
+
+        # Set up the environment
+        env_config = setup_environment(test_case_id)
+
+        # Set up tasks
+        tasks = setup_task(test_case_id)
+
+        # Clean up instruction material
+        cleanup_instruction_material()
+
+        # Run the interaction
+        run_interaction(env_config, tasks)
+
+        logger.info(f"Test case {test_case_id} completed successfully")
+
+    except Exception as e:
+        logger.error(f"Runner script failed: {e}")
+        traceback.print_exc()
+        sys.exit(1)
+
+    logger.info("Runner script completed")
+
+
+if __name__ == "__main__":
+    main()

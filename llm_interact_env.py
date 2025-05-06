@@ -1,14 +1,20 @@
 import json
 import os
-import time
 import tomllib
 from dataclasses import dataclass, asdict
-from typing import List, Dict, Any, Optional, Tuple
+from typing import Any
 from copy import deepcopy
 from logger import logger
 import re
-from llm_interact import LLMInteractor, LLMConfig
 import datetime
+from typing import Literal
+from llm_interact import LLMInteractor, AgentClass, LLMConfig, agent_dict
+
+# TODO from lihy
+# To handle different agent framework, you need to define an abstract agent class, with LLMInteractor as an instance.
+# In the below code, we can see that for assistant agent, we only use its .call_llm() method and its
+# system_prompt, so you need to define a protocol for the agent class, and let LLMInteractor implement it.
+# This will help us to decouple the agent framework from the environment. See llm_interact.py for more details.
 
 
 @dataclass
@@ -57,6 +63,7 @@ class EnvironmentConfig:
 
     user_llm_config: LLMConfig
     assistant_llm_config: LLMConfig
+    assistant_agent_type: Literal["pure-model", "aide"]  # TODO: check supported agent types
     interpreter_config_path: str
     user_prompt_template: str
     # assistant_prompt_template: str
@@ -112,6 +119,11 @@ class Environment:
         self.tasks = tasks
         self.current_task_idx = 0
 
+        # check if the agent type is supported
+        if self.config.assistant_agent_type not in agent_dict:
+            raise ValueError(f"Unsupported agent type: {self.config.assistant_agent_type}.")
+        agent_constructor = agent_dict[self.config.assistant_agent_type]
+
         # Record starting time
         self.start_time = datetime.datetime.now().isoformat()
         logger.info(f"Environment initialization started at {self.start_time}")
@@ -128,7 +140,7 @@ class Environment:
         logger.debug("Creating user agent")
         self.user_agent = LLMInteractor(self.config.user_llm_config)
         logger.debug("Creating assistant agent")
-        self.assistant_agent = LLMInteractor(
+        self.assistant_agent = agent_constructor(
             self.config.assistant_llm_config, interpreter_config_path=self.config.interpreter_config_path
         )
 
@@ -180,18 +192,18 @@ class Environment:
                     "model": self.config.user_llm_config.model,
                     "temperature": self.config.user_llm_config.temperature,
                     "api_base": self.config.user_llm_config.api_base,
-                    "system_prompt": self.config.user_llm_config.system_prompt
+                    "system_prompt": self.config.user_llm_config.system_prompt,
                 },
                 "assistant_agent_config": {
                     "model": self.config.assistant_llm_config.model,
                     "temperature": self.config.assistant_llm_config.temperature,
                     "api_base": self.config.assistant_llm_config.api_base,
-                    "system_prompt": self.assistant_agent.interpreter.system_message
+                    "system_prompt": self.assistant_agent.interpreter.system_message,
                 },
                 "conversation_history": self.conversation_history,
                 # Add timestamp information
                 "start_time": self.start_time,
-                "checkpoint_time": current_time
+                "checkpoint_time": current_time,
             }
 
             os.makedirs(os.path.dirname(os.path.abspath(self.config.checkpoint_path)), exist_ok=True)
@@ -233,7 +245,7 @@ class Environment:
             print()
 
 
-def interact_version1(env: Environment, user_agent: LLMInteractor, assistant_agent: LLMInteractor):
+def interact_version1(env: Environment, user_agent: LLMInteractor, assistant_agent: AgentClass):
     """Run the environment until all tasks are completed or max turns is reached."""
     logger.info("Starting interaction using version1 strategy")
 
@@ -401,7 +413,7 @@ def interact_version1(env: Environment, user_agent: LLMInteractor, assistant_age
     logger.info("Environment run completed")
 
 
-def interact_version2(env: Environment, user_agent: LLMInteractor, assistant_agent: LLMInteractor):
+def interact_version2(env: Environment, user_agent: LLMInteractor, assistant_agent: AgentClass):
     """Run the environment until all tasks are completed or max turns is reached."""
     logger.info("Starting interaction using version2 strategy")
 
@@ -484,7 +496,7 @@ def interact_version2(env: Environment, user_agent: LLMInteractor, assistant_age
         logger.info(f"Turn {number_of_turns} completed")
 
 
-def interact_version_taubench(env: Environment, user_agent: LLMInteractor, assistant_agent: LLMInteractor):
+def interact_version_taubench(env: Environment, user_agent: LLMInteractor, assistant_agent: AgentClass):
     """Run the environment until all tasks are completed or max turns is reached."""
     logger.info("Starting interaction using version2 strategy")
 

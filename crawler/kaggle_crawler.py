@@ -5,7 +5,7 @@ import dateparser
 from typing import Literal
 import asyncio
 from data_manager import DatasetManager, NotebookManager
-from data_manager.kaggle_info import DatasetInfo, NotebookInfo
+from data_manager.meta_info import DatasetInfo, NotebookInfo
 from logger import logger
 from crawler.utils import check_filter_keywords, detect_time_series_data
 from data_manager.utils import notebook_id_to_url, url_to_notebook_id
