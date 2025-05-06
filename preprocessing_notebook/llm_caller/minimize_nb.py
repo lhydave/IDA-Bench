@@ -10,15 +10,7 @@ except ImportError:
     import tomli as tomllib  # For older versions, requires 'pip install tomli'
 from logger import logger
 
-# Get the directory of the current script
-script_dir = os.path.dirname(os.path.abspath(__file__))
-# Get parent directory (preprocessing_notebook folder)
-parent_dir = os.path.dirname(script_dir)
 
-def load_config(config_path):
-    """Load configuration from TOML file."""
-    with open(config_path, "rb") as f:
-        return tomllib.load(f)
 
 def minimize_notebook(prompt_path: str, notebook_path: str, output_folder_path: str, config: dict):
     """

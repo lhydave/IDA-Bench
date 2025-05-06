@@ -36,13 +36,13 @@ warnings.filterwarnings("ignore")
 pd.options.display.max_columns=100 # to see columns
 
 # Code Block 3
-df_store = pd.read_csv('stores.csv') #store data
+df_store = pd.read_csv('processed_data/stores.csv') #store data
 
 # Code Block 4
-df_train = pd.read_csv('train.csv') # train set
+df_train = pd.read_csv('processed_data/train.csv') # train set
 
 # Code Block 5
-df_features = pd.read_csv('features.csv') #external information
+df_features = pd.read_csv('processed_data/features.csv') #external information
 
 # Code Block 6
 # merging 3 different sets
@@ -91,7 +91,7 @@ df.loc[(df['Date'] != '2010-12-31')&(df['Date'] != '2011-12-30'),'Christmas'] = 
 df = df.fillna(0) # filling null's with 0
 
 # Code Block 17
-df.to_csv('clean_data.csv') # assign new data frame to csv for using after here
+df.to_csv('processed_data/clean_data.csv') # assign new data frame to csv for using after here
 
 # Code Block 18
 df["Date"] = pd.to_datetime(df["Date"]) #changing data to datetime for decomposing
