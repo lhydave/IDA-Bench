@@ -1,5 +1,5 @@
 from dataclasses import dataclass, asdict
-from typing import Literal
+from typing import Literal, Any
 import json
 
 
@@ -85,16 +85,11 @@ class NotebookInfo:
 
 @dataclass
 class BenchmarkInfo:
-    url: str  # URL of original notebook
-    title: str  # Title of original notebook
-    input: list[str]  # List of input dataset IDs
-    path: str | None = None  # Local path of benchmark data if available
+    notebook_id: str  # ID of the original notebook
+    input_ids: list[str]  # List of input dataset IDs
+    eval_metric: Any  # Evaluation metric of the benchmark # TODO: specify the type
+    num_rounds: int  # Number of interaction rounds in the benchmark
     # TODO: Add more benchmark-specific attributes as needed
-    # This could include metadata like:
-    # - Number of benchmark rounds
-    # - Difficulty level
-    # - Types of data analysis tasks covered
-    # - Evaluation metrics
 
     @classmethod
     def from_json(cls, json_str: str) -> "BenchmarkInfo":
