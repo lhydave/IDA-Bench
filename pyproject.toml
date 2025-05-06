@@ -47,9 +47,5 @@ target-version = "py311"
 [tool.ruff.lint]
 select = ["F", "E", "W", "UP", "C901"]
 
-[[tool.uv.index]]
-url = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple"
-default = true
-
 [tool.ruff.analyze]
 exclude = ["archived"]

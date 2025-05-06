@@ -19,6 +19,8 @@ def respond(interpreter):
 
     last_unsupported_code = ""
     insert_loop_message = False
+    max_code_blocks = interpreter.max_code_blocks
+    num_code_blocks = 0
 
     while True:
         ## RENDER SYSTEM MESSAGE ##
@@ -363,6 +365,19 @@ def respond(interpreter):
                     yield {"role": "computer", **line}
 
                 ## ↑ CODE IS RUN HERE
+
+                # Increment the code block counter
+                num_code_blocks += 1
+
+                # Check if we've reached the maximum number of code blocks
+                if max_code_blocks and num_code_blocks >= max_code_blocks:
+                    yield {
+                        "role": "computer",
+                        "type": "console",
+                        "format": "output",
+                        "content": f"Maximum number of code blocks ({max_code_blocks}) reached. Stopping execution."
+                    }
+                    break
 
                 # sync up your computer with the interpreter's computer
                 try:

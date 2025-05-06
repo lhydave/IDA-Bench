@@ -7,6 +7,7 @@ supports_vision = false
 
 [interpreter]
 verbose = true
+max_code_blocks = 5
 max_output = 10000
 offline = false
 loop = false
