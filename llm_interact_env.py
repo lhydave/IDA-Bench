@@ -179,12 +179,14 @@ class Environment:
                 "user_agent_config": {
                     "model": self.config.user_llm_config.model,
                     "temperature": self.config.user_llm_config.temperature,
-                    "api_base": self.config.user_llm_config.api_base
+                    "api_base": self.config.user_llm_config.api_base,
+                    "system_prompt": self.config.user_llm_config.system_prompt
                 },
                 "assistant_agent_config": {
                     "model": self.config.assistant_llm_config.model,
                     "temperature": self.config.assistant_llm_config.temperature,
-                    "api_base": self.config.assistant_llm_config.api_base
+                    "api_base": self.config.assistant_llm_config.api_base,
+                    "system_prompt": self.assistant_agent.interpreter.system_message
                 },
                 "conversation_history": self.conversation_history,
                 # Add timestamp information
