@@ -35,6 +35,7 @@ while os.path.exists(checkpoint_path):
 env_config = EnvironmentConfig(
     user_llm_config=user_config,
     assistant_llm_config=assistant_config,
+    assistant_agent_type="pure-model",
     interpreter_config_path="interpreter_config_agent.toml",
     user_prompt_template="""
     You are a data analyst for Walmart.

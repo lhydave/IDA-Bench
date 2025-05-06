@@ -8,6 +8,25 @@ from copy import deepcopy
 import time
 from typing import Any
 from interpreter import OpenInterpreter
+from typing_extensions import Protocol
+
+
+class AgentClass(Protocol):
+    """
+    Protocol for the agent class. It should implement the call_llm method and system_prompt property.
+    """
+
+    # call the LLM with the given prompt and return the response
+    def call_llm(self, message: str, retry: bool = True) -> list[dict[str, Any]]: ...
+
+    # return the system prompt
+    @property
+    def system_prompt(self) -> str | None: ...
+
+    # set the system prompt
+    @system_prompt.setter
+    def system_prompt(self, value: str): ...
+
 
 def initialize_interpreter(config_path: str) -> OpenInterpreter:
     try:
@@ -81,7 +100,7 @@ class LLMConfig:
             raise ValueError("System prompt must be a string or None.")
 
 
-class LLMInteractor:
+class LLMInteractor(AgentClass):
     """A simplified class for handling multi-round interactions with an LLM."""
 
     def __init__(self, config: LLMConfig, interpreter_config_path: str | None = None):
@@ -95,7 +114,7 @@ class LLMInteractor:
         self.send_queue = []
         self.interpreter_config_path = interpreter_config_path
         logger.info(f"Initialized LLMInteractor with model: {config.model}, temperature: {config.temperature}")
-        self.system_prompt = None
+        self._system_prompt = None
         # Initialize rate limiters
 
         if config.run_code:
@@ -118,8 +137,18 @@ class LLMInteractor:
                 litellm.api_base = config.api_base
             litellm.api_key = config.api_key
             if config.system_prompt:
-                self.system_prompt = config.system_prompt
+                self._system_prompt = config.system_prompt
                 self.messages.append({"role": "system", "content": config.system_prompt})
+
+    @property
+    def system_prompt(self) -> str | None:
+        """Get the system prompt."""
+        return self._system_prompt
+
+    @system_prompt.setter
+    def system_prompt(self, value: str):
+        """Set the system prompt."""
+        self._system_prompt = value
 
     def reset_conversation(self):
         """Reset conversation history."""
@@ -303,3 +332,7 @@ class LLMInteractor:
         except Exception as e:
             logger.error(f"Failed to load checkpoint from {checkpoint_path}: {str(e)}")
             raise ValueError(f"Could not load checkpoint: {str(e)}")
+
+
+agent_dict = {"pure-model": LLMInteractor}
+# TODO: Add more agent classes to this dictionary as needed
