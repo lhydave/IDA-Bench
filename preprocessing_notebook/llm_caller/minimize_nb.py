@@ -12,31 +12,20 @@ from logger import logger
 
 
 
-def minimize_notebook(prompt_path: str, notebook_path: str, output_folder_path: str, config: dict):
+def minimize_notebook(prompt_path: str, full_markdown_path: str, output_response_path: str, config: dict):
     """
     Read prompt and notebook markdown, pass to LLM API, and save the minimized notebook.
     
     Args:
         notebook_name (str): Name of the notebook file in full_nb_md folder
     """
-    notebook_filename = os.path.basename(notebook_path)
-    
-    # Remove the extension
-    notebook_name = os.path.splitext(notebook_filename)[0]
-    # Create the output folder if it doesn't exist
-    if not os.path.exists(output_folder_path):
-        os.makedirs(output_folder_path, exist_ok=True)
 
-    # Define output file paths inside the new folder
-    markdown_output_path = os.path.join(output_folder_path, f"{notebook_name}.md")
-    full_response_path = os.path.join(output_folder_path, f"full-response.md")
-    
     # Read prompt and notebook content
     with open(prompt_path, 'r') as f:
         prompt = f.read()
     
-    with open(notebook_path, 'r') as f:
-        notebook_content = f.read()
+    with open(full_markdown_path, 'r') as f:
+        full_markdown_content = f.read()
     
     # Configure litellm with settings from config file
     litellm.api_key = config.get("api_key")
@@ -52,7 +41,7 @@ def minimize_notebook(prompt_path: str, notebook_path: str, output_folder_path: 
 
 Here is the markdown file to minimize:
 
-{notebook_content}
+{full_markdown_content}
 """
     
     # Make a direct call to the LLM API using litellm
@@ -65,54 +54,46 @@ Here is the markdown file to minimize:
         )
         
         # Extract content from response
-        minimized_content = response.choices[0].message["content"]
+        response_content = response.choices[0].message["content"]
 
         # Save the full response to a file
-        with open(full_response_path, 'w') as f:
-            f.write(minimized_content)
-        logger.info(f"Full response saved to: {full_response_path}")
+        with open(output_response_path, 'w') as f:
+            f.write(response_content)
+        logger.info(f"Full response saved to: {output_response_path}")
 
-        logger.info("Extracting markdown content from response")
+        # logger.info("Extracting markdown content from response")
 
-        # Check for unclosed tags
-        opening_count = minimized_content.count("<markdown>")
-        closing_count = minimized_content.count("</markdown>")
+        # # Check for unclosed tags
+        # opening_count = minimized_content.count("<markdown>")
+        # closing_count = minimized_content.count("</markdown>")
 
-        if opening_count != closing_count:
-            error_msg = f"Error: Mismatched markdown tags. Found {opening_count} opening tags and {closing_count} closing tags."
-            logger.error(error_msg)
-            # raise ValueError(error_msg)
+        # if opening_count != closing_count:
+        #     error_msg = f"Error: Mismatched markdown tags. Found {opening_count} opening tags and {closing_count} closing tags."
+        #     logger.error(error_msg)
+        #     # raise ValueError(error_msg)
 
-        # Find all complete tag pairs
-        markdown_matches = re.findall(r"<markdown>(.*?)</markdown>", minimized_content, re.DOTALL)
+        # # Find all complete tag pairs
+        # markdown_matches = re.findall(r"<markdown>(.*?)</markdown>", minimized_content, re.DOTALL)
 
-        if markdown_matches:
-            # Find the longest match
-            longest_markdown = max(markdown_matches, key=len).strip()
-            logger.info(f"Found {len(markdown_matches)} markdown sections")
-            logger.info(f"Using longest section (length: {len(longest_markdown)} characters)")
+        # if markdown_matches:
+        #     # Find the longest match
+        #     longest_markdown = max(markdown_matches, key=len).strip()
+        #     logger.info(f"Found {len(markdown_matches)} markdown sections")
+        #     logger.info(f"Using longest section (length: {len(longest_markdown)} characters)")
             
-            # Save the extracted markdown content
-            with open(markdown_output_path, 'w') as f:
-                f.write(longest_markdown)
-            logger.info(f"Minimized notebook saved to: {markdown_output_path}")
-            return longest_markdown
-        else:
-            # Handle case where tags aren't found
-            logger.info("Warning: Could not find <markdown> tags in the response. Using full response for minimized notebook.")
-            with open(markdown_output_path, 'w') as f:
-                f.write(minimized_content)
-            logger.info(f"full response saved to: {markdown_output_path}")
-            return minimized_content
+        #     # Save the extracted markdown content
+        #     with open(markdown_output_path, 'w') as f:
+        #         f.write(longest_markdown)
+        #     logger.info(f"Minimized notebook saved to: {markdown_output_path}")
+        #     return longest_markdown
+        # else:
+        #     # Handle case where tags aren't found
+        #     logger.info("Warning: Could not find <markdown> tags in the response. Using full response for minimized notebook.")
+        #     with open(markdown_output_path, 'w') as f:
+        #         f.write(minimized_content)
+        #     logger.info(f"full response saved to: {markdown_output_path}")
+        #     return minimized_content
     
     except Exception as e:
         logger.error(f"Error calling LLM API: {str(e)}")
         return None
-
-if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        notebook_name = sys.argv[1]
-        minimize_notebook(notebook_name)
-    else:
-        print("Please provide a notebook filename")
-        print("Usage: python minimize_notebook.py walmart-sales-forecasting.md")
