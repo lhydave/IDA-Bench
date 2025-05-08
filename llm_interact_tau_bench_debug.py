@@ -5,7 +5,7 @@ import logging
 from dataclasses import dataclass
 from typing import List, Dict, Any, Optional
 from copy import deepcopy
-from llm_interact import LLMInteractor, LLMConfig
+from llms.llm_interact import LLMInteractor, LLMConfig
 from llm_interact_env import Environment, EnvironmentConfig, Task, run
 from logger import logger  # Import the logger
 import subprocess  # Added for running the script
@@ -20,9 +20,9 @@ console_handler.setFormatter(formatter)
 logger.addHandler(console_handler)
 
 # Define configuration for both agents
-user_config = LLMConfig.from_toml("./llm_config_user.toml")
+user_config = LLMConfig.from_toml("llm_configs/raw/llm_config_user.toml")
 
-assistant_config = LLMConfig.from_toml("./llm_config_agent.toml")
+assistant_config = LLMConfig.from_toml("llm_configs/raw/llm_config_agent.toml")
 assistant_config.run_code = True
 
 i = 0
@@ -36,7 +36,7 @@ env_config = EnvironmentConfig(
     user_llm_config=user_config,
     assistant_llm_config=assistant_config,
     assistant_agent_type="pure-model",
-    interpreter_config_path="interpreter_config_agent.toml",
+    interpreter_config_path="llm_configs/raw/interpreter_config_agent.toml",
     user_prompt_template="""
     You are a data analyst for Walmart.
     
@@ -49,22 +49,20 @@ env_config = EnvironmentConfig(
 # Define tasks
 tasks = [
     Task(
-        id="1", 
+        id="1",
         description=
         """**Background**:
-        You are James, a data analyst for Walmart. Walmart is a renowned retail corporation that operates a chain of hypermarkets. Here, Walmart has provided walmart_data/walmart.csv combining 45 stores including store information and monthly sales. The data is provided on a weekly basis. Your main objective is to predict sales of stores in a week. You want to focus on your goal and do not want to be distracted by other tasks.
-        
-        
-        **your knowledge**:
-        
-        Missing values should be imputed with zero; 
-        Sales should be positive; 
-        The holidays (Super Bowl, Labor Day, Thanksgiving, and Christmas) have a significant impact on sales;
-        The Holt-Winters exponential smoothing model is the best model for this task;
-        The seasonal period of the Holt-Winters exponential smoothing model should be determined by the agent;
-        Make the data more stationary by computing a differenced series and resampling the data to weekly frequency with averaging values;
-        Use the first 70% of the data in time for training and the rest for testing;
-        Calculate the weighted mean absolute error on the test set, the weight on the holiday weeks should be 5, and the weight on the non-holiday weeks should be 1.""",
+Walmart has provided walmart_data/walmart.csv, a weekly data set that covers 45 stores (store info + weekly sales).
+Goal: predict each store's sales for an upcoming week.
+
+Reference insights  (formerly “your knowledge”)
+    •	Impute any missing values with **0**.
+    •	Sales must be **positive**.
+    •	Holiday weeks (Super Bowl, Labor Day, Thanksgiving, Christmas) have outsized impact on sales.
+    •	**Holt-Winters exponential smoothing** is usually strongest; let the agent infer the seasonal period.
+    •	To improve stationarity you may resample to **weekly means** and/or difference the series.
+    •	Time split: first **70 % for training**, last **30 % for testing**.
+    •	Metric: **weighted MAE** on the test set (weight = 5 for holiday weeks, 1 otherwise).""",
         success_criteria=""
     )
 ]

@@ -172,7 +172,7 @@ def run_interaction(env_config: dict[str, Any], tasks: list[dict[str, Any]]):
         tasks: List of tasks to complete
     """
     from llm_interact_env import Task, Environment, EnvironmentConfig
-    from llm_interact import LLMConfig
+    from llms.llm_interact import LLMConfig
 
     logger.info("Starting interaction")
     try:

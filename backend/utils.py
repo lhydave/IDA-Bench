@@ -84,6 +84,16 @@ class FunctionSpec(DataClassJsonMixin):
         }
 
     @property
+    def as_litellm_tool_dict(self):
+        """Litellm uses OpenAI's tool format."""
+        return self.as_openai_tool_dict
+
+    @property
+    def litellm_tool_choice_dict(self):
+        """Litellm uses OpenAI's tool choice format."""
+        return self.openai_tool_choice_dict
+
+    @property
     def as_anthropic_tool_dict(self):
         """Convert to Anthropic's tool format."""
         return {

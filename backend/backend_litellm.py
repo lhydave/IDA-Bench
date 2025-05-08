@@ -3,13 +3,14 @@
 import logging
 import time
 import re
+import json
 from typing import Any, Dict
 
 import litellm
 
 from .utils import FunctionSpec, OutputType, opt_messages_to_list, backoff_create
 from funcy import notnone, once, select_values
-from llm_interact import LLMConfig
+from llms.llm_interact import LLMConfig
 logger = logging.getLogger("aide")
 
 
@@ -34,14 +35,15 @@ class LiteLLMBackend:
         if "claude" in self.config.model or "gemini" in self.config.model:
             if system_message is not None and user_message is None:
                 system_message, user_message = user_message, system_message
+        additional_kwargs = {}
         # Prepare messages
         messages = []
         messages.extend(opt_messages_to_list(system_message, user_message))
         # Add function spec if provided
         if func_spec is not None and func_spec.name == "submit_review":
-            filtered_kwargs["tools"] = [func_spec.as_anthropic_tool_dict]
+            additional_kwargs["tools"] = [func_spec.as_litellm_tool_dict]
             # Force tool use
-            filtered_kwargs["tool_choice"] = func_spec.anthropic_tool_choice_dict
+            additional_kwargs["tool_choice"] = func_spec.litellm_tool_choice_dict
         # Make API call with backoff for handling rate limits
         for attempt in range(self.config.max_retries):
             try:
@@ -50,9 +52,40 @@ class LiteLLMBackend:
                             model=self.config.model,
                             temperature=self.config.temperature,
                             api_base=self.config.api_base,
+                            **additional_kwargs
                             )
-
-                output = response.choices[0].message["content"]
+                choice = response.choices[0]
+                # Decide how to parse the response
+                if func_spec is None or "tools" not in additional_kwargs:
+                    # No function calling was ultimately used
+                    output = choice.message.content
+                else:
+                    # Attempt to extract tool calls
+                    tool_calls = getattr(choice.message, "tool_calls", None)
+                    if not tool_calls:
+                        logger.warning(
+                            "No function call was used despite function spec. Fallback to text.\n"
+                            f"Message content: {choice.message.content}"
+                        )
+                        output = choice.message.content
+                    else:
+                        first_call = tool_calls[0]
+                        # Optional: verify that the function name matches
+                        if first_call.function.name != func_spec.name:
+                            logger.warning(
+                                f"Function name mismatch: expected {func_spec.name}, "
+                                f"got {first_call.function.name}. Fallback to text."
+                            )
+                            output = choice.message.content
+                        else:
+                            try:
+                                output = json.loads(first_call.function.arguments)
+                            except json.JSONDecodeError as ex:
+                                logger.error(
+                                    "Error decoding function arguments:\n"
+                                    f"{first_call.function.arguments}"
+                                )
+                                raise ex
                 return output
             except Exception as e:
                 last_exception = e

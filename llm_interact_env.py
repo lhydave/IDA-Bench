@@ -8,7 +8,8 @@ from logger import logger
 import re
 import datetime
 from typing import Literal
-from llm_interact import LLMInteractor, AgentClass, LLMConfig, agent_dict
+from llms import agent_dict
+from llms.llm_interact import LLMConfig, BaseMultiRoundHandler
 
 # TODO from lihy
 # To handle different agent framework, you need to define an abstract agent class, with LLMInteractor as an instance.
@@ -63,7 +64,7 @@ class EnvironmentConfig:
 
     user_llm_config: LLMConfig
     assistant_llm_config: LLMConfig
-    assistant_agent_type: Literal["pure-model", "aide"]  # TODO: check supported agent types
+    assistant_agent_type: Literal["base-agent", "aide"]  # TODO: check supported agent types
     interpreter_config_path: str
     user_prompt_template: str
     # assistant_prompt_template: str
@@ -138,7 +139,7 @@ class Environment:
         logger.debug(f"Environment initialized with current_task_idx={self.current_task_idx}")
 
         logger.debug("Creating user agent")
-        self.user_agent = LLMInteractor(self.config.user_llm_config)
+        self.user_agent = agent_dict["user"](self.config.user_llm_config)
         logger.debug("Creating assistant agent")
         self.assistant_agent = agent_constructor(
             self.config.assistant_llm_config, interpreter_config_path=self.config.interpreter_config_path
@@ -245,7 +246,7 @@ class Environment:
             print()
 
 
-def interact_version1(env: Environment, user_agent: LLMInteractor, assistant_agent: AgentClass):
+def interact_version1(env: Environment, user_agent: BaseMultiRoundHandler, assistant_agent: BaseMultiRoundHandler):
     """Run the environment until all tasks are completed or max turns is reached."""
     logger.info("Starting interaction using version1 strategy")
 
@@ -413,7 +414,7 @@ def interact_version1(env: Environment, user_agent: LLMInteractor, assistant_age
     logger.info("Environment run completed")
 
 
-def interact_version2(env: Environment, user_agent: LLMInteractor, assistant_agent: AgentClass):
+def interact_version2(env: Environment, user_agent: BaseMultiRoundHandler, assistant_agent: BaseMultiRoundHandler):
     """Run the environment until all tasks are completed or max turns is reached."""
     logger.info("Starting interaction using version2 strategy")
 
@@ -496,7 +497,7 @@ def interact_version2(env: Environment, user_agent: LLMInteractor, assistant_age
         logger.info(f"Turn {number_of_turns} completed")
 
 
-def interact_version_taubench(env: Environment, user_agent: LLMInteractor, assistant_agent: AgentClass):
+def interact_version_taubench(env: Environment, user_agent: BaseMultiRoundHandler, assistant_agent: BaseMultiRoundHandler):
     """Run the environment until all tasks are completed or max turns is reached."""
     logger.info("Starting interaction using version2 strategy")
 
@@ -514,10 +515,10 @@ def interact_version_taubench(env: Environment, user_agent: LLMInteractor, assis
         # Generate user message based on task and conversation history
         if number_of_turns == 0:
             user_prompt = user_init_prompt(env)
-            task_specific_instruction = "\n".join([task.description for task in env.tasks])
+            project_context = "\n".join([task.description for task in env.tasks])
             if user_agent.system_prompt is not None:
                 user_agent.system_prompt = user_agent.system_prompt.format(
-                    task_specific_instruction=task_specific_instruction
+                    project_context=project_context
                 )
             user_agent.reset_conversation()
         else:
