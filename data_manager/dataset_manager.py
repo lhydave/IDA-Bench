@@ -212,7 +212,7 @@ class DatasetManager:
         filename = id_to_filename(dataset_id, False)
         dataset_dir = os.path.join(self.storage_path, filename)
 
-        if os.path.exists(dataset_dir) and os.path.isdir(dataset_dir):
+        if os.path.exists(dataset_dir) and os.path.isdir(dataset_dir) and len(os.listdir(dataset_dir)) > 0:
             # If it contains at least one csv file, we assume it's already downloaded
             if any(file.endswith(".csv") for file in os.listdir(dataset_dir)):
                 logger.info(f"Dataset {dataset_id} already downloaded at {dataset_dir}")

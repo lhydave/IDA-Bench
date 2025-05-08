@@ -30,6 +30,8 @@ checkpoints
 # generated test files
 test/
 test_data/
+keep_data/
+benchmark_data/
 source/
 
 example/walmart/llm_test/results/*
