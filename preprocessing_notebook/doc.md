@@ -6,7 +6,13 @@ Transforms a raw notebook directory into benchmark artefacts via an automated pi
    Convert the source notebook to Markdown → `full_notebook_markdown`.
 
 2. **Markdown Minimization (LLM)**  
-   Send `full_notebook_markdown` to an external LLM; keep only the cells required to reproduce the primary numerical result → `minimized_notebook_markdown`.
+   Send `full_notebook_markdown` to an external LLM;
+   (1) If the original notebook contains evaluation in itself (classified as `selfEval`), we identify the main numerical result of the `full_notebook_markdown`, specifically identify:
+      - metric name
+      - original column name of response value (for ground truth)
+   Then keep only the cells required to reproduce the primary numerical result → `minimized_notebook_markdown`.
+
+   (2) In the other case, if the original notebook contains evaluation in itself (classified as `toSubmit`), we identify the submission file created. Also there will be an intended metric for the submission file, which we will extract from notebook (TODO)
 
 3. **Markdown → Executable Notebook**  
    Transpile `minimized_notebook_markdown` back into a runnable `.ipynb` → `minimized_notebook`.

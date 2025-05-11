@@ -1,13 +1,21 @@
 Given the markdown file with multiple code blocks, please:
 
-1. First identify the most important quantitative conclusion or final numerical result presented in this file. 
-   - Format your extracted result as follows:
+1. Extract numerical result, metric and response variable:
+
+- Identify the **most important** quantitative conclusion or final numerical result presented in this file. This typically involves a **performance metric** (e.g., accuracy, RMSE, MAE, MSE, RMLSE) used to evaluate predictions of a specific **response variable**. **Never use R^2 as the evaluation metric if there are other metrics**
+
+- Determine the name of the **response variable**'s column in the dataset (e.g., if the prediction is df['growth_rate'], then 'growth_rate' is the response column name). Be accurate and ensure the column name corresponds directly to the original dataset used in the code.
+
+- Format your extracted result as follows:
+
 <main_result>
 {
-  "metric_name": "Brief description of the metric in context",
-  "value from original notebook": numerical_value
+  "metric_name": "Brief description of the evaluation metric in context",
+  "metric_value": 123.456,                        // numeric outcome from the original notebook
+  "response_columns": ["col_name_1", "col_name_2"] // list of response-variable column names
 }
 </main_result>
+
 
 2. Analyze the entire file to determine which code blocks directly contribute to producing this final result by:
 
