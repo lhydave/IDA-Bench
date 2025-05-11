@@ -13,7 +13,7 @@ wheels/
 
 # Datasets
 *.csv
-*.DS_Store
+.DS_Store
 *.json
 !walmart_data/*.json
 *.log
