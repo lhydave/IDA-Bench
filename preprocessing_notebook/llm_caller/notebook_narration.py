@@ -11,7 +11,7 @@ except ImportError:
 from logger import logger
 
 
-def extract_instructions(prompt_path: str, minimized_notebook_path: str, output_response_path: str, config: dict):
+def notebook_narration(prompt_path: str, minimized_notebook_path: str, output_response_path: str, config: dict):
     """
     Extract instructions from minimized notebook by calling an LLM API.
     

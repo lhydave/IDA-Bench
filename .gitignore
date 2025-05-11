@@ -13,7 +13,7 @@ wheels/
 
 # Datasets
 *.csv
-*.DS_Store
+.DS_Store
 *.json
 !walmart_data/*.json
 *.log
@@ -34,7 +34,6 @@ test_data_keep/
 test_data_in_bench/
 test_data_in_bench_no_gt/
 keep_data/
-benchmark_data/
 source/
 walmart_data/
 
