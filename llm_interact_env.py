@@ -192,7 +192,7 @@ class Environment:
                     "model": self.config.user_llm_config.model,
                     "temperature": self.config.user_llm_config.temperature,
                     "api_base": self.config.user_llm_config.api_base,
-                    "system_prompt": self.config.user_llm_config.system_prompt,
+                    "system_prompt": self.user_agent.system_prompt,
                 },
                 "assistant_agent_config": {
                     "model": self.config.assistant_llm_config.model,

@@ -87,8 +87,8 @@ class NotebookInfo:
 class BenchmarkInfo:
     notebook_id: str  # ID of the original notebook
     input_ids: list[str]  # List of input dataset IDs
-    eval_metric: Any  # Evaluation metric of the benchmark # TODO: specify the type
-    num_rounds: int  # Number of interaction rounds in the benchmark
+    eval_metric: Any | None  # Evaluation metric of the benchmark # TODO: specify the type
+    num_rounds: int | None  # Number of interaction rounds in the benchmark
     # TODO: Add more benchmark-specific attributes as needed
 
     @classmethod
