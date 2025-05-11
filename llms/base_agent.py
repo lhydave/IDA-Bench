@@ -29,6 +29,7 @@ class BaseAgent(BaseMultiRoundHandler):
         super().__init__(config)
         self.interpreter_config_path = interpreter_config_path
         self.backend = InterpreterBackend(config, interpreter_config_path)
+        self.system_prompt = self.backend.interpreter.system_message
 
     def reset_conversation(self):
         """Reset conversation history."""
@@ -38,21 +39,11 @@ class BaseAgent(BaseMultiRoundHandler):
             self.backend.interpreter.reset()
 
     def call_llm(self, message: str, retry: bool = True) -> list[dict[str, Any]]:
-        """Call the LLM API with optional retry logic.
-
-        Args:
-            retry: Whether to retry on failure
-
-        Returns:
-            The response from the LLM
-
-        Raises:
-            Exception: If all retry attempts fail
-        """
+        """Call the LLM with the given message."""
         self.messages.append({"role": "user", "content": message})
-        response = self.backend.query(self._system_prompt, self.messages)
-        self.messages.append({"role": "assistant", "content": response})
-        return response
+        responses = self.backend.query(None, message, None, retry=retry)
+        self.messages.extend(responses)
+        return responses
 
     def store_checkpoint(self):
         """Store a checkpoint of the conversation history and configuration."""
@@ -62,7 +53,7 @@ class BaseAgent(BaseMultiRoundHandler):
             "send_queue": self.send_queue,
             "interpreter_config_path": self.interpreter_config_path
         }
-        
+
         if not self.config.checkpoint_path:
             logger.warning("Checkpoint path is not set. Skipping checkpoint storage.")
             return

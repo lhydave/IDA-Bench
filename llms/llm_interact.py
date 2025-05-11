@@ -17,6 +17,7 @@ class LLMConfig:
     run_code: bool = False
     api_base: str | None = None
     checkpoint_path: str | None = None
+    caching: bool = False
     system_prompt: str | None = None
 
     @classmethod
@@ -119,6 +120,31 @@ class BaseMultiRoundHandler(AgentClass):
         if not self.messages:
             return None
         return self.messages[-1]
+    
+    def update_last_message(self, message: str):
+        """Update the last message in the conversation.
+
+        Args:
+            message: The message to update the last message with
+        """
+        self.messages[-1]["content"] = message
+
+    def get_turns(self) -> list[dict[str, Any]]:
+        """Get the turns in the conversation.
+
+        Returns:
+            List of turns
+        """
+        results = []
+        user_turn_processed = False
+        for turn in reversed(self.messages):
+            if turn["role"] == "user" and not user_turn_processed:
+                include_turn = {"role": "user", "content": turn["content"], "cache_control": {"type": "ephemeral"}}
+                user_turn_processed = True
+            else:
+                include_turn = turn
+            results.append(include_turn)
+        return list(reversed(results))
 
     def send_all(self, messages: list[str] | str, retry: bool = True) -> list[dict[str, Any]]:
         """Send all messages in turns to the LLM.

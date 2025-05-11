@@ -23,7 +23,7 @@ interpreter_config.toml
 llm_config.toml
 llm_config_user.toml
 llm_config_agent.toml
-
+llm_configs/llm_config_proxy.yaml
 # checkpoints
 checkpoints
 
@@ -37,3 +37,4 @@ example/walmart/llm_test/results/*
 base_config.toml
 agent_configs/*
 !agent_configs/sample_agent_config.toml
+llm_configs/llm_config_proxy.yaml

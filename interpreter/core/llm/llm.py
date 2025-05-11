@@ -71,6 +71,7 @@ class Llm:
         self._is_loaded = False
         # Budget manager powered by LiteLLM
         self.max_budget = None
+        self.caching = False
 
     def run(self, messages):
         """
@@ -102,7 +103,6 @@ class Llm:
             assert (
                 msg["role"] != "system"
             ), "No message after the first can have the role 'system'"
-
         model = self.model
         if model in [
             "claude-3.5",
@@ -206,8 +206,15 @@ class Llm:
             shrink_images=self.interpreter.shrink_images,
             interpreter=self.interpreter,
         )
+        messages[0]["cache_control"] = {"type": "ephemeral"}
 
-
+        cache_control_injected = False
+        for msg in messages[::-1]:
+            if msg["role"] == "user" and not cache_control_injected:
+                msg["cache_control"] = {"type": "ephemeral"}
+                cache_control_injected = True
+            elif msg["role"] == "user":
+                msg.pop("cache_control", None)
         system_message = messages[0]["content"]
         messages = messages[1:]
 
@@ -296,6 +303,8 @@ Continuing...
             params["max_tokens"] = self.max_tokens
         if self.temperature:
             params["temperature"] = self.temperature
+        if self.caching:
+            params["caching"] = True
         if hasattr(self.interpreter, "conversation_id"):
             params["conversation_id"] = self.interpreter.conversation_id
         # Set some params directly on LiteLLM
