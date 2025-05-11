@@ -91,6 +91,18 @@ dependencies = [
     "backoff>=2.2.1",
     "streamlit==1.40.2",
     "python-dotenv>=1.1.0",
+    "ipynbname>=2024.1.0.0",
+    "xgboost>=3.0.0",
+    "lightgbm>=4.6.0",
+    "yellowbrick>=1.5",
+    "ppscore>=1.1.0",
+    "contractions>=0.1.73",
+    "textstat>=0.7.5",
+    "nltk>=3.9.1",
+    "textblob>=0.19.0",
+    "spacy>=3.8.5",
+    "imblearn>=0.0",
+    "geopy>=2.4.1",
 ]
 
 [dependency-groups]

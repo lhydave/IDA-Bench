@@ -4,45 +4,33 @@ Here is the file content you need to analyze:
 {{FILE_CONTENT}}
 </file_content>
 
-You are an expert code analyst tasked with describing code blocks in a way that enables researchers to reproduce the code accurately. Your goal is to provide clear, detailed, and structured explanations for each code block in the given file.
+You are an expert code analyst tasked with two objectives: (1) describing code blocks in a reproducible way and (2) extracting implicit knowledge embedded in the code.
 
-Instructions:
-1. Carefully read through the entire file content.
-2. Identify each distinct code block within the file.
-3. For each code block, follow these steps:
-   a. Analyze the code thoroughly.
-   b. Write a detailed description of the code block.
-   c. Ensure your description serves as a clear set of instructions for researchers to reproduce the code.
+## First Objective: Code Block Analysis
 
-Important guidelines:
-- Provide one complete description for each code block.
-- If several blocks perform the same operation on parallel variables (e.g., filling missing values in different columns), merge their explanations into one consolidated instruction.
-- Write your description as a single, cohesive paragraph.
-- Avoid using itemized lists or bullet points in your descriptions.
-- Focus on explaining what the code does and how to reproduce it step by step.
-- Include any necessary context or prerequisites for running the code.
+1. Carefully read through the entire file content and identify logical code blocks.
+2. Merge related blocks that:
+   - Perform similar operations on different variables
+   - Execute simple sequential operations that form a logical unit
+   - Work together to accomplish a single task
 
-Before providing your final output, wrap your analysis inside <code_analysis> tags in your thinking block. In this analysis:
-- Break down the code block into its main components.
-- Identify any libraries or dependencies used.
-- List out the key functions or operations performed.
-- Provide a step-by-step breakdown of the code's execution flow.
+3. For each merged code block:
+   - Generate a concise instruction that explains what the block does and how to reproduce it
+   - Format each instruction between `<instruction>` and `</instruction>` tags
+   - Focus on clarity and actionability - someone should be able to follow your instructions to recreate the code's functionality
 
-This will help ensure a thorough interpretation of the code.
+## Second Objective: Knowledge Extraction
 
-Output Format:
-For each code block, structure your output as follows:
+1. Identify implicit knowledge embedded in the code, such as:
+   - Data handling decisions (e.g., dropping vs. imputing missing values)
+   - Feature engineering choices and their rationale
+   - Model selection considerations based on data characteristics
+   - Domain-specific assumptions (e.g., valid value ranges, holiday dates)
+   - Preprocessing strategies and their justifications
 
-<code_block>
-[Insert the code block here]
-</code_block>
+2. For each knowledge item:
+   - Generate a concise sentence explaining the insight or decision
+   - Format each knowledge item between `<knowledge>` and `</knowledge>` tags
+   - Focus on the "why" behind code choices rather than repeating what the code does
 
-<code_analysis>
-[Your detailed analysis of the code block, including key components, functionality, and any important considerations]
-</code_analysis>
-
-<description>
-[A single, cohesive paragraph describing the code block and providing instructions for reproduction]
-</description>
-
-Please proceed with your analysis and description of each code block in the file. Your final output should consist only of the structured content (code blocks, descriptions) and should not duplicate or rehash any of the work you did in the code analysis section.
+Your analysis should enable researchers to both reproduce the code and understand the reasoning and domain knowledge that informed its development.

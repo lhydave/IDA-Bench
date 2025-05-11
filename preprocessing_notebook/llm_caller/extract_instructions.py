@@ -11,7 +11,7 @@ except ImportError:
 from logger import logger
 
 
-def extract_instructions(prompt_path: str, minimized_notebook_path: str, output_dir: str, config: dict):
+def extract_instructions(prompt_path: str, minimized_notebook_path: str, output_response_path: str, config: dict):
     """
     Extract instructions from minimized notebook by calling an LLM API.
     
@@ -24,17 +24,6 @@ def extract_instructions(prompt_path: str, minimized_notebook_path: str, output_
     Returns:
         str: Extracted instructions content or None if an error occurred
     """
-    notebook_filename = os.path.basename(minimized_notebook_path)
-    
-    # Remove the extension
-    notebook_name = os.path.splitext(notebook_filename)[0]
-    
-    # Create the output folder if it doesn't exist
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir, exist_ok=True)
-
-    # Define output file paths inside the output folder
-    full_response_path = os.path.join(output_dir, f"{notebook_name}_full_response.md")
     
     # Read prompt and notebook content
     with open(prompt_path, 'r') as f:
@@ -74,27 +63,10 @@ def extract_instructions(prompt_path: str, minimized_notebook_path: str, output_
         instructions_content = response.choices[0].message["content"]
 
         # Save the full response to a file
-        with open(full_response_path, 'w') as f:
+        with open(output_response_path, 'w') as f:
             f.write(instructions_content)
-        logger.info(f"Full response saved to: {full_response_path}")
+        logger.info(f"Full response from extractor saved to: {output_response_path}")
     
     except Exception as e:
         logger.error(f"Error calling LLM API: {str(e)}")
         return None
-
-
-if __name__ == "__main__":
-    if len(sys.argv) > 2:
-        prompt_path = sys.argv[1]
-        minimized_notebook_path = sys.argv[2]
-        output_folder_path = sys.argv[3] if len(sys.argv) > 3 else os.path.dirname(minimized_notebook_path)
-        
-        # Load config from file if provided
-        config_path = sys.argv[4] if len(sys.argv) > 4 else "preprocessing_notebook/preprocess_config.toml"
-        with open(config_path, "rb") as f:
-            config = tomllib.load(f).get("instruction_extractor", {})
-        
-        extract_instructions(prompt_path, minimized_notebook_path, output_folder_path, config)
-    else:
-        print("Please provide the necessary parameters")
-        print("Usage: python extract_instructions.py <prompt_path> <minimized_notebook_path> [<output_folder_path>] [<config_path>]")

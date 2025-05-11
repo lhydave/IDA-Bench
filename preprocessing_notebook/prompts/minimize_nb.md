@@ -1,7 +1,13 @@
 Given the markdown file with multiple code blocks, please:
 
 1. First identify the most important quantitative conclusion or final numerical result presented in this file. 
-   - Note that this might be a submission file created. If the main quantative result of the file is a submission file, take the file as the "most important quantitative conclusion".
+   - Format your extracted result as follows:
+<main_result>
+{
+  "metric_name": "Brief description of the metric in context",
+  "value from original notebook": numerical_value
+}
+</main_result>
 
 2. Analyze the entire file to determine which code blocks directly contribute to producing this final result by:
 

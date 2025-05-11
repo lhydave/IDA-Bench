@@ -1,3 +1,5 @@
+from logger import logger
+
 def run_text_llm(llm, params):
     ## Setup
     
@@ -21,6 +23,8 @@ def run_text_llm(llm, params):
     exit_code_block = False # NOTE: suddenly return when exit code block, so all information after the first code block is lost
 
     for chunk in llm.completions(**params):
+        logger.debug(f"Chunk in coding_llm: {chunk}")
+        print(f"Chunk in coding_llm: {chunk}")
         if llm.interpreter.verbose:
             print("Chunk in coding_llm", chunk)
 

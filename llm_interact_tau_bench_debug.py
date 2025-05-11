@@ -7,7 +7,7 @@ from typing import List, Dict, Any, Optional
 from copy import deepcopy
 from llms.llm_interact import LLMConfig
 from llm_interact_env import Environment, EnvironmentConfig, Task, run
-from logger import logger  # Import the logger
+from logger import logger, configure_global_logger  # Import the logger
 import subprocess  # Added for running the script
 
 # Set logger to DEBUG level
@@ -18,6 +18,7 @@ console_handler.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 console_handler.setFormatter(formatter)
 logger.addHandler(console_handler)
+configure_global_logger(log_file="llm_interact_tau_bench_debug.log", level=logging.DEBUG)
 
 # Define configuration for both agents
 user_config = LLMConfig.from_toml("llm_configs/raw/llm_config_user.toml")

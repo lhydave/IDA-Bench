@@ -28,40 +28,40 @@ async def main():
     await crawler.setup()
 
     try:
-        # # Step 1: Search for notebooks
-        # logger.info("Starting notebook search...")
-        # search_url = "https://www.kaggle.com/search?q=data+analysis+date%3A90+in%3Anotebooks"
-        # max_notebooks = 20
+        # Step 1: Search for notebooks
+        logger.info("Starting notebook search...")
+        search_url = "https://www.kaggle.com/search?q=data+analysis+date%3A90+in%3Anotebooks"
+        max_notebooks = 20
 
-        # # Search for notebooks and store results in notebook_manager
-        # await crawler.search_notebooks(search_url=search_url, max_notebooks=max_notebooks)
-        # logger.info(f"Found {len(notebook_manager.search_results_ids)} notebooks in search")
+        # Search for notebooks and store results in notebook_manager
+        await crawler.search_notebooks(search_url=search_url, max_notebooks=max_notebooks)
+        logger.info(f"Found {len(notebook_manager.search_results_ids)} notebooks in search")
 
-        # # Step 2: Process the found notebooks
-        # # You can split the processing into multiple batches and run on different nodes
-        # notebook_ids = list(notebook_manager.kept_notebooks_ids)
-        # logger.info(f"Processing {len(notebook_ids)} notebooks...")
+        # Step 2: Process the found notebooks
+        # You can split the processing into multiple batches and run on different nodes
+        notebook_ids = list(notebook_manager.kept_notebooks_ids)
+        logger.info(f"Processing {len(notebook_ids)} notebooks...")
 
-        # # Process notebooks to extract metadata
-        # notebook_infos = await crawler.process_multiple_notebooks(
-        #     notebook_ids=notebook_ids,
-        #     concurrency=4,  # Process 4 notebooks at a time
-        # )
-        # if not notebook_infos:
-        #     logger.warning("No notebooks found in the search results")
-        #     return
+        # Process notebooks to extract metadata
+        notebook_infos = await crawler.process_multiple_notebooks(
+            notebook_ids=notebook_ids,
+            concurrency=4,  # Process 4 notebooks at a time
+        )
+        if not notebook_infos:
+            logger.warning("No notebooks found in the search results")
+            return
 
-        # # Step 3: Download notebook files for successfully processed notebooks
-        # kept_notebooks_ids = list(notebook_manager.kept_notebooks_ids)
-        # logger.info(f"Downloading {len(kept_notebooks_ids)} notebook files...")
+        # Step 3: Download notebook files for successfully processed notebooks
+        kept_notebooks_ids = list(notebook_manager.kept_notebooks_ids)
+        logger.info(f"Downloading {len(kept_notebooks_ids)} notebook files...")
 
-        # # Download notebook files asynchronously
-        # notebook_manager.download_notebook_file_batch(notebook_ids=kept_notebooks_ids, worker_size=5, log_every=2)
+        # Download notebook files asynchronously
+        notebook_manager.download_notebook_file_batch(notebook_ids=kept_notebooks_ids, worker_size=5, log_every=2)
 
-        # # Step 4: Extract code information from downloaded notebooks
-        # logger.info("Extracting code information from downloaded notebooks...")
-        # update_all_code_info(notebook_manager, do_filter=True)
-        # logger.info("Code information extraction completed")
+        # Step 4: Extract code information from downloaded notebooks
+        logger.info("Extracting code information from downloaded notebooks...")
+        update_all_code_info(notebook_manager, do_filter=True)
+        logger.info("Code information extraction completed")
 
         # Step 4.1: Filter notebooks that do not have supported imports
         # NOTE: You should first check 10% samples of the notebooks to set the proper import keywords
@@ -88,48 +88,48 @@ async def main():
         # notebook_manager.merge(other_notebook_manager)
         # dataset_manager.merge(other_dataset_manager)
 
-        # # Step 6: Print summary of processed notebooks
-        # logger.info(f"Successfully processed {len(notebook_infos)} notebooks")
-        # filtered_count = len(notebook_manager.filtered_notebooks_ids)
-        # logger.info(f"Filtered out {filtered_count} notebooks")
+        # Step 6: Print summary of processed notebooks
+        logger.info(f"Successfully processed {len(notebook_infos)} notebooks")
+        filtered_count = len(notebook_manager.filtered_notebooks_ids)
+        logger.info(f"Filtered out {filtered_count} notebooks")
 
-        # # Display statistics about the notebooks
-        # if notebook_infos:
-        #     notebook_list = list(notebook_infos.values())
-        #     avg_runtime = sum(info.runtime for info in notebook_list) / len(notebook_list) if notebook_list else 0
-        #     avg_votes = sum(info.votes for info in notebook_list) / len(notebook_list) if notebook_list else 0
-        #     avg_views = sum(info.views for info in notebook_list) / len(notebook_list) if notebook_list else 0
-        #     avg_input_size = sum(info.input_size for info in notebook_list) / len(notebook_list) if notebook_list else 0
+        # Display statistics about the notebooks
+        if notebook_infos:
+            notebook_list = list(notebook_infos.values())
+            avg_runtime = sum(info.runtime for info in notebook_list) / len(notebook_list) if notebook_list else 0
+            avg_votes = sum(info.votes for info in notebook_list) / len(notebook_list) if notebook_list else 0
+            avg_views = sum(info.views for info in notebook_list) / len(notebook_list) if notebook_list else 0
+            avg_input_size = sum(info.input_size for info in notebook_list) / len(notebook_list) if notebook_list else 0
 
-        #     logger.info(f"Average runtime: {avg_runtime:.2f} seconds")
-        #     logger.info(f"Average votes: {avg_votes:.2f}")
-        #     logger.info(f"Average views: {avg_views:.2f}")
-        #     logger.info(f"Average input size: {avg_input_size / 1000:.2f} KB")
+            logger.info(f"Average runtime: {avg_runtime:.2f} seconds")
+            logger.info(f"Average votes: {avg_votes:.2f}")
+            logger.info(f"Average views: {avg_views:.2f}")
+            logger.info(f"Average input size: {avg_input_size / 1000:.2f} KB")
 
-        #     # Print the titles of up to 5 notebooks
-        #     for i, info in enumerate(notebook_list[:5]):
-        #         logger.info(f"Notebook {i + 1}: {info.title}")
-        #         logger.info(f"  - URL: {info.url}")
-        #         logger.info(f"  - Input datasets: {', '.join(info.input)}")
+            # Print the titles of up to 5 notebooks
+            for i, info in enumerate(notebook_list[:5]):
+                logger.info(f"Notebook {i + 1}: {info.title}")
+                logger.info(f"  - URL: {info.url}")
+                logger.info(f"  - Input datasets: {', '.join(info.input)}")
 
-        # # Display statistics about the datasets
-        # if dataset_ids:
-        #     logger.info(f"Processed {len(dataset_ids)} datasets")
-        #     time_series_count = sum(
-        #         1
-        #         for d_id in dataset_ids
-        #         if dataset_manager.get_meta_info(d_id) and dataset_manager.get_meta_info(d_id).contain_time_series  # type: ignore
-        #     )
-        #     logger.info(f"Datasets with time series data: {time_series_count}")
+        # Display statistics about the datasets
+        if dataset_ids:
+            logger.info(f"Processed {len(dataset_ids)} datasets")
+            time_series_count = sum(
+                1
+                for d_id in dataset_ids
+                if dataset_manager.get_meta_info(d_id) and dataset_manager.get_meta_info(d_id).contain_time_series  # type: ignore
+            )
+            logger.info(f"Datasets with time series data: {time_series_count}")
 
-        #     # Print information about up to 3 datasets
-        #     for i, dataset_id in enumerate(dataset_ids[:3]):
-        #         dataset_info = dataset_manager.get_meta_info(dataset_id)
-        #         if dataset_info:
-        #             logger.info(f"Dataset {i + 1}: {dataset_info.name}")
-        #             logger.info(f"  - Type: {dataset_info.type}")
-        #             logger.info(f"  - Files: {len(dataset_info.filename_list)}")
-        #             logger.info(f"  - Time series: {'Yes' if dataset_info.contain_time_series else 'No'}")
+            # Print information about up to 3 datasets
+            for i, dataset_id in enumerate(dataset_ids[:3]):
+                dataset_info = dataset_manager.get_meta_info(dataset_id)
+                if dataset_info:
+                    logger.info(f"Dataset {i + 1}: {dataset_info.name}")
+                    logger.info(f"  - Type: {dataset_info.type}")
+                    logger.info(f"  - Files: {len(dataset_info.filename_list)}")
+                    logger.info(f"  - Time series: {'Yes' if dataset_info.contain_time_series else 'No'}")
 
     finally:
         # Clean up resources
