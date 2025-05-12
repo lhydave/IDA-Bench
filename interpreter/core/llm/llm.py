@@ -446,9 +446,13 @@ def fixed_litellm_completions(**params):
 
     params["num_retries"] = 0
 
-    # for msg in params["messages"]:
-    #     if msg["role"] == "user" or msg["role"] == "system":
-    #         msg['content'] = {"type": "text", "text": msg['content'], "cache_control": {"type": "ephemeral"}}
+    marked_as_ephemeral = False
+    for msg in reversed(params["messages"]):
+        if msg["role"] == "system":
+            msg['content'] = [{"type": "text", "text": msg['content'], "cache_control": {"type": "ephemeral"}}]
+        elif msg["role"] == "user" and not marked_as_ephemeral:
+            msg['content'] = [{"type": "text", "text": msg['content'], "cache_control": {"type": "ephemeral"}}]
+            marked_as_ephemeral = True
 
     for attempt in range(attempts):
         try:

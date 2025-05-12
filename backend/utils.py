@@ -35,12 +35,12 @@ def opt_messages_to_list(
     messages = []
     if system_message:
         if isinstance(system_message, str):
-            messages.append({"role": "system", "content": system_message})
+            messages.append({"role": "system", "content": [{"type": "text", "text": system_message, "cache_control": {"type": "ephemeral"}}]})
         else:
             messages.extend(system_message)
     if user_message:
         if isinstance(user_message, str):
-            messages.append({"role": "user", "content": user_message})
+            messages.append({"role": "user", "content": [{"type": "text", "text": user_message, }]})
         else:
             messages.extend(user_message)
     return messages

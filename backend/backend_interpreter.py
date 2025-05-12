@@ -72,7 +72,7 @@ class InterpreterBackend:
         # Make API call with retry logic
         for attempt in range(self.config.max_retries):
             try:
-                response_messages = self.interpreter.chat(messages[-1]["content"], display=False)
+                response_messages = self.interpreter.chat(messages[-1]["content"][0]["text"], display=False)
                 if not isinstance(response_messages, list):
                     logger.warning("Response is not a list, may cause issues.")
                     return response_messages

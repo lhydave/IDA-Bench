@@ -9,7 +9,7 @@ import time
 import re
 from typing import Any
 from backend import LiteLLMBackend, FunctionSpec
-from .llm_interact import LLMConfig, BaseMultiRoundHandler
+from .llm_interact import LLMConfig, BaseMultiRoundHandler, AgentClass
 
 
 user_turn_spec = FunctionSpec(
@@ -65,11 +65,26 @@ class User(BaseMultiRoundHandler):
     def __init__(self, config: LLMConfig):
         super().__init__(config)
         self.backend = LiteLLMBackend(config)
+        self.gatekeeper = None
+        self.follow_up_message = None
+    def add_gatekeeper(self, gatekeeper: AgentClass):
+        self.gatekeeper = gatekeeper
 
     def call_llm(self, message: str, retry: bool = True) -> tuple[list[dict[str, Any]], str]:
         """Call the LLM with the given message."""
-        self.messages.append({"role": "user", "content": message})
+        self.add_message(message, role="user")
+        if self.follow_up_message:
+            self.add_message(self.follow_up_message, role="assistant")
+            return_message = self.follow_up_message
+            self.follow_up_message = None
+            return {"end": False, "user_response": return_message, "gatekeeper_response": None}
         response = self.backend.query(None, None, self.get_turns(), func_spec=user_turn_spec, retry=retry)
-        self.messages.append({"role": "assistant", "content": response['user_response']})
-        return response, response['user_response']
+        self.add_message(response['user_response'], role="assistant")
+        if self.gatekeeper:
+            gatekeeper_response = self.gatekeeper.call_llm(response['user_response'], retry=retry)
+            if gatekeeper_response["contradictory"]:
+                self.follow_up_message = gatekeeper_response["follow_up_instruction"]
+                assert self.follow_up_message is not None, "follow_up_message cannot be None"
+            response["gatekeeper_response"] = gatekeeper_response
+        return response
 

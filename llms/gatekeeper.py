@@ -38,7 +38,6 @@ gatekeeper_spec = FunctionSpec(
         "required": ["contradictory", "follow_up_instruction"],
         "additionalProperties": False
     },
-    cache_control={"type": "ephemeral"}
 )
 
 
@@ -57,7 +56,7 @@ class Gatekeeper(AgentClass):
             self._system_prompt = config.system_prompt
         logger.info(f"Initialized Gatekeeper with model: {config.model}, temperature: {config.temperature}")
         self.backend = LiteLLMBackend(config)
-        self.system_message = [{"role": "system", "content": self.config.system_prompt, "cache_control": {"type": "ephemeral"}}]
+        self.system_message = [{"role": "system", "content": [{"type": "text", "text": self.system_prompt,}]}]
     @property
     def system_prompt(self) -> str | None:
         """Get the system prompt."""

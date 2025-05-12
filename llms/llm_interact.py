@@ -104,12 +104,16 @@ class BaseMultiRoundHandler(AgentClass):
         """Set the system prompt."""
         self._system_prompt = value
 
+    def add_message(self, message: str, role: str = "user"):
+        """Add a message to the conversation."""
+        self.messages.append({"role": role, "content": [{"type": "text", "text": message}]})
+
     def reset_conversation(self):
         """Reset conversation history."""
         logger.debug("Resetting conversation history")
         self.messages = []
-        if self._system_prompt:
-            self.messages.extend([{"role": "system", "content": {"type": "text", "text": self.system_prompt, "cache_control": {"type": "ephemeral"}}}])
+        if self.system_prompt:
+            self.add_message(self.system_prompt, role="system")
 
     def get_last_message(self) -> dict[str, Any] | None:
         """Get the last message in the conversation.
@@ -138,11 +142,7 @@ class BaseMultiRoundHandler(AgentClass):
         results = []
         user_turn_processed = False
         for turn in reversed(self.messages):
-            if turn["role"] == "user" and not user_turn_processed:
-                include_turn = {"role": "user", "content": {"type": "text", "text": turn["content"], "cache_control": {"type": "ephemeral"}}}
-                user_turn_processed = True
-            else:
-                include_turn = turn
+            include_turn = turn
             results.append(include_turn)
         return list(reversed(results))
 

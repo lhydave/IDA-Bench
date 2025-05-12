@@ -523,7 +523,7 @@ def interact_version_taubench(env: Environment, user_agent: BaseMultiRoundHandle
     number_of_turns = 0
     logger.info(f"Starting task loop with max turns: {env.config.max_turns}")
     assistant_message = None
-    alternative_user_message = None
+    user_agent.add_gatekeeper(gatekeeper)
     while number_of_turns < env.config.max_turns:
         logger.debug(f"Starting turn {number_of_turns + 1}")
         # Generate user message based on task and conversation history
@@ -539,27 +539,12 @@ def interact_version_taubench(env: Environment, user_agent: BaseMultiRoundHandle
             user_prompt = assistant_message
         if user_prompt is None:
             raise ValueError("user_prompt cannot be None")
-        logger.debug(f"User prompt generated, length: {len(user_prompt)}")
 
-        if alternative_user_message:
-            user_agent.messages.extend([{"role": "user", "content": user_prompt}, {"role": "assistant", "content": alternative_user_message}])
-            user_message = alternative_user_message
-            alternative_user_message = None
-            user_response = {"user_message": user_message, "end": False}
-            gatekeeper_response = {"contradictory": False, "correct_instruction": None}
-        else:
-            user_response, user_message = user_agent.call_llm(user_prompt)
-            logger.debug(f"User message generated, length: {len(user_message)}")
+        user_response = user_agent.call_llm(user_prompt)
+        logger.debug(f"User message generated, length: {len(user_response['user_response'])}")
 
-            # Validate the message using gatekeeper
-            gatekeeper_response = gatekeeper.call_llm(user_message)
-            logger.debug(f"Gatekeeper response generated")
-            if gatekeeper_response["contradictory"]:
-                logger.warning(f"Message validation failed: {gatekeeper_response}")
-                alternative_user_message = gatekeeper_response["follow_up_instruction"]
-                assert alternative_user_message is not None, "alternative_user_message cannot be None"
         env.conversation_history.append(
-            {"role": "user agent", "prompt_received": user_prompt, "all_messages": deepcopy(user_response), "gatekeeper_response": deepcopy(gatekeeper_response)}
+            {"role": "user agent", "prompt_received": user_prompt, "all_messages": deepcopy(user_response)}
         )
         env._save_checkpoint()
 
@@ -570,11 +555,11 @@ def interact_version_taubench(env: Environment, user_agent: BaseMultiRoundHandle
 
         # Generate assistant response
         logger.debug("Calling assistant agent with user message")
-        assistant_responses = assistant_agent.call_llm(user_message)
+        assistant_responses = assistant_agent.call_llm(user_response['user_response'])
         logger.debug(f"Assistant response generated with {len(assistant_responses)} messages")
 
         env.conversation_history.append(
-            {"role": "assistant agent", "prompt_received": user_message, "all_messages": deepcopy(assistant_responses)}
+            {"role": "assistant agent", "prompt_received": user_response['user_response'], "all_messages": deepcopy(assistant_responses)}
         )
         env._save_checkpoint()
 
