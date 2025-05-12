@@ -9,9 +9,8 @@ dependencies = [
     "numpy==1.26.4",
     "matplotlib",
     "beautifulsoup4",
-    "open-interpreter>=0.4.3",
     "semgrep>=1.119.0",
-    "litellm>=1.67.0.post1",
+    "litellm[proxy]>=1.67.0.post1",
     "kagglehub>=0.3.12",
     "kaggle>=1.7.4.2",
     "dateparser>=1.2.1",
@@ -33,6 +32,15 @@ dependencies = [
     "spacy>=3.8.5",
     "imblearn>=0.0",
     "geopy>=2.4.1",
+    "funcy>=2.0",
+    "dataclasses-json>=0.6.7",
+    "shortuuid>=1.0.13",
+    "inquirer>=3.4.0",
+    "wget>=3.2",
+    "open-interpreter>=0.3.7",
+    "html2text>=2025.4.15",
+    "selenium>=4.32.0",
+    "webdriver-manager>=4.0.2",
 ]
 
 [dependency-groups]
