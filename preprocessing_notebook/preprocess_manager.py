@@ -41,7 +41,7 @@ def extract_notebook_name(full_notebook_path: str) -> str:
 
 
 class PreprocessManager:
-    def __init__(self, full_notebook_path: str, data_dir: str, preprocess_version: str = "toSubmit"):
+    def __init__(self, full_notebook_path: str, data_dir: str, preprocess_version: str = "toSubmit", replace: bool = True):
         # full_notebook_dir: path to the directory containing the full notebook
         # data_dir: directory containing the data
         self.full_notebook_path = full_notebook_path
@@ -102,6 +102,7 @@ class PreprocessManager:
         self.knowledge_path = os.path.join(self.base_dir, "knowledge.md")
 
         self.preprocess_version = preprocess_version
+        self.replace = replace
         # self.instructions_dir = "notebook_instructions"
 
         # # path to the directory(folder) containing the full notebook markdown
@@ -283,12 +284,20 @@ class PreprocessManager:
         reconstruct(prompt_path, minimized_notebook_py_path, metric_info_path, data_dir, submission_path, reconstructing_response_path, config)
         logger.info(f"Reconstructed evaluation response from minimized notebook python file")
         
-    def extract_reconstructed_code(self, reconstructing_response_path: str = None, output_path: str = None):
+    def extract_reconstructed_code(self, reconstructing_response_path: str = None, output_path: str = None, replace: bool = None):
         if reconstructing_response_path is None:
             reconstructing_response_path = self.reconstructing_response_path
             
         if output_path is None:
             output_path = self.reconstructed_code_path
+        
+        if replace is None:
+            replace = self.replace
+        
+        # Check if output file exists and we don't want to replace it
+        if not replace and os.path.exists(output_path):
+            logger.info(f"Skipping extraction as {output_path} already exists and replace=False")
+            return
             
         parse_reconstructed_code(reconstructing_response_path, output_path)
         logger.info(f"Parsed reconstructed code from reconstruction response and saved to {output_path}")
@@ -343,7 +352,7 @@ class PreprocessManager:
         run_evaluation(eval_script_path, y_test_path, y_pred_path, output_json_path)
         logger.info(f"Evaluated reconstructed code")
     
-    ######################################################### Narraition starts here
+    ######################################################### Narration starts here
     
     def narration(self, prompt_path: str = None, notebook_path: str = None, output_path: str = None, config: dict = None):
        
