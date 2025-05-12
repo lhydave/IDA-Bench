@@ -523,6 +523,7 @@ def interact_version_taubench(env: Environment, user_agent: BaseMultiRoundHandle
     number_of_turns = 0
     logger.info(f"Starting task loop with max turns: {env.config.max_turns}")
     assistant_message = None
+    alternative_user_message = None
     while number_of_turns < env.config.max_turns:
         logger.debug(f"Starting turn {number_of_turns + 1}")
         # Generate user message based on task and conversation history
@@ -540,19 +541,25 @@ def interact_version_taubench(env: Environment, user_agent: BaseMultiRoundHandle
             raise ValueError("user_prompt cannot be None")
         logger.debug(f"User prompt generated, length: {len(user_prompt)}")
 
-        user_response, user_message = user_agent.call_llm(user_prompt)
-        logger.debug(f"User message generated, length: {len(user_message)}")
+        if alternative_user_message:
+            user_agent.messages.extend([{"role": "user", "content": user_prompt}, {"role": "assistant", "content": alternative_user_message}])
+            user_message = alternative_user_message
+            alternative_user_message = None
+            user_response = {"user_message": user_message, "end": False}
+            gatekeeper_response = {"contradictory": False, "correct_instruction": None}
+        else:
+            user_response, user_message = user_agent.call_llm(user_prompt)
+            logger.debug(f"User message generated, length: {len(user_message)}")
 
-        # Validate the message using gatekeeper
-        gatekeeper_response = gatekeeper.call_llm(user_message)
-        if gatekeeper_response["contradict"]:
-            logger.warning(f"Message validation failed: {gatekeeper_response['thought']}")
-            # Use the cleaned message if available, otherwise use the original
-            user_message = gatekeeper_response["correct_instruction"] if gatekeeper_response["correct_instruction"] else user_message
+            # Validate the message using gatekeeper
+            gatekeeper_response = gatekeeper.call_llm(user_message)
+            if gatekeeper_response["contradictory"]:
+                logger.warning(f"Message validation failed: {gatekeeper_response}")
+                alternative_user_message = gatekeeper_response["follow_up_instruction"]
+                assert alternative_user_message is not None, "alternative_user_message cannot be None"
         env.conversation_history.append(
             {"role": "user agent", "prompt_received": user_prompt, "all_messages": deepcopy(user_response), "gatekeeper_response": deepcopy(gatekeeper_response)}
         )
-        user_agent.update_last_message(user_message)
         env._save_checkpoint()
 
         # TODO: debug, since gatekeeper may change the user message, we need to check if the user message is changed

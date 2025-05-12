@@ -109,7 +109,7 @@ class BaseMultiRoundHandler(AgentClass):
         logger.debug("Resetting conversation history")
         self.messages = []
         if self._system_prompt:
-            self.messages.append({"role": "system", "content": self._system_prompt})
+            self.messages.extend(self.system_message)
 
     def get_last_message(self) -> dict[str, Any] | None:
         """Get the last message in the conversation.
@@ -139,7 +139,7 @@ class BaseMultiRoundHandler(AgentClass):
         user_turn_processed = False
         for turn in reversed(self.messages):
             if turn["role"] == "user" and not user_turn_processed:
-                include_turn = {"role": "user", "content": turn["content"], "cache_control": {"type": "ephemeral"}}
+                include_turn = {"role": "user", "content": {"type": "text", "text": turn["content"], "cache_control": {"type": "ephemeral"}}}
                 user_turn_processed = True
             else:
                 include_turn = turn

@@ -206,15 +206,15 @@ class Llm:
             shrink_images=self.interpreter.shrink_images,
             interpreter=self.interpreter,
         )
-        messages[0]["cache_control"] = {"type": "ephemeral"}
+        # messages[0]["cache_control"] = {"type": "ephemeral"}
 
-        cache_control_injected = False
-        for msg in messages[::-1]:
-            if msg["role"] == "user" and not cache_control_injected:
-                msg["cache_control"] = {"type": "ephemeral"}
-                cache_control_injected = True
-            elif msg["role"] == "user":
-                msg.pop("cache_control", None)
+        # cache_control_injected = False
+        # for msg in messages[::-1]:
+        #     if msg["role"] == "user" and not cache_control_injected:
+        #         msg["cache_control"] = {"type": "ephemeral"}
+        #         cache_control_injected = True
+        #     elif msg["role"] == "user":
+        #         msg.pop("cache_control", None)
         system_message = messages[0]["content"]
         messages = messages[1:]
 
@@ -445,6 +445,10 @@ def fixed_litellm_completions(**params):
     first_error = None
 
     params["num_retries"] = 0
+
+    # for msg in params["messages"]:
+    #     if msg["role"] == "user" or msg["role"] == "system":
+    #         msg['content'] = {"type": "text", "text": msg['content'], "cache_control": {"type": "ephemeral"}}
 
     for attempt in range(attempts):
         try:

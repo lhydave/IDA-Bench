@@ -31,6 +31,7 @@ class LiteLLMBackend:
         messages: list | str | None,
         func_spec: FunctionSpec | None = None,
         retry: bool = True,
+        output_raw: bool = False,
     ) -> OutputType:
         """BaseMultiRoundHandler already handles system message and user message.
         We just need to pass in the messages and function spec.
@@ -51,6 +52,8 @@ class LiteLLMBackend:
         # Make API call with backoff for handling rate limits
         for attempt in range(self.config.max_retries):
             try:
+                # TODO: prompt caching has bugs, so we disable it for now
+                messages = [{"role": msg['role'], "content": msg['content']['text']} for msg in messages]
                 response = litellm.completion(
                             messages=messages,
                             model=self.config.model,
@@ -59,6 +62,8 @@ class LiteLLMBackend:
                             caching=self.config.caching,
                             **additional_kwargs
                             )
+                if output_raw:
+                    return response
                 choice = response.choices[0]
                 logger.debug(f"Cached Tokens: {response.usage.prompt_tokens_details.cached_tokens}")
                 break
