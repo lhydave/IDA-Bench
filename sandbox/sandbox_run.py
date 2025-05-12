@@ -47,6 +47,7 @@ def run_docker_test(
     checkpoint_path: str,
     submission_path: str,
     log_path: str,
+    timestamp: str,
 ) -> bool:
     """
     Run a test inside a Docker container.
@@ -138,7 +139,7 @@ def run_docker_test(
 
         # Create a unique container name using test_case_id and agent_name
         agent_name = agent_config.get("id", "unnamed_agent")
-        container_name = f"test-{test_case_id}-{agent_name}"
+        container_name = f"test-{test_case_id}-{agent_name}-{timestamp}"
 
         # Run the container
         logger.info(f"Starting Docker container '{container_name}' for test case {test_case_id}")

@@ -6,6 +6,8 @@ import concurrent.futures
 from typing import Any
 from datetime import datetime
 import logging
+import importlib.util
+import pandas as pd
 
 from data_manager.benchmark_manager import BenchmarkManager
 from sandbox.sandbox_run import run_docker_test
@@ -211,6 +213,7 @@ def single_agent_test(
             checkpoint_path=checkpoint_file,
             submission_path=submission_file,
             log_path=log_file,
+            timestamp=timestamp,
         )
 
         if not success:
@@ -230,6 +233,7 @@ def single_agent_test(
             result_file=result_file,
             benchmark_id=test_case_id,
             benchmark_manager=benchmark_manager,
+            submission_path=submission_file,
         )
 
         logger.info(f"Test for agent {agent_id} on test case {test_case_id} completed successfully")

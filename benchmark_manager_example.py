@@ -55,11 +55,7 @@ def main():
         benchmark_info_1 = BenchmarkInfo(
             notebook_id="fake/notebook123",
             input_ids=["titanic", "mikhail1681/walmart-sales"],
-            eval_metric={
-                "rmse": "Root Mean Square Error",
-                "mae": "Mean Absolute Error",
-                "mape": "Mean Absolute Percentage Error",
-            },  # FIXME: this should be replaced with a real one
+            baseline_metric=1.0,
             num_rounds=1,
         )
 
@@ -67,11 +63,7 @@ def main():
         benchmark_info_2 = BenchmarkInfo(
             notebook_id="fake/notebook456",
             input_ids=["titanic"],
-            eval_metric={
-                "accuracy": "Classification Accuracy",
-                "f1_score": "F1 Score",
-                "auc": "Area Under Curve",
-            },  # FIXME: this should be replaced with a real one
+            baseline_metric=1.0,
             num_rounds=3,
         )
 
@@ -169,11 +161,7 @@ Evaluate your model using the provided test dataset and metrics.
         benchmark_manager.update_meta_info(
             benchmark_id_1,
             {
-                "eval_metric": {
-                    "rmse": "Root Mean Square Error",
-                    "mae": "Mean Absolute Error",
-                    "mape": "Mean Absolute Percentage Error with threshold",
-                }
+                "baseline_metric": 1.0
             },
         )
 
