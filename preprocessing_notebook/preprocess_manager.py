@@ -11,6 +11,7 @@ from preprocessing_notebook.utils.run_py_nb import run_python_file
 from preprocessing_notebook.utils.run_eval import run_evaluation
 from preprocessing_notebook.utils.split_dataset import split_dataset
 from preprocessing_notebook.utils.copy_directory import copy_directory
+from preprocessing_notebook.utils.reconstruct_dataset import reconstruct_dataset
 
 from logger import logger, configure_global_logger
 import tomllib
@@ -314,6 +315,10 @@ class PreprocessManager:
             
         parse_evaluation_metrics(response_path, output_path)
         logger.info(f"Parsed evaluation metrics from reconstruction response and saved to {output_path}")
+
+
+
+    ######################################################### Run python notebook and evaluation
         
     def run_python_notebook(self, file_path: str = None, execution_results_path: str = None):
         
@@ -351,6 +356,22 @@ class PreprocessManager:
             
         run_evaluation(eval_script_path, y_test_path, y_pred_path, output_json_path)
         logger.info(f"Evaluated reconstructed code")
+
+    ######################################################### Further reconstruct data for benchmark agents
+    def reconstruct_dataset(self, input_dir: str = None, output_dir: str = None, column_names: list = None):
+        if input_dir is None:
+            input_dir = self.new_data_dir
+            
+        if output_dir is None:
+            output_dir = self.new_data_dir
+
+        if column_names is None:
+            with open(self.metric_info_path, 'r') as f:
+                metric_info = json.load(f)
+            column_names = metric_info['response_columns']
+                
+        reconstruct_dataset(input_dir, output_dir, column_names)
+        logger.info(f"Reconstructed dataset from {input_dir} to {output_dir}")
     
     ######################################################### Narration starts here
     
@@ -416,6 +437,9 @@ class PreprocessManager:
         ### run python notebook and evaluation
         self.run_python_notebook()
         self.run_evaluation()
+
+        ### reconstruct dataset
+        self.reconstruct_dataset()
 
         ### narration
         self.narration()
