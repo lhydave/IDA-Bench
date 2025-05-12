@@ -38,6 +38,7 @@ llm_config.toml
 llm_config_user.toml
 llm_config_agent.toml
 llm_configs/llm_config_proxy.yaml
+llm_configs/llm_config_proxy_haoyu.yaml
 # checkpoints
 checkpoints
 
