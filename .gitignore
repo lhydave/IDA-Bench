@@ -17,6 +17,20 @@ wheels/
 *.json
 !walmart_data/*.json
 *.log
+!preprocessing_notebook/*.json
+!preprocessing_notebook/*.csv
+!preprocessing_notebook/*.ipynb
+!preprocessing_notebook/*.md
+
+!benchmark_data/*.json
+!benchmark_data/*.csv
+!benchmark_data/*.ipynb
+!benchmark_data/*.md
+
+!benchmark_final/*.json
+!benchmark_final/*.csv
+!benchmark_final/*.ipynb
+!benchmark_final/*.md
 
 # configuration files
 interpreter_config.toml
