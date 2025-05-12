@@ -61,38 +61,6 @@ Here is the markdown file to minimize:
             f.write(response_content)
         logger.info(f"Full response saved to: {output_response_path}")
 
-        # logger.info("Extracting markdown content from response")
-
-        # # Check for unclosed tags
-        # opening_count = minimized_content.count("<markdown>")
-        # closing_count = minimized_content.count("</markdown>")
-
-        # if opening_count != closing_count:
-        #     error_msg = f"Error: Mismatched markdown tags. Found {opening_count} opening tags and {closing_count} closing tags."
-        #     logger.error(error_msg)
-        #     # raise ValueError(error_msg)
-
-        # # Find all complete tag pairs
-        # markdown_matches = re.findall(r"<markdown>(.*?)</markdown>", minimized_content, re.DOTALL)
-
-        # if markdown_matches:
-        #     # Find the longest match
-        #     longest_markdown = max(markdown_matches, key=len).strip()
-        #     logger.info(f"Found {len(markdown_matches)} markdown sections")
-        #     logger.info(f"Using longest section (length: {len(longest_markdown)} characters)")
-            
-        #     # Save the extracted markdown content
-        #     with open(markdown_output_path, 'w') as f:
-        #         f.write(longest_markdown)
-        #     logger.info(f"Minimized notebook saved to: {markdown_output_path}")
-        #     return longest_markdown
-        # else:
-        #     # Handle case where tags aren't found
-        #     logger.info("Warning: Could not find <markdown> tags in the response. Using full response for minimized notebook.")
-        #     with open(markdown_output_path, 'w') as f:
-        #         f.write(minimized_content)
-        #     logger.info(f"full response saved to: {markdown_output_path}")
-        #     return minimized_content
     
     except Exception as e:
         logger.error(f"Error calling LLM API: {str(e)}")

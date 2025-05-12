@@ -4,7 +4,10 @@ import json
 import tomllib
 import concurrent.futures
 from typing import Any
+from datetime import datetime
 import logging
+import importlib.util
+import pandas as pd
 
 from data_manager.benchmark_manager import BenchmarkManager
 from sandbox.sandbox_run import run_docker_test
@@ -179,9 +182,18 @@ def single_agent_test(
     logger.info(f"Starting test for agent {agent_id} on test case {test_case_id}")
 
     # Set up paths for this specific test
-    checkpoint_file = os.path.join(paths["checkpoint_path"], f"{test_case_id}_{agent_id}.json")
-    log_file = os.path.join(paths["log_path"], f"{test_case_id}_{agent_id}.log")
-    result_file = os.path.join(paths["result_path"], f"{test_case_id}_{agent_id}.json")
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    checkpoint_file = os.path.join(paths["checkpoint_path"], f"{test_case_id}_{agent_id}_{timestamp}.json")
+    submission_file = os.path.join(paths["checkpoint_path"], f"{test_case_id}_{agent_id}_{timestamp}_submission.csv")
+    log_file = os.path.join(paths["log_path"], f"{test_case_id}_{agent_id}_{timestamp}.log")
+    result_file = os.path.join(paths["result_path"], f"{test_case_id}_{agent_id}_{timestamp}.json")
+
+    # Create empty files if they don't exist
+    for file_path in [checkpoint_file, submission_file, log_file, result_file]:
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        if not os.path.exists(file_path):
+            with open(file_path, 'w') as f:
+                pass  # Create empty file
 
     # Run the test in a Docker container
     try:
@@ -193,13 +205,15 @@ def single_agent_test(
         logger.debug(f"Benchmark data loaded for {test_case_id}: {benchmark_data}")
 
         # Run the test inside a Docker container
-        success = run_docker_test(
+        success = run_docker_test( # TODO: return the test_case_id-agent_id-timestamp
             test_case_id=test_case_id,
             agent_config=agent_config,
             benchmark_manager=benchmark_manager,
             config_path=config_path,
             checkpoint_path=checkpoint_file,
+            submission_path=submission_file,
             log_path=log_file,
+            timestamp=timestamp,
         )
 
         if not success:
@@ -219,6 +233,7 @@ def single_agent_test(
             result_file=result_file,
             benchmark_id=test_case_id,
             benchmark_manager=benchmark_manager,
+            submission_path=submission_file,
         )
 
         logger.info(f"Test for agent {agent_id} on test case {test_case_id} completed successfully")

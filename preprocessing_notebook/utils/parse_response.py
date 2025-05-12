@@ -169,4 +169,96 @@ def parse_instruction_and_knowledge(response_file_path: str, instruction_output_
 
     logger.info(f"Found {len(instruction_items)} instruction items and {len(knowledge_items)} knowledge items")
     return formatted_instructions, formatted_knowledge 
+
+def parse_reconstructed_code(response_file_path: str, output_path: str | None = None) -> str:
+    """
+    Parse reconstructed code from a file containing LLM response, handling tag matching and extraction.
+    """
+    logger.info(f"Reading response from file: {response_file_path}")    
+    
+    # Read the response content from file
+    with open(response_file_path, 'r') as f:
+        response_content = f.read()
+    
+    logger.info("Extracting reconstructed code from response")  
+    
+    # Check for unclosed tags
+    opening_count = response_content.count("<code>")
+    closing_count = response_content.count("</code>")
+
+    if opening_count != closing_count:
+        error_msg = f"Error: Mismatched code tags. Found {opening_count} opening tags and {closing_count} closing tags."  
+        logger.error(error_msg)
+        # raise ValueError(error_msg)
+
+    # Find all complete tag pairs
+    code_matches = re.findall(r"<code>(.*?)</code>", response_content, re.DOTALL)   
+
+    if code_matches:
+        # Find the longest match
+        longest_code = max(code_matches, key=len).strip()
+        logger.info(f"Found {len(code_matches)} reconstructed code sections")
+        logger.info(f"Using longest section (length: {len(longest_code)} characters)")  
+        
+        # Save the extracted code content if output path is provided
+        if output_path:
+            with open(output_path, 'w') as f:
+                f.write(longest_code)
+            logger.info(f"Parsed reconstructed code saved to: {output_path}")
+        return longest_code
+    else:
+        # Handle case where tags aren't found       
+        logger.info("Warning: Could not find <code> tags in the response.")
+        if output_path:
+            with open(output_path, 'w') as f:
+                f.write("No reconstructed code found in the response.")
+            logger.info(f"Empty result saved to: {output_path}")
+        return "No reconstructed code found in the response."
+    
+def parse_evaluation_metrics(response_file_path: str, output_path: str | None = None) -> str:
+    """
+    Parse evaluation metrics from a file containing LLM response, handling tag matching and extraction.
+    """
+    logger.info(f"Reading response from file: {response_file_path}")    
+    
+    # Read the response content from file
+    with open(response_file_path, 'r') as f:
+        response_content = f.read()
+    
+    logger.info("Extracting evaluation metrics from response")  
+    
+    # Check for unclosed tags
+    opening_count = response_content.count("<evaluation>")
+    closing_count = response_content.count("</evaluation>")
+
+    if opening_count != closing_count:
+        error_msg = f"Error: Mismatched evaluation tags. Found {opening_count} opening tags and {closing_count} closing tags."
+        logger.error(error_msg)
+        # raise ValueError(error_msg)
+
+    # Find all complete tag pairs
+    metrics_matches = re.findall(r"<evaluation>(.*?)</evaluation>", response_content, re.DOTALL)
+
+    if metrics_matches: 
+        # Save all metrics sections
+        all_metrics = [match.strip() for match in metrics_matches]
+        logger.info(f"Found {len(metrics_matches)} evaluation metrics sections")
+        
+        # Save all metrics sections if output path is provided
+        if output_path:
+            with open(output_path, 'w') as f:
+                for i, metrics in enumerate(all_metrics, 1):
+                    f.write(f"# === Metrics Section {i} ===\n")
+                    f.write(metrics)
+                    f.write("\n\n")
+            logger.info(f"All {len(all_metrics)} evaluation metrics sections saved to: {output_path}")
+        return all_metrics
+    else:
+        # Handle case where tags aren't found
+        logger.info("Warning: Could not find <evaluation> tags in the response.")
+        if output_path:
+            with open(output_path, 'w') as f:
+                f.write("No evaluation metrics found in the response.")
+            logger.info(f"Empty result saved to: {output_path}")
+        return "No evaluation metrics found in the response."   
     

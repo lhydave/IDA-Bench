@@ -18,6 +18,7 @@ You are an expert code analyst tasked with two objectives: (1) describing code b
    - Generate a concise instruction that explains what the block does and how to reproduce it
    - Format each instruction between `<instruction>` and `</instruction>` tags
    - Focus on clarity and actionability - someone should be able to follow your instructions to recreate the code's functionality
+   - Do **not** include any code blocks bewteen `<instruction>` and `</instruction>` tags--only explanatory text.
 
 ## Second Objective: Knowledge Extraction
 

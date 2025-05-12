@@ -1,6 +1,12 @@
 import os
 import docker
 import tempfile
+try:
+    import tomli_w as toml_writer         # modern, write-only library
+except ImportError:
+    print("tomli_w not found, falling back to toml")
+    import toml as toml_writer            # fall back to toml-0.10+
+
 import shutil
 from typing import Any
 import json
@@ -39,7 +45,9 @@ def run_docker_test(
     benchmark_manager: BenchmarkManager,
     config_path: str,
     checkpoint_path: str,
+    submission_path: str,
     log_path: str,
+    timestamp: str,
 ) -> bool:
     """
     Run a test inside a Docker container.
@@ -53,7 +61,7 @@ def run_docker_test(
         log_path: Path to save logs
 
     Returns:
-        True if the test ran successfully, False otherwise
+        bool: True if successful, False otherwise
     """
     # Ensure Docker image is built
     if not build_docker_image():
@@ -70,7 +78,7 @@ def run_docker_test(
 
     # Write agent config to a temporary file
     temp_agent_config = tempfile.NamedTemporaryFile(delete=False, suffix=".toml", mode="w")
-    json.dump(agent_config, temp_agent_config)
+    toml_writer.dump(agent_config, temp_agent_config)
     temp_agent_config.close()
 
     # Create temporary directory for instructions that will be copied into Docker
@@ -90,25 +98,36 @@ def run_docker_test(
         logger.debug(f"Copied instructions from {instructions_dir} to {temp_instructions_dir}")
 
     # Define volumes to mount
+    print("checkpoint_path", os.path.abspath(checkpoint_path))
+    print("submission_path", os.path.abspath(submission_path))
+    print(f"/app/checkpoints/{os.path.basename(checkpoint_path)}")
+
     volumes = {
         # Mount datasets as read-only
-        os.path.join(benchmark_dir, "datasets"): {"bind": "/app/datasets", "mode": "ro"},
+        os.path.abspath(os.path.join(benchmark_dir, "datasets")): {"bind": "/app/datasets", "mode": "ro"},
         # Mount agent configuration as read-only
-        temp_agent_config.name: {"bind": "/app/agent_config.toml", "mode": "ro"},
+        os.path.abspath(temp_agent_config.name): {"bind": "/app/agent_config.toml", "mode": "ro"},
         # Mount config directory as read-only
-        config_path: {"bind": "/app/configs", "mode": "ro"},
+        os.path.abspath(config_path): {"bind": "/app/configs", "mode": "ro"},
         # Mount necessary code as read-only
         os.path.abspath("data_manager"): {"bind": "/app/data_manager", "mode": "ro"},
         os.path.abspath("interpreter"): {"bind": "/app/interpreter", "mode": "ro"},
+        os.path.abspath("logger.py"): {"bind": "/app/logger.py", "mode": "ro"},
         os.path.abspath("llm_interact.py"): {"bind": "/app/llm_interact.py", "mode": "ro"},
         os.path.abspath("llm_interact_env.py"): {"bind": "/app/llm_interact_env.py", "mode": "ro"},
         os.path.abspath(os.path.join("sandbox", "runner.py")): {"bind": "/app/runner.py", "mode": "ro"},
         # Mount directories for logs and checkpoints (read-write)
-        os.path.dirname(log_path): {"bind": "/app/logs", "mode": "rw"},
-        os.path.dirname(checkpoint_path): {"bind": "/app/checkpoints", "mode": "rw"},
+        os.path.abspath(log_path): {"bind": f"/app/logs/{test_case_id}_{agent_config.get('id', 'unnamed_agent')}.log", "mode": "rw"},
+        os.path.abspath(checkpoint_path): {"bind": f"/app/checkpoints/{test_case_id}_{agent_config.get('id', 'unnamed_agent')}.json", "mode": "rw"},
+        os.path.abspath(submission_path): {"bind": "/app/checkpoints/submission.csv", "mode": "rw"},
+        # TODO first: create a new file in the host system: checkpoints/test_case_id-agent_id-timestamp.json
+        # second: mount the file in the container
+        # same for submission.csv
+        # test_case_id-agent_id-timestamp-submission.csv -> /app/submission.csv
+
         # Mount the temporary instructions directory with read-write permissions
         # so that runner.py can delete instructions after initialization
-        temp_instructions_dir: {"bind": "/app/instructions", "mode": "rw"},
+        os.path.abspath(temp_instructions_dir): {"bind": "/app/instructions", "mode": "rw"},
     }
 
     try:
@@ -118,8 +137,12 @@ def run_docker_test(
             "PYTHONUNBUFFERED": "1",
         }
 
+        # Create a unique container name using test_case_id and agent_name
+        agent_name = agent_config.get("id", "unnamed_agent")
+        container_name = f"test-{test_case_id}-{agent_name}-{timestamp}"
+
         # Run the container
-        logger.info(f"Starting Docker container for test case {test_case_id}")
+        logger.info(f"Starting Docker container '{container_name}' for test case {test_case_id}")
         container = client.containers.run(
             "datasci-benchmark:latest",
             detach=True,
@@ -128,6 +151,7 @@ def run_docker_test(
             mem_limit="4g",
             network_mode="host",  # Use host network for API access
             remove=True,  # Remove container when it exits
+            name=container_name,  # Assign unique name to container
         )
 
         # Stream and capture logs
