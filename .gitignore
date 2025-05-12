@@ -50,8 +50,7 @@ test_data_in_bench_no_gt/
 keep_data/
 source/
 walmart_data/
-
-
+mobile-price-prediction-model/trajactory_mobile_9.md
 example/walmart/llm_test/results/*
 
 base_config.toml
