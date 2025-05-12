@@ -55,11 +55,6 @@ env_config = EnvironmentConfig(
     gatekeeper_llm_config=gatekeeper_config,  # Add gatekeeper config
     assistant_agent_type="base-agent",
     interpreter_config_path="llm_configs/raw/interpreter_config_agent.toml",
-    user_prompt_template="""
-    You are a data analyst for Walmart.
-    
-    {project_context}
-    """,
     max_turns=20,
     checkpoint_path=checkpoint_path
 )
