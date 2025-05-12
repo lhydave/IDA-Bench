@@ -12,9 +12,12 @@ Given the markdown file with multiple code blocks, please:
 {
   "metric_name": "Brief description of the evaluation metric in context",
   "metric_value": 123.456,                        // numeric outcome from the original notebook
-  "response_columns": ["col_name_1", "col_name_2"] // list of response-variable column names
+  "response_columns": ["col_name_1", "col_name_2"], // list of response-variable column names
+  "is_higher_better": true, // true or false. For example, this is true for accuracy, and false for MSE
+  "theoretical_best": 0.0 // The theoretically best achievable value of this metric. For example, this is 0.0 for MSE and 1.0 for accuracy
 }
 </main_result>
+
 
 
 2. Analyze the entire file to determine which code blocks directly contribute to producing this final result by:
