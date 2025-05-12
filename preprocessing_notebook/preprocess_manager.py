@@ -10,6 +10,7 @@ from preprocessing_notebook.utils.set_data_dir import set_data_dir
 from preprocessing_notebook.utils.run_py_nb import run_python_file
 from preprocessing_notebook.utils.run_eval import run_evaluation
 from preprocessing_notebook.utils.split_dataset import split_dataset
+from preprocessing_notebook.utils.copy_directory import copy_directory
 
 from logger import logger, configure_global_logger
 import tomllib
@@ -40,7 +41,7 @@ def extract_notebook_name(full_notebook_path: str) -> str:
 
 
 class PreprocessManager:
-    def __init__(self, full_notebook_path: str, data_dir: str, preprocess_version: str = "selfEval"):
+    def __init__(self, full_notebook_path: str, data_dir: str, preprocess_version: str = "toSubmit"):
         # full_notebook_dir: path to the directory containing the full notebook
         # data_dir: directory containing the data
         self.full_notebook_path = full_notebook_path
@@ -143,6 +144,22 @@ class PreprocessManager:
         self.test_path = Path(self.new_data_dir) / f"{base_name}_test.csv"
         self.test_features_path = Path(self.new_data_dir) / f"{base_name}_test_features.csv"
 
+    def _set_data_paths(self):
+        # this function is only used for toSubmit version
+        # it sets the data paths to the new data directory
+        self.train_path = Path(self.new_data_dir) / "train.csv"
+        self.test_features_path = Path(self.new_data_dir) / "test.csv"
+        self.response_gt_path = Path(self.new_data_dir) / "groundtruth_df.csv"
+
+    def copy_data(self, from_dir: str = None, to_dir: str = None):
+        if from_dir is None:
+            from_dir = self.data_dir
+        if to_dir is None:
+            to_dir = self.new_data_dir
+
+        copy_directory(from_dir, to_dir)
+
+
     def convert_full_notebook_to_markdown(self, notebook_path: str = None, output_path: str = None):
        
         if notebook_path is None:
@@ -213,15 +230,15 @@ class PreprocessManager:
 
     ######################################################### Data handling starts here
 
-    def set_data_dir(self, pyfile: str = None, new_prefix: str = None, outfile: str = None):
+    def update_data_dir_in_pyfile(self, pyfile: str = None, new_prefix: str = None, outfile: str = None):
         if pyfile is None:
             pyfile = self.minimized_notebook_py_path
             
         if new_prefix is None:
-            new_prefix = self.data_dir
+            new_prefix = self.new_data_dir
             
         set_data_dir(pyfile, new_prefix, outfile=outfile)
-        logger.info(f"Set data directories in minimized notebook python file to {self.data_dir}")
+        logger.info(f"Set data directories in minimized notebook python file to {self.new_data_dir}")
 
     def split_dataset(self, dataset_path: str = None, new_dir: str = None, response_column_name: str = None, test_size: float = 0.3, random_state: int = 42):
         if dataset_path is None:
@@ -276,21 +293,26 @@ class PreprocessManager:
         parse_reconstructed_code(reconstructing_response_path, output_path)
         logger.info(f"Parsed reconstructed code from reconstruction response and saved to {output_path}")
         
-    def extract_evaluation_metrics(self, reconstructing_response_path: str = None, output_path: str = None):
-        if reconstructing_response_path is None:
-            reconstructing_response_path = self.reconstructing_response_path
+    def extract_evaluation_metrics(self, response_path: str = None, output_path: str = None):
+        if response_path is None:
+            if self.preprocess_version == "selfEval":
+                response_path = self.reconstructing_response_path
+            elif self.preprocess_version == "toSubmit":
+                response_path = self.minimizer_response_path
             
         if output_path is None:
             output_path = self.evaluation_metrics_path
             
-        parse_evaluation_metrics(reconstructing_response_path, output_path)
+        parse_evaluation_metrics(response_path, output_path)
         logger.info(f"Parsed evaluation metrics from reconstruction response and saved to {output_path}")
         
     def run_python_notebook(self, file_path: str = None, execution_results_path: str = None):
         
         if file_path is None:
-            # file_path = self.minimized_notebook_py_path
-            file_path = self.reconstructed_code_path
+            if self.preprocess_version == "selfEval":
+                file_path = self.reconstructed_code_path
+            elif self.preprocess_version == "toSubmit":
+                file_path = self.minimized_notebook_py_path
 
         if execution_results_path is None:
             execution_results_path = self.execution_results_path
@@ -304,10 +326,13 @@ class PreprocessManager:
             eval_script_path = self.evaluation_metrics_path
 
         if y_test_path is None:
-            if not hasattr(self, 'test_path'):
-                self._load_data_paths()
-                    
-            y_test_path = self.test_path
+            if self.preprocess_version == "selfEval":
+                if not hasattr(self, 'test_path'):
+                    self._load_data_paths()
+                y_test_path = self.test_path
+
+            elif self.preprocess_version == "toSubmit":
+                y_test_path = self.response_gt_path
 
         if y_pred_path is None:
             y_pred_path = self.baseline_submission_path
@@ -388,7 +413,29 @@ class PreprocessManager:
         self.extract_instructions_and_knowledge()       
 
     def run_toSubmit(self):
-        pass
+        ### set and copy data
+        self.copy_data()
+        self._set_data_paths()
+        self.convert_full_notebook_to_markdown()
+
+        ### minimize notebook
+        self.minimize_notebook()
+        self.extract_minimized_markdown()
+        self.extract_numerical_result()
+        self.extract_evaluation_metrics()
+
+        ### convert markdown to python
+        self.convert_markdown_to_python()
+
+        ### run python notebook and evaluation
+        self.update_data_dir_in_pyfile()
+        self.run_python_notebook()
+        self.run_evaluation()
+
+        ### narration
+        self.narration()
+        self.extract_instructions_and_knowledge()
+        
     
 
 
