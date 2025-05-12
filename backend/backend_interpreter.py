@@ -10,6 +10,7 @@ from .utils import FunctionSpec, OutputType, opt_messages_to_list
 from funcy import notnone, once, select_values
 from llms.llm_interact import LLMConfig
 from logger import logger
+import re
 
 def initialize_interpreter(config_path: str) -> OpenInterpreter:
     try:
@@ -79,10 +80,16 @@ class InterpreterBackend:
                 return response_messages
             except Exception as e:
                 if attempt < self.config.max_retries - 1 and retry:
-                    logger.warning(f"LLM API call failed (attempt {attempt + 1}/{self.config.max_retries}): {str(e)}")
-                    backoff_time = self.config.retry_delay * (attempt + 1)
-                    logger.info(f"Retrying in {backoff_time} seconds...")
-                    time.sleep(backoff_time)
+                    retryDelay = re.search(r"retryDelay\": \"(\d+)s\"", str(e.message))
+                    if retryDelay:
+                        retryDelay = int(retryDelay.group(1))
+                        logger.info(f"RPM reached. Retry delay: {retryDelay} seconds")
+                        time.sleep(retryDelay)
+                    else:
+                        logger.warning(f"LLM API call failed and cannot parse retry delay from error: {str(e)}")
+                        backoff_time = self.config.retry_delay * (attempt + 1)
+                        logger.info(f"Retrying in {backoff_time} seconds...")
+                        time.sleep(backoff_time)
                 else:
                     error_message = f"All {self.config.max_retries} attempts to call LLM API failed. Last error: {str(e)}"
                     logger.error(error_message)

@@ -65,7 +65,6 @@ class User(BaseMultiRoundHandler):
     def __init__(self, config: LLMConfig):
         super().__init__(config)
         self.backend = LiteLLMBackend(config)
-        self.system_message = [{"role": "system", "content": {"type": "text", "text": self.config.system_prompt, "cache_control": {"type": "ephemeral"}}}]
 
     def call_llm(self, message: str, retry: bool = True) -> tuple[list[dict[str, Any]], str]:
         """Call the LLM with the given message."""

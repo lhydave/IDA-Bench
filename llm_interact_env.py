@@ -553,6 +553,7 @@ def interact_version_taubench(env: Environment, user_agent: BaseMultiRoundHandle
 
             # Validate the message using gatekeeper
             gatekeeper_response = gatekeeper.call_llm(user_message)
+            logger.debug(f"Gatekeeper response generated")
             if gatekeeper_response["contradictory"]:
                 logger.warning(f"Message validation failed: {gatekeeper_response}")
                 alternative_user_message = gatekeeper_response["follow_up_instruction"]

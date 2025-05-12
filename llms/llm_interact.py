@@ -109,7 +109,7 @@ class BaseMultiRoundHandler(AgentClass):
         logger.debug("Resetting conversation history")
         self.messages = []
         if self._system_prompt:
-            self.messages.extend(self.system_message)
+            self.messages.extend([{"role": "system", "content": {"type": "text", "text": self.system_prompt, "cache_control": {"type": "ephemeral"}}}])
 
     def get_last_message(self) -> dict[str, Any] | None:
         """Get the last message in the conversation.
