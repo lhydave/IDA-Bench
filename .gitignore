@@ -37,8 +37,6 @@ keep_data/
 source/
 walmart_data/
 
-# final benchmark data but temporarily ignored
-benchmark_final/
 
 example/walmart/llm_test/results/*
 
