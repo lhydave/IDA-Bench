@@ -33,7 +33,7 @@ source .venv/bin/activate
 then run
 ```sh
 uv pip install litellm[proxy]
-litellm --config llm_config_proxy.yaml
+litellm --config llm_configs/llm_config_proxy.yaml
 ```
 Press ``Ctrl+b`` (press those two keys together), then release your fingers and press ``d`` to detach from the session.
 To return to this session, use
