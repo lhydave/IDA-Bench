@@ -44,6 +44,14 @@ class LiteLLMBackend:
         if messages is None:
             messages = []
             messages.extend(opt_messages_to_list(system_message, user_message))
+        else:
+            new_messages = []
+            for msg in messages:
+                if isinstance(msg['content'], dict):
+                    new_messages.append({"role": msg['role'], "content": msg['content']['text']})
+                else:
+                    new_messages.append({"role": msg['role'], "content": msg['content']})
+            messages = new_messages
         # Add function spec if provided
         if func_spec is not None:
             additional_kwargs["tools"] = [func_spec.as_litellm_tool_dict]
@@ -53,7 +61,6 @@ class LiteLLMBackend:
         for attempt in range(self.config.max_retries):
             try:
                 # TODO: prompt caching has bugs, so we disable it for now
-                messages = [{"role": msg['role'], "content": msg['content']['text']} for msg in messages]
                 response = litellm.completion(
                             messages=messages,
                             model=self.config.model,
