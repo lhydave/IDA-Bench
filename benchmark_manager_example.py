@@ -55,7 +55,7 @@ def main():
         benchmark_info_1 = BenchmarkInfo(
             notebook_id="fake/notebook123",
             input_ids=["titanic", "mikhail1681/walmart-sales"],
-            baseline_metric=1.0,
+            # baseline_metric=1.0,
             num_rounds=1,
         )
 
@@ -63,7 +63,7 @@ def main():
         benchmark_info_2 = BenchmarkInfo(
             notebook_id="fake/notebook456",
             input_ids=["titanic"],
-            baseline_metric=1.0,
+            # baseline_metric=1.0,
             num_rounds=3,
         )
 
