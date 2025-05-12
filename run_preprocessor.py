@@ -14,7 +14,7 @@ def get_dataset_path(notebook_name: str) -> str:
         str: Path to the dataset directory
     """
     # Construct path to meta_info file
-    meta_info_path = Path("benchmark_data/notebooks/meta_info/storage") / f"{notebook_name}.json"
+    meta_info_path = Path("benchmark_data_toSubmit/notebooks/meta_info/storage") / f"{notebook_name}.json"
     
     if not meta_info_path.exists():
         raise FileNotFoundError(f"Meta info file not found: {meta_info_path}")
@@ -32,7 +32,7 @@ def get_dataset_path(notebook_name: str) -> str:
     dataset_name = input_path[0]
     
     # Construct path to dataset directory
-    dataset_path = Path("benchmark_data/datasets/storage") / dataset_name
+    dataset_path = Path("benchmark_data_toSubmit/datasets/storage") / dataset_name
     
     if not dataset_path.exists():
         raise FileNotFoundError(f"Dataset directory not found: {dataset_path}")
@@ -44,7 +44,7 @@ def process_all_notebooks():
     Process all notebooks in the storage directory, setting up their corresponding datasets.
     """
     # Get all notebook files in storage directory
-    notebooks_dir = Path("benchmark_data/notebooks/storage")
+    notebooks_dir = Path("benchmark_data_toSubmit/notebooks/storage")
     if not notebooks_dir.exists():
         raise FileNotFoundError(f"Notebooks directory not found: {notebooks_dir}")
     
@@ -70,11 +70,12 @@ def process_all_notebooks():
             # Create and run preprocessor
             preprocessor = PreprocessManager(
                 full_notebook_path=str(notebook_path),
-                data_dir=dataset_path
+                data_dir=dataset_path,
+                preprocess_version="toSubmit"
             )
             
             # Run the preprocessing pipeline
-            preprocessor.run_python_notebook()
+            preprocessor.run()
             print(f"Successfully processed {notebook_name}")
             
         except Exception as e:
