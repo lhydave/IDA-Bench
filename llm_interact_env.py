@@ -27,7 +27,7 @@ class Task:
     success_criteria: str
     completed: bool = False
     summary: str = ""
-
+    reference_instructions: str = ""
     @classmethod
     def from_toml(cls, config_path: str) -> "Task":
         try:
@@ -56,6 +56,8 @@ class Task:
             raise ValueError("Completed must be a boolean.")
         if not isinstance(self.summary, str):
             raise ValueError("Summary must be a string.")
+        if not isinstance(self.reference_instructions, str):
+            raise ValueError("Reference instructions must be a string.")
 
 
 @dataclass
@@ -523,18 +525,23 @@ def interact_version_taubench(env: Environment, user_agent: BaseMultiRoundHandle
     number_of_turns = 0
     logger.info(f"Starting task loop with max turns: {env.config.max_turns}")
     assistant_message = None
-    user_agent.add_gatekeeper(gatekeeper)
+    
     while number_of_turns < env.config.max_turns:
         logger.debug(f"Starting turn {number_of_turns + 1}")
         # Generate user message based on task and conversation history
         if number_of_turns == 0:
             user_prompt = user_init_prompt(env)
-            project_context = "\n".join([task.description for task in env.tasks])
+            project_context = "".join([task.description for task in env.tasks])
+            reference_instructions = "".join([task.reference_instructions for task in env.tasks])
             if user_agent.system_prompt is not None:
                 user_agent.system_prompt = user_agent.system_prompt.format(
                     project_context=project_context
                 )
+            if gatekeeper.system_prompt is not None:
+                gatekeeper.system_prompt = gatekeeper.system_prompt.format(reference_instructions=reference_instructions)
             user_agent.reset_conversation()
+            gatekeeper.reset_system_message()
+            user_agent.add_gatekeeper(gatekeeper)
         else:
             user_prompt = assistant_message
         if user_prompt is None:
@@ -549,7 +556,7 @@ def interact_version_taubench(env: Environment, user_agent: BaseMultiRoundHandle
         env._save_checkpoint()
 
         # TODO: debug, since gatekeeper may change the user message, we need to check if the user message is changed
-        if user_response['end']:
+        if user_response['end'] and user_agent.follow_up_prompt is None:
             logger.info("All tasks completion marker detected, exiting loop")
             break
 

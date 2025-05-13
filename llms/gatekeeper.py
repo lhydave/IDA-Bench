@@ -67,6 +67,10 @@ class Gatekeeper(AgentClass):
         """Set the system prompt."""
         self._system_prompt = value
 
+    def reset_system_message(self):
+        """Reset the system message."""
+        self.system_message = [{"role": "system", "content": [{"type": "text", "text": self.system_prompt,}]}]
+
     def call_llm(self, message: str, retry: bool = True, output_raw: bool = False) -> dict[str, Any]:
         """Call the LLM to validate the user message.
         Args:
