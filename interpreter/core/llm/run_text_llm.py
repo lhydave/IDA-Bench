@@ -1,5 +1,3 @@
-from logger import logger
-
 def run_text_llm(llm, params):
     ## Setup
     
@@ -24,8 +22,6 @@ def run_text_llm(llm, params):
 
 
     for chunk in llm.completions(**params):
-        logger.debug(f"Chunk in coding_llm: {chunk}")
-        print(f"Chunk in coding_llm: {chunk}")
         if llm.interpreter.verbose:
             print("Chunk in coding_llm", chunk)
 
