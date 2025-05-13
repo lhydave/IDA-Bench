@@ -2,6 +2,7 @@ import json
 import os
 import re
 from typing import Any
+from datetime import datetime
 
 from data_manager.benchmark_manager import BenchmarkManager
 from logger import logger
@@ -122,6 +123,43 @@ def count_conversation_turns(conversation_history: list[dict[str, Any]]) -> int:
     return user_messages  # Each user message corresponds to one turn
 
 
+def calculate_interaction_time(checkpoint_data: dict[str, Any]) -> float | None:
+    """
+    Calculate the interaction time in seconds from checkpoint data.
+
+    Args:
+        checkpoint_data: Dictionary containing interaction data,
+                         expected to have 'start_time' and 'checkpoint_time'.
+
+    Returns:
+        Interaction time in seconds, or None if time data is invalid or missing.
+    """
+    try:
+        start_time_str = checkpoint_data.get("start_time")
+        checkpoint_time_str = checkpoint_data.get("checkpoint_time")
+
+        if not start_time_str or not checkpoint_time_str:
+            logger.warning("Start time or checkpoint time is missing from checkpoint data.")
+            return None
+
+        # Adjusting format to handle potential timezone offsets if present,
+        # or lack thereof. Using isoformat() compatible parsing.
+        # Example format: "2025-05-13T13:12:19.496596"
+        # If timezone info like +00:00 or Z is present, datetime.fromisoformat handles it.
+        # If not, it's treated as naive. For duration, this is usually fine.
+        start_time = datetime.fromisoformat(start_time_str)
+        checkpoint_time = datetime.fromisoformat(checkpoint_time_str)
+
+        duration = checkpoint_time - start_time
+        return duration.total_seconds()
+    except ValueError as e:
+        logger.error(f"Error parsing time strings: {e}. Start: '{start_time_str}', Checkpoint: '{checkpoint_time_str}'") # type: ignore
+        return None
+    except Exception as e:
+        logger.error(f"An unexpected error occurred during interaction time calculation: {e}")
+        return None
+
+
 def evaluate_agent_performance(
     checkpoint_file: str, result_file: str, benchmark_id: str, benchmark_manager: BenchmarkManager, submission_path: str
 ) -> dict[str, Any]:  # TODO: Implement!!!!!!!
@@ -149,6 +187,13 @@ def evaluate_agent_performance(
             "completion_status": "completed",  # Assume completion if checkpoint exists
             "metrics": {},
         }
+
+        # Calculate interaction time
+        interaction_time = calculate_interaction_time(checkpoint_data)
+        if (interaction_time is not None):
+            evaluation["metrics"]["interaction_time_seconds"] = interaction_time
+        else:
+            evaluation["metrics"]["interaction_time_seconds"] = -1 # Indicate missing or error
 
         # Extract conversation metrics
         conversation_history = checkpoint_data.get("conversation_history", [])
