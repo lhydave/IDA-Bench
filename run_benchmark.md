@@ -22,13 +22,12 @@
 
 当你配置好所有文件之后，你就可以直接运行
 ```bash
-python run_benchmark.py [--config_path PATH_TO_CONFIG] [--agent_config_path PATH_TO_AGENT_CONFIG] [--log_level INFO] [-l INFO] [--evaluate_only] [--evaluation_target_dir PATH_TO_CHECKPOINTS]
+python run_benchmark.py [--config_path PATH_TO_CONFIG] [--agent_config_path PATH_TO_AGENT_CONFIG] [--log_level INFO] [-l INFO] [--evaluate_only]
 ```
 - `PATH_TO_CONFIG`是你benchmark配置文件夹路径，默认是`configs/`.
 - `PATH_TO_AGENT_CONFIG`是你agent的配置文件夹路径，默认是`agent_configs/`，如果你使用的是单agent测试，测试的配置文件路径为`test/path/single_agent_config.toml`，那么请将`PATH_TO_AGENT_CONFIG`设置为`test/path/single_agent_config.toml`.
 - `log_level`是你benchmark的日志级别，默认是`INFO`，你可以设置为`DEBUG`来查看更详细的日志。`-l`是`--log_level`的简写。所有日志通过我们统一的日志模块`logger.py`进行管理，确保日志一致性。
-- `--evaluate_only`: 如果设置此参数，脚本将跳过运行新的benchmark测试，而是对已经存在的测试结果进行评估。此时，你必须同时提供`--evaluation_target_dir`参数。日志文件将默认为`evaluation_only.log`。
-- `--evaluation_target_dir PATH_TO_CHECKPOINTS`: 当使用`--evaluate_only`时，此参数指定包含先前运行产生的checkpoint文件（例如 `test_case_id_agent_id_timestamp.json`）和对应的submission文件（例如 `test_case_id_agent_id_timestamp_submission.csv`）的目录。评估结果将根据`base_config.toml`中的`result_path`设置进行存储，并生成一个名为`evaluation_only_summary.json`的评估摘要。
+- `--evaluate_only`: 如果设置此参数，脚本将跳过运行新的benchmark测试，而是对已经存在的测试结果进行评估。脚本会从`base_config.toml`中定义的`checkpoint_path`路径下查找checkpoint文件和对应的submission文件进行评估。日志文件将默认为`evaluation_only.log`。
 
 接下来，我们讲述一下benchmark的工作流程：
 
@@ -97,11 +96,12 @@ WORKDIR /app
 之后，single_agent_test会进行评估，其评估的方法在`evaluations/`中定义，评估的结果被存储在你指定的`result_path`文件夹下，文件名为`{test_case_id}_{agent_name}.json`。评估的结果会被存储在一个json文件中，包含了所有的评估指标和分数。#TODO: 明确评估的指标和分数
 
 **仅评估模式 (`--evaluate_only`)：**
-1. 当设置了`--evaluate_only`和`--evaluation_target_dir`参数时，脚本不会运行新的测试。
-2. 它会加载`base_config.toml`以获取必要的路径配置（如`result_path`和`benchmark_path`）并初始化BenchmarkManager。
-3. 脚本会扫描`--evaluation_target_dir`目录，查找符合命名规范 (`{test_case_id}_{agent_id}_{timestamp}.json`) 的checkpoint文件。
-4. 对于每个找到的checkpoint文件，它会尝试解析出`test_case_id`, `agent_id`, 和 `timestamp`。
-5. 然后，它会查找对应的submission文件 (`{test_case_id}_{agent_id}_{timestamp}_submission.csv`)。
-6. 如果checkpoint和submission文件都存在，脚本会调用评估函数（`evaluations.evaluator.evaluate_agent_performance`）对该测试结果进行评估。
-7. 评估结果（一个JSON文件）将保存在`base_config.toml`中定义的`result_path`目录下，文件名与原始测试结果的文件名相同。
-8. 所有评估完成后，会在`result_path`目录下生成一个`evaluation_only_summary.json`文件，汇总本次仅评估运行的结果。
+1. 当设置了`--evaluate_only`参数时，脚本不会运行新的测试。
+2. 它会加载`base_config.toml`以获取必要的路径配置（如`result_path`，`benchmark_path`和`checkpoint_path`）并初始化BenchmarkManager。
+3. 脚本会使用`base_config.toml`中定义的`checkpoint_path`作为评估目标目录。
+4. 脚本会扫描此`checkpoint_path`目录，查找符合命名规范 (`{test_case_id}_{agent_id}_{timestamp}.json`) 的checkpoint文件。
+5. 对于每个找到的checkpoint文件，它会尝试解析出`test_case_id`, `agent_id`, 和 `timestamp`。
+6. 然后，它会查找对应的submission文件 (`{test_case_id}_{agent_id}_{timestamp}_submission.csv`)。
+7. 如果checkpoint和submission文件都存在，脚本会调用评估函数（`evaluations.evaluator.evaluate_agent_performance`）对该测试结果进行评估。
+8. 评估结果（一个JSON文件）将保存在`base_config.toml`中定义的`result_path`目录下，文件名与原始测试结果的文件名相同。
+9. 所有评估完成后，会在`result_path`目录下生成一个`evaluation_only_summary.json`文件，汇总本次仅评估运行的结果。

@@ -42,12 +42,6 @@ def parse_args():
         action="store_true",
         help="If set, skip running tests and only perform evaluation on existing results.",
     )
-    parser.add_argument(
-        "--evaluation_target_dir",
-        type=str,
-        default=None,
-        help="Path to the directory containing checkpoint and submission files for evaluation (required if --evaluate_only is set).",  # noqa: E501
-    )
     return parser.parse_args()
 
 
@@ -273,12 +267,12 @@ def run_evaluation_only(args: argparse.Namespace, base_config: dict[str, Any], p
     """Run evaluation on existing benchmark results."""
     logger.info("Running in evaluation-only mode.")
 
-    if not args.evaluation_target_dir:
-        logger.error("--evaluate_only requires --evaluation_target_dir to be set.")
-        return
+    evaluation_source_dir = paths["checkpoint_path"]  # Use checkpoint_path from base_config
 
-    if not os.path.isdir(args.evaluation_target_dir):
-        logger.error(f"Evaluation target directory not found: {args.evaluation_target_dir}")
+    if not os.path.isdir(evaluation_source_dir):
+        logger.error(
+            f"Evaluation source directory (checkpoint_path from base_config) not found: {evaluation_source_dir}"
+        )
         return
 
     benchmark_path = base_config["benchmark"]["benchmark_path"]
@@ -290,7 +284,7 @@ def run_evaluation_only(args: argparse.Namespace, base_config: dict[str, Any], p
     # Sort benchmark_ids by length descending to match longest prefix first during parsing
     sorted_benchmark_ids = sorted(list(benchmark_manager.benchmark_ids), key=len, reverse=True)
 
-    for filename in os.listdir(args.evaluation_target_dir):
+    for filename in os.listdir(evaluation_source_dir):  # Use evaluation_source_dir
         # We are looking for primary checkpoint files: {test_case_id}_{agent_id}_{timestamp}.json
         # Exclude submission files or other specific JSON files not intended as primary checkpoints.
         if filename.endswith(".json") and "_submission" not in filename:
@@ -323,10 +317,10 @@ def run_evaluation_only(args: argparse.Namespace, base_config: dict[str, Any], p
                 )
                 continue
 
-            current_checkpoint_file_path = os.path.join(args.evaluation_target_dir, filename)
+            current_checkpoint_file_path = os.path.join(evaluation_source_dir, filename)  # Use evaluation_source_dir
 
             submission_filename = f"{parsed_test_case_id}_{parsed_agent_id}_{timestamp_str}_submission.csv"
-            submission_filepath = os.path.join(args.evaluation_target_dir, submission_filename)
+            submission_filepath = os.path.join(evaluation_source_dir, submission_filename)  # Use evaluation_source_dir
 
             if not os.path.exists(submission_filepath):
                 logger.warning(
