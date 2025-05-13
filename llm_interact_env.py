@@ -521,7 +521,7 @@ To get started, could you please provide a bit of background information:
 
 def interact_version_taubench(env: Environment, user_agent: BaseMultiRoundHandler, assistant_agent: BaseMultiRoundHandler, gatekeeper: AgentClass):
     """Run the environment until all tasks are completed or max turns is reached."""
-    logger.info("Starting interaction using version2 strategy")
+    logger.info("Starting interaction using taubench strategy")
     number_of_turns = 0
     logger.info(f"Starting task loop with max turns: {env.config.max_turns}")
     assistant_message = None

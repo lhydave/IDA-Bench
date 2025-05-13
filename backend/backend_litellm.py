@@ -54,6 +54,7 @@ class LiteLLMBackend:
         for attempt in range(self.config.max_retries):
             try:
                 # TODO: prompt caching has bugs, so we disable it for now
+                logger.debug(f"Trying to call LLM API with model: {self.config.model}")
                 response = litellm.completion(
                             messages=messages,
                             model=self.config.model,

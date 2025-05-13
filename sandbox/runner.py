@@ -229,7 +229,7 @@ def run_interaction(env_config: dict[str, Any], tasks: list[dict[str, Any]]):
             assistant_agent_type=env_config["agent_config"].get("framework", "base-agent"),
             interpreter_config_path="/app/configs/interpreter_config.toml",
             # user_prompt_template="You are a data scientist. You need to help solve this task:\n\n{task_list}\n\n{current_task}",
-            max_turns=30,  # TODO: config max_turns somewhere
+            max_turns=20,  # TODO: config max_turns somewhere
             # user_continue_prompt_template="The assistant has provided analysis: {assistant_summary}\n\nPlease provide further instructions or indicate if all tasks are completed by including '##ALL_TASKS_COMPLETED##' in your message.",
             checkpoint_path=env_config["checkpoint_path"],
         )

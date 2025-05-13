@@ -8,7 +8,7 @@
         - TODO：为AIDE准备配置文件
         - 如果你还有其他agent框架，我们需要你自己实现AgentClass定义好的Protocol，请参考LLMInteract，将你的agent定义好，然后放入agent_dict中。
     - 准备好agent相关的配置文件，放在`agent_configs/`文件夹下：
-        - 我们支持多agent和单agent测试。
+        - 我们支持多agent和单agent测试。通过 `--agent_config_path` 来配置，可以是文件夹（多agent）或者单文件（单个agent）。
         - 对于多agent，默认的路径为`agent_configs/`，里面每一个toml文件代表一个agent的测试文件，我们的benchmark会自动读取这个文件夹下的所有toml文件进行测试。
         - 对于单agent，默认的路径为`agent_configs/agent_config.toml`，里面的配置文件代表一个agent的测试文件，我们的benchmark会自动读取这个文件进行测试。
         - 无论哪种情况，agent的配置文件都需要指明使用的agent name、API key、model、framework等参数，请参考`configs/sample_agent_config.toml`来实现。
