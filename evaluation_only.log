@@ -1,0 +1,74 @@
+2025-05-13 22:36:53 - DataSciBench - INFO - Log level set to INFO
+2025-05-13 22:36:53 - DataSciBench - INFO - Logging to file: evaluation_only.log
+2025-05-13 22:36:53 - DataSciBench - INFO - Loaded base config from configs/base_config.toml
+2025-05-13 22:36:53 - DataSciBench - INFO - Running in evaluation-only mode.
+2025-05-13 22:36:53 - DataSciBench - ERROR - --evaluate_only requires --evaluation_target_dir to be set.
+2025-05-13 22:52:29 - DataSciBench - INFO - Log level set to INFO
+2025-05-13 22:52:29 - DataSciBench - INFO - Logging to file: evaluation_only.log
+2025-05-13 22:52:29 - DataSciBench - INFO - Loaded base config from configs/base_config.toml
+2025-05-13 22:52:29 - DataSciBench - INFO - Running in evaluation-only mode.
+2025-05-13 22:52:29 - DataSciBench - INFO - Benchmark storage initialized at ./benchmark_final
+2025-05-13 22:52:29 - DataSciBench - INFO - Initialized benchmark manager with path: ./benchmark_final
+2025-05-13 22:52:29 - DataSciBench - INFO - Evaluating checkpoint: ./experiments/checkpoints/umerhayat123-how-i-achieved-83-accuracy_sample_agent_20250513_211144.json for benchmark ID: umerhayat123-how-i-achieved-83-accuracy
+2025-05-13 22:52:29 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/umerhayat123-how-i-achieved-83-accuracy_sample_agent_20250513_211144.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/umerhayat123-how-i-achieved-83-accuracy_sample_agent_20250513_211144.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluating checkpoint: ./experiments/checkpoints/ayodejiibrahimlateef-integrative-analysis-early-depression-detection_sample_agent_20250513_211144.json for benchmark ID: ayodejiibrahimlateef-integrative-analysis-early-depression-detection
+2025-05-13 22:52:31 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/ayodejiibrahimlateef-integrative-analysis-early-depression-detection_sample_agent_20250513_211144.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/ayodejiibrahimlateef-integrative-analysis-early-depression-detection_sample_agent_20250513_211144.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluating checkpoint: ./experiments/checkpoints/amitsinghbhadoria0-final-qt-project-analysis_sample_agent_20250513_220953.json for benchmark ID: amitsinghbhadoria0-final-qt-project-analysis
+2025-05-13 22:52:31 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/amitsinghbhadoria0-final-qt-project-analysis_sample_agent_20250513_220953.json
+2025-05-13 22:52:31 - DataSciBench - ERROR - Error during evaluation script execution for ./experiments/checkpoints/amitsinghbhadoria0-final-qt-project-analysis_sample_agent_20250513_220953.json: 'Failure_Flag'
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/amitsinghbhadoria0-final-qt-project-analysis_sample_agent_20250513_220953.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluating checkpoint: ./experiments/checkpoints/jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm_sample_agent_20250513_220953.json for benchmark ID: jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm
+2025-05-13 22:52:31 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm_sample_agent_20250513_220953.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm_sample_agent_20250513_220953.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluating checkpoint: ./experiments/checkpoints/aarthi93-end-to-end-ml-pipeline_sample_agent_20250513_211144.json for benchmark ID: aarthi93-end-to-end-ml-pipeline
+2025-05-13 22:52:31 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/aarthi93-end-to-end-ml-pipeline_sample_agent_20250513_211144.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/aarthi93-end-to-end-ml-pipeline_sample_agent_20250513_211144.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluating checkpoint: ./experiments/checkpoints/hanymato-mobile-price-prediction-model_sample_agent_20250513_203316.json for benchmark ID: hanymato-mobile-price-prediction-model
+2025-05-13 22:52:31 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/hanymato-mobile-price-prediction-model_sample_agent_20250513_203316.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/hanymato-mobile-price-prediction-model_sample_agent_20250513_203316.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluating checkpoint: ./experiments/checkpoints/patilaakash619-electric-vehicle-population-data-in-the-us_sample_agent_20250513_211144.json for benchmark ID: patilaakash619-electric-vehicle-population-data-in-the-us
+2025-05-13 22:52:31 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/patilaakash619-electric-vehicle-population-data-in-the-us_sample_agent_20250513_211144.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/patilaakash619-electric-vehicle-population-data-in-the-us_sample_agent_20250513_211144.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluating checkpoint: ./experiments/checkpoints/dmytrobuhai-eda-rf_sample_agent_20250513_203712.json for benchmark ID: dmytrobuhai-eda-rf
+2025-05-13 22:52:31 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/dmytrobuhai-eda-rf_sample_agent_20250513_203712.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/dmytrobuhai-eda-rf_sample_agent_20250513_203712.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluating checkpoint: ./experiments/checkpoints/drpashamd4r-indian-floods-data-exploratory_sample_agent_20250513_203316.json for benchmark ID: drpashamd4r-indian-floods-data-exploratory
+2025-05-13 22:52:31 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/drpashamd4r-indian-floods-data-exploratory_sample_agent_20250513_203316.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/drpashamd4r-indian-floods-data-exploratory_sample_agent_20250513_203316.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluating checkpoint: ./experiments/checkpoints/hasangulec-feature-engineering-diabetes_sample_agent_20250513_211144.json for benchmark ID: hasangulec-feature-engineering-diabetes
+2025-05-13 22:52:31 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/hasangulec-feature-engineering-diabetes_sample_agent_20250513_211144.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/hasangulec-feature-engineering-diabetes_sample_agent_20250513_211144.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluating checkpoint: ./experiments/checkpoints/abdallaellaithy-titanic-in-space-ml-survival-predictions_sample_agent_20250513_211144.json for benchmark ID: abdallaellaithy-titanic-in-space-ml-survival-predictions
+2025-05-13 22:52:31 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/abdallaellaithy-titanic-in-space-ml-survival-predictions_sample_agent_20250513_211144.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/abdallaellaithy-titanic-in-space-ml-survival-predictions_sample_agent_20250513_211144.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluating checkpoint: ./experiments/checkpoints/ugurcan95-brazilian-tweet-sentiment-analysis_sample_agent_20250513_211144.json for benchmark ID: ugurcan95-brazilian-tweet-sentiment-analysis
+2025-05-13 22:52:31 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/ugurcan95-brazilian-tweet-sentiment-analysis_sample_agent_20250513_211144.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/ugurcan95-brazilian-tweet-sentiment-analysis_sample_agent_20250513_211144.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluating checkpoint: ./experiments/checkpoints/vijaythurimella-bank-subscriptions-predictions-f1-score_sample_agent_20250513_203316.json for benchmark ID: vijaythurimella-bank-subscriptions-predictions-f1-score
+2025-05-13 22:52:31 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/vijaythurimella-bank-subscriptions-predictions-f1-score_sample_agent_20250513_203316.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/vijaythurimella-bank-subscriptions-predictions-f1-score_sample_agent_20250513_203316.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluating checkpoint: ./experiments/checkpoints/iseedeep-mission-podcast-listening-prediction_sample_agent_20250513_211144.json for benchmark ID: iseedeep-mission-podcast-listening-prediction
+2025-05-13 22:52:31 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/iseedeep-mission-podcast-listening-prediction_sample_agent_20250513_211144.json
+2025-05-13 22:52:31 - DataSciBench - ERROR - Error during evaluation script execution for ./experiments/checkpoints/iseedeep-mission-podcast-listening-prediction_sample_agent_20250513_211144.json: No columns to parse from file
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/iseedeep-mission-podcast-listening-prediction_sample_agent_20250513_211144.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluating checkpoint: ./experiments/checkpoints/esotericdata1-titanickaggle-ds_sample_agent_20250513_203316.json for benchmark ID: esotericdata1-titanickaggle-ds
+2025-05-13 22:52:31 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/esotericdata1-titanickaggle-ds_sample_agent_20250513_203316.json
+2025-05-13 22:52:31 - DataSciBench - ERROR - Error during evaluation script execution for ./experiments/checkpoints/esotericdata1-titanickaggle-ds_sample_agent_20250513_203316.json: No columns to parse from file
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/esotericdata1-titanickaggle-ds_sample_agent_20250513_203316.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluating checkpoint: ./experiments/checkpoints/ak5047-australia-weather_sample_agent_20250513_211144.json for benchmark ID: ak5047-australia-weather
+2025-05-13 22:52:31 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/ak5047-australia-weather_sample_agent_20250513_211144.json
+2025-05-13 22:52:31 - DataSciBench - ERROR - Error during evaluation script execution for ./experiments/checkpoints/ak5047-australia-weather_sample_agent_20250513_211144.json: Classification metrics can't handle a mix of binary and continuous targets
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/ak5047-australia-weather_sample_agent_20250513_211144.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluating checkpoint: ./experiments/checkpoints/sasakitetsuya-predicting-startup-valuation-with-machine-learning_sample_agent_20250513_203316.json for benchmark ID: sasakitetsuya-predicting-startup-valuation-with-machine-learning
+2025-05-13 22:52:31 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/sasakitetsuya-predicting-startup-valuation-with-machine-learning_sample_agent_20250513_203316.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/sasakitetsuya-predicting-startup-valuation-with-machine-learning_sample_agent_20250513_203316.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluating checkpoint: ./experiments/checkpoints/jakubkrasuski-llm-chatbot-arena-predicting-user-preferences_sample_agent_20250513_211144.json for benchmark ID: jakubkrasuski-llm-chatbot-arena-predicting-user-preferences
+2025-05-13 22:52:31 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/jakubkrasuski-llm-chatbot-arena-predicting-user-preferences_sample_agent_20250513_211144.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/jakubkrasuski-llm-chatbot-arena-predicting-user-preferences_sample_agent_20250513_211144.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluating checkpoint: ./experiments/checkpoints/mightyjiraiya-titanic-survival-prediction_sample_agent_20250513_203729.json for benchmark ID: mightyjiraiya-titanic-survival-prediction
+2025-05-13 22:52:31 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/mightyjiraiya-titanic-survival-prediction_sample_agent_20250513_203729.json
+2025-05-13 22:52:31 - DataSciBench - ERROR - Error during evaluation script execution for ./experiments/checkpoints/mightyjiraiya-titanic-survival-prediction_sample_agent_20250513_203729.json: No columns to parse from file
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/mightyjiraiya-titanic-survival-prediction_sample_agent_20250513_203729.json
+2025-05-13 22:52:31 - DataSciBench - INFO - Evaluation-only summary written to ./experiments/results/evaluation_only_summary.json
