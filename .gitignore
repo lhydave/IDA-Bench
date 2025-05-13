@@ -27,6 +27,11 @@ wheels/
 !benchmark_data/*.ipynb
 !benchmark_data/*.md
 
+!benchmark_data_toSubmit/*.json
+!benchmark_data_toSubmit/*.csv
+!benchmark_data_toSubmit/*.ipynb
+!benchmark_data_toSubmit/*.md
+
 !benchmark_final/*.json
 !benchmark_final/*.csv
 !benchmark_final/*.ipynb
