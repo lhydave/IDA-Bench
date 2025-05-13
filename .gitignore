@@ -17,10 +17,17 @@ wheels/
 *.json
 !walmart_data/*.json
 *.log
+
 !preprocessing_notebook/*.json
 !preprocessing_notebook/*.csv
 !preprocessing_notebook/*.ipynb
 !preprocessing_notebook/*.md
+
+!preprocessing_notebook/preprocess_data/
+!preprocessing_notebook/preprocess_data/**/*.json
+!preprocessing_notebook/preprocess_data/**/*.csv
+!preprocessing_notebook/preprocess_data/**/*.ipynb
+!preprocessing_notebook/preprocess_data/**/*.md
 
 !benchmark_data/*.json
 !benchmark_data/*.csv
