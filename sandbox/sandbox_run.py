@@ -1,15 +1,10 @@
 import os
 import docker
 import tempfile
-try:
-    import tomli_w as toml_writer         # modern, write-only library
-except ImportError:
-    print("tomli_w not found, falling back to toml")
-    import toml as toml_writer            # fall back to toml-0.10+
+import toml as toml_writer  # fall back to toml-0.10+
 
 import shutil
 from typing import Any
-import json
 
 from data_manager.benchmark_manager import BenchmarkManager
 from logger import logger
@@ -101,14 +96,14 @@ def run_docker_test(
                 shutil.copy2(source, destination)
         logger.info(f"Copied instructions from {instructions_dir} to {temp_instructions_dir}")
         logger.info(f"Final temp instructions directory contents: {os.listdir(temp_instructions_dir)}")
-        
+
         # Verify files exist and are readable
         for item in os.listdir(temp_instructions_dir):
             file_path = os.path.join(temp_instructions_dir, item)
             if os.path.isfile(file_path):
                 try:
-                    with open(file_path, 'r') as f:
-                        content = f.read()
+                    with open(file_path) as f:
+                        f.read()
                     logger.info(f"Successfully verified file {item} is readable")
                 except Exception as e:
                     logger.error(f"Error reading file {item}: {e}")
@@ -136,13 +131,18 @@ def run_docker_test(
         os.path.abspath("llm_interact_env.py"): {"bind": "/app/llm_interact_env.py", "mode": "ro"},
         os.path.abspath(os.path.join("sandbox", "runner.py")): {"bind": "/app/runner.py", "mode": "ro"},
         # Mount directories for logs and checkpoints (read-write)
-        os.path.abspath(log_path): {"bind": f"/app/logs/{test_case_id}_{agent_config.get('id', 'unnamed_agent')}.log", "mode": "rw"},
-        os.path.abspath(checkpoint_path): {"bind": f"/app/checkpoints/{test_case_id}_{agent_config.get('id', 'unnamed_agent')}.json", "mode": "rw"},
+        os.path.abspath(log_path): {
+            "bind": f"/app/logs/{test_case_id}_{agent_config.get('id', 'unnamed_agent')}.log",
+            "mode": "rw",
+        },
+        os.path.abspath(checkpoint_path): {
+            "bind": f"/app/checkpoints/{test_case_id}_{agent_config.get('id', 'unnamed_agent')}.json",
+            "mode": "rw",
+        },
         os.path.abspath(submission_path): {"bind": "/app/checkpoints/submission.csv", "mode": "rw"},
         # second: mount the file in the container
         # same for submission.csv
         # test_case_id-agent_id-timestamp-submission.csv -> /app/submission.csv
-
         # Mount the temporary instructions directory with read-write permissions
         # so that runner.py can delete instructions after initialization
         os.path.abspath(temp_instructions_dir): {"bind": "/app/instructions", "mode": "rw"},

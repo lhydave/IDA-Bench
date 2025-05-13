@@ -56,7 +56,7 @@ def setup_environment(test_case_id: str) -> dict[str, Any]:
         log_path = f"/app/logs/{test_case_id}_{agent_config.get('id', 'unnamed_agent')}.log"
 
         # Configure logging for the runner
-        configure_global_logger(level=os.environ.get("LOG_LEVEL", "INFO"), log_file=log_path)
+        configure_global_logger(level=os.environ.get("LOG_LEVEL", "DEBUG"), log_file=log_path)
 
         return {
             "test_case_id": test_case_id,
@@ -83,88 +83,94 @@ def setup_task(test_case_id: str) -> list[dict[str, Any]]:
     Returns:
         List of task dictionaries
     """
+    # try:
+    #     # TODO: it would be far simpler if the instructions are given in a single markdown file,
+    #     # that is, even if the task is multi-round, we can just have a single file with all the instructions
+    #     # and then parse it into rounds
+    #     # Check if we have a dedicated instructions directory for this test case
+    #     instructions_dir = f"/app/instructions/{test_case_id}"
+    #     if os.path.exists(instructions_dir):
+    #         # Look for instructions.md or round_*.md files
+    #         # if os.path.exists(os.path.join(instructions_dir, "instructions.md")):
+    #         #     with open(os.path.join(instructions_dir, "instructions.md")) as f:
+    #         #         instruction_text = f.read()
+    #         # Alternatively, load reference_insights.md if it exists
+    #         if os.path.exists(os.path.join(instructions_dir, "reference_insights.md")):
+    #             with open(os.path.join(instructions_dir, "reference_insights.md")) as f:
+    #                 instruction_text = f.read()
+
+    #             # Create a single task from the instruction
+    #             tasks = [
+    #                 {
+    #                     "id": test_case_id,
+    #                     "description": instruction_text,
+    #                     "success_criteria": "Complete the data analysis task as instructed.",
+    #                     "completed": False,
+    #                     "summary": "",
+    #                 }
+    #             ]
+
+    #         else:
+    #             # Look for round_*.md files for multi-round instructions
+    #             tasks = []
+    #             round_files = sorted(
+    #                 [f for f in os.listdir(instructions_dir) if f.startswith("round_") and f.endswith(".md")]
+    #             )
+
+    #             for i, round_file in enumerate(round_files):
+    #                 with open(os.path.join(instructions_dir, round_file)) as f:
+    #                     instruction_text = f.read()
+
+    #                 tasks.append(
+    #                     {
+    #                         "id": f"{test_case_id}_round_{i + 1}",
+    #                         "description": instruction_text,
+    #                         "success_criteria": f"Complete round {i + 1} of the task as instructed.",
+    #                         "completed": False,
+    #                         "summary": "",
+    #                     }
+    #                 )
+    #     else:
+    #         # If no specific instructions directory, look for a general instructions file
+    # instructions_file = "/app/instructions/instructions.md"
+    # alternatively, load reference_insights.md if it exists
+    instructions_file = "/app/instructions/reference_insights.md"
+    gatekeeper_reference_file = "/app/instructions/gatekeeper_reference.md"
+
+    # load instructions
     try:
-        # TODO: it would be far simpler if the instructions are given in a single markdown file,
-        # that is, even if the task is multi-round, we can just have a single file with all the instructions
-        # and then parse it into rounds
-        # Check if we have a dedicated instructions directory for this test case
-        instructions_dir = f"/app/instructions/{test_case_id}"
-        if os.path.exists(instructions_dir):
-            # Look for instructions.md or round_*.md files
-            if os.path.exists(os.path.join(instructions_dir, "instructions.md")):
-                with open(os.path.join(instructions_dir, "instructions.md")) as f:
-                    instruction_text = f.read()
-
-                # Create a single task from the instruction
-                tasks = [
-                    {
-                        "id": test_case_id,
-                        "description": instruction_text,
-                        "success_criteria": "Complete the data analysis task as instructed.",
-                        "completed": False,
-                        "summary": "",
-                    }
-                ]
-
-            else:
-                # Look for round_*.md files for multi-round instructions
-                tasks = []
-                round_files = sorted(
-                    [f for f in os.listdir(instructions_dir) if f.startswith("round_") and f.endswith(".md")]
-                )
-
-                for i, round_file in enumerate(round_files):
-                    with open(os.path.join(instructions_dir, round_file)) as f:
-                        instruction_text = f.read()
-
-                    tasks.append(
-                        {
-                            "id": f"{test_case_id}_round_{i + 1}",
-                            "description": instruction_text,
-                            "success_criteria": f"Complete round {i + 1} of the task as instructed.",
-                            "completed": False,
-                            "summary": "",
-                        }
-                    )
-        else:
-            # If no specific instructions directory, look for a general instructions file
-            instructions_file = "/app/instructions/instructions.md"
-            gatekeeper_reference_file = "/app/instructions/gatekeeper_reference.md"
-
-            # load instructions
-            try:
-                with open(instructions_file) as f:
-                    instruction_text = f.read()
-            except Exception as e:
-                logger.error(f"No instructions found for test case {test_case_id}")
-                instruction_text = "No instructions available. Please analyze the provided data."
-
-            # load gatekeeper reference
-            try:
-                with open(gatekeeper_reference_file) as f:
-                    gatekeeper_reference_text = f.read()
-            except Exception as e:
-                logger.error(f"No gatekeeper reference found for test case {test_case_id}")
-                gatekeeper_reference_text = instruction_text
-
-            tasks = [
-                {
-                    "id": test_case_id,
-                    "description": instruction_text,
-                    "success_criteria": "Complete the data analysis task as instructed.",
-                    "completed": False,
-                    "summary": "",
-                    "reference_instructions": gatekeeper_reference_text,
-                }
-            ]
-
-        logger.info(f"Set up {len(tasks)} tasks for test case {test_case_id}")
-        return tasks
-
+        with open(instructions_file) as f:
+            instruction_text = f.read()
     except Exception as e:
-        logger.error(f"Failed to set up task: {e}")
-        traceback.print_exc()
-        raise
+        logger.error(f"No instructions found for test case {test_case_id}: {e}")
+        instruction_text = "No instructions available. Please analyze the provided data."
+
+    # load gatekeeper reference
+    try:
+        with open(gatekeeper_reference_file) as f:
+            gatekeeper_reference_text = f.read()
+    except Exception as e:
+        logger.error(f"No gatekeeper reference found for test case {test_case_id}: {e}")
+        gatekeeper_reference_text = instruction_text
+
+    tasks = [
+        {
+            "id": test_case_id,
+            "description": instruction_text,
+            "success_criteria": "Complete the data analysis task as instructed.",
+            "completed": False,
+            "summary": "",
+            "reference_instructions": gatekeeper_reference_text,
+        }
+    ]
+
+    logger.info(f"Set up {len(tasks)} tasks for test case {test_case_id}")
+    return tasks
+
+    # except Exception as e:
+    #     logger.error(f"Failed to set up task: {e}")
+    #     traceback.print_exc()
+    #     raise
 
 
 def run_interaction(env_config: dict[str, Any], tasks: list[dict[str, Any]]):
@@ -223,7 +229,7 @@ def run_interaction(env_config: dict[str, Any], tasks: list[dict[str, Any]]):
             assistant_agent_type=env_config["agent_config"].get("framework", "base-agent"),
             interpreter_config_path="/app/configs/interpreter_config.toml",
             # user_prompt_template="You are a data scientist. You need to help solve this task:\n\n{task_list}\n\n{current_task}",
-            max_turns=20, # TODO: config max_turns somewhere
+            max_turns=30,  # TODO: config max_turns somewhere
             # user_continue_prompt_template="The assistant has provided analysis: {assistant_summary}\n\nPlease provide further instructions or indicate if all tasks are completed by including '##ALL_TASKS_COMPLETED##' in your message.",
             checkpoint_path=env_config["checkpoint_path"],
         )
@@ -254,7 +260,7 @@ def cleanup_instruction_material():
     try:
         if os.path.exists("/app/instructions"):
             logger.info("Cleaning up instruction material")
-            shutil.rmtree("/app/instructions")
+            shutil.rmtree("/app/instructions", True)
         else:
             logger.warning("No instructions directory found to clean up")
     except Exception as e:

@@ -9,6 +9,7 @@ from logger import logger
 # TODO from lihy: this is a purely fake evaluator, but shows how to write an evaluator
 # please implement a real evaluator
 
+
 def load_checkpoint(checkpoint_file: str) -> dict[str, Any]:
     """
     Load agent interaction checkpoint.
@@ -123,7 +124,7 @@ def count_conversation_turns(conversation_history: list[dict[str, Any]]) -> int:
 
 def evaluate_agent_performance(
     checkpoint_file: str, result_file: str, benchmark_id: str, benchmark_manager: BenchmarkManager, submission_path: str
-) -> dict[str, Any]: # TODO: Implement!!!!!!!
+) -> dict[str, Any]:  # TODO: Implement!!!!!!!
     """
     Evaluate agent performance based on interaction logs.
 
@@ -167,29 +168,52 @@ def evaluate_agent_performance(
         # Import evaluation function and load ground truth dataset
         # Import evaluation function
         import importlib.util
-        eval_module_path = os.path.join(benchmark_manager.storage_path, benchmark_id, "evaluation/evaluation_metrics.py")
+
+        eval_module_path = os.path.join(
+            benchmark_manager.storage_path, benchmark_id, "evaluation/evaluation_metrics.py"
+        )
         spec = importlib.util.spec_from_file_location("evaluation_metrics", eval_module_path)
         if spec is None:
+            logger.error(
+                f"Could not find evaluation metrics module at {eval_module_path} when evaluating {checkpoint_file}"
+            )
             raise ImportError(f"Could not find evaluation metrics module at {eval_module_path}")
         if spec.loader is None:
+            logger.error(f"Module loader is None for {eval_module_path} when evaluating {checkpoint_file}")
             raise ImportError(f"Module loader is None for {eval_module_path}")
         eval_module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(eval_module)
-        
+
         # Load ground truth dataset
-        ground_truth_path = os.path.join(benchmark_manager.storage_path, benchmark_id, "ground_truth/groundtruth_df.csv")
+        ground_truth_path = os.path.join(
+            benchmark_manager.storage_path, benchmark_id, "ground_truth/groundtruth_df.csv"
+        )
+
+        eval_error = False
 
         # Calculate absolute metric score obtained by the agent
-        evaluation["metrics"]["absolute_metric_score"] = eval_module.evaluate(ground_truth_path, submission_path)
+        try:
+            evaluation["metrics"]["absolute_metric_score"] = eval_module.evaluate(ground_truth_path, submission_path)
+        except Exception as e:
+            logger.error(f"Error during evaluation script execution for {checkpoint_file}: {e}")
+            eval_error = True
 
         # Calculate skill score, which is the relative ratio of the absolute metric score to the baseline metric score
-        numeric_baseline_path = os.path.join(benchmark_manager.storage_path, benchmark_id, "evaluation/numeric_baseline.json")
-        with open(numeric_baseline_path, "r") as f:
+        numeric_baseline_path = os.path.join(
+            benchmark_manager.storage_path, benchmark_id, "evaluation/numeric_baseline.json"
+        )
+        with open(numeric_baseline_path) as f:
             numeric_baseline = json.load(f)
-        if numeric_baseline["is_higher_better"]:
-            evaluation["metrics"]["skill_score"] = (evaluation["metrics"]["absolute_metric_score"] - numeric_baseline["score"]) / (numeric_baseline["theoretical_best"] - numeric_baseline["score"])
+        if eval_error:
+            evaluation["metrics"]["skill_score"] = -10000.0  # for now, the lower the worse
+        elif numeric_baseline["is_higher_better"]:
+            evaluation["metrics"]["skill_score"] = (
+                evaluation["metrics"]["absolute_metric_score"] - numeric_baseline["score"]
+            ) / (numeric_baseline["theoretical_best"] - numeric_baseline["score"])
         else:
-            evaluation["metrics"]["skill_score"] = (numeric_baseline["score"] - evaluation["metrics"]["absolute_metric_score"]) / (numeric_baseline["score"] - numeric_baseline["theoretical_best"])
+            evaluation["metrics"]["skill_score"] = (
+                numeric_baseline["score"] - evaluation["metrics"]["absolute_metric_score"]
+            ) / (numeric_baseline["score"] - numeric_baseline["theoretical_best"])
 
         # Save evaluation results
         os.makedirs(os.path.dirname(result_file), exist_ok=True)
@@ -200,7 +224,7 @@ def evaluate_agent_performance(
         return evaluation
 
     except Exception as e:
-        logger.error(f"Error evaluating agent performance: {e}")
+        logger.error(f"Error evaluating agent performance for {checkpoint_file}: {e}")
         # Create a minimal evaluation indicating failure
         evaluation = {
             "benchmark_id": benchmark_id,

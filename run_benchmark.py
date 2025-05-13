@@ -6,8 +6,6 @@ import concurrent.futures
 from typing import Any
 from datetime import datetime
 import logging
-import importlib.util
-import pandas as pd
 
 from data_manager.benchmark_manager import BenchmarkManager
 from sandbox.sandbox_run import run_docker_test
@@ -192,7 +190,7 @@ def single_agent_test(
     for file_path in [checkpoint_file, submission_file, log_file, result_file]:
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
         if not os.path.exists(file_path):
-            with open(file_path, 'w') as f:
+            with open(file_path, 'w'):
                 pass  # Create empty file
 
     # Run the test in a Docker container
@@ -265,7 +263,7 @@ def main():
 
     # Set up logging based on the command line argument
     log_level = getattr(logging, args.log_level.upper())
-    configure_global_logger(level=log_level)
+    configure_global_logger(level=log_level, log_file="run_benchmark.log")
     logger.info(f"Log level set to {args.log_level}")
 
     # Load configurations
