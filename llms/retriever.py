@@ -5,47 +5,8 @@ import json
 from backend import LiteLLMBackend
 from backend.utils import FunctionSpec
 
-gatekeeper_spec = FunctionSpec(
-    name="gatekeeper",
-    description=(
-        "Given a user instruction and reference instructions, decide whether they contradictory each other."
-    ),
-    json_schema={
-        "type": "object",
-        "properties": {
-            "thought": {
-                "type": "string",
-                "description": (
-                    "Your reasoning process before providing the answer"
-                )
-            },
-            "contradictory": {
-                "type": "boolean",
-                "description": (
-                    "True if the user instruction conflicts with the reference instructions, "
-                    "False if the instruction is irrelevant to or aligns with the reference instructions."
-                )
-            },
-            "follow_up_instruction": {
-                "type": "string",
-                "description": (
-                    "When contradictory=true, follow-up instruction that guides the direction back to the reference instructions"
-                    "while preserving the tone and style of the original. When contradictory=false, use null."
-                ),
-                "nullable": True
-            },
-        },
-        "required": ["contradictory", "follow_up_instruction"],
-        "additionalProperties": False
-    },
-    cache_control={
-        "type": "ephemeral"
-    }
-)
-
-
-class Gatekeeper(AgentClass):
-    """Gatekeeper class that validates user messages before they reach the assistant."""
+class Retriever(AgentClass):
+    """Retriever class that retrieves project context from the reference instructions."""
 
     def __init__(self, config: LLMConfig):
         """Initialize the gatekeeper with configuration.
@@ -74,7 +35,7 @@ class Gatekeeper(AgentClass):
         """Reset the system message."""
         self.system_message = [{"role": "system", "content": [{"type": "text", "text": self.system_prompt, "cache_control": {"type": "ephemeral"}}]}]
 
-    def call_llm(self, message: str, retry: bool = True, output_raw: bool = False) -> dict[str, Any]:
+    def call_llm(self, message: str, retry: bool = True, output_raw: bool = False, **kwargs) -> dict[str, Any]:
         """Call the LLM to validate the user message.
         Args:
             message: The user message to validate
@@ -86,5 +47,5 @@ class Gatekeeper(AgentClass):
             - 'correct_instruction': str containing the validated/cleaned message
         """
         # Call the LLM
-        response = self.backend.query(self.system_message, message, None, func_spec=gatekeeper_spec, retry=retry, output_raw=output_raw)
+        response = self.backend.query(self.system_message, message, None, func_spec=None, retry=retry, output_raw=output_raw, **kwargs)
         return response

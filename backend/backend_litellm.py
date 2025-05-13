@@ -32,6 +32,7 @@ class LiteLLMBackend:
         func_spec: FunctionSpec | None = None,
         retry: bool = True,
         output_raw: bool = False,
+        **kwargs
     ) -> OutputType:
         """BaseMultiRoundHandler already handles system message and user message.
         We just need to pass in the messages and function spec.
@@ -59,7 +60,8 @@ class LiteLLMBackend:
                             temperature=self.config.temperature,
                             api_base=self.config.api_base,
                             caching=self.config.caching,
-                            **additional_kwargs
+                            **additional_kwargs,
+                            **kwargs
                             )
                 if output_raw:
                     return response
