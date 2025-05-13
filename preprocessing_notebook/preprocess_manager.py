@@ -12,6 +12,7 @@ from preprocessing_notebook.utils.run_eval import run_evaluation
 from preprocessing_notebook.utils.split_dataset import split_dataset
 from preprocessing_notebook.utils.copy_directory import copy_directory
 from preprocessing_notebook.utils.reconstruct_dataset import reconstruct_dataset
+from preprocessing_notebook.utils.copy_dict_items import copy_dict_items
 
 from logger import logger, configure_global_logger
 import tomllib
@@ -357,6 +358,17 @@ class PreprocessManager:
         run_evaluation(eval_script_path, y_test_path, y_pred_path, output_json_path)
         logger.info(f"Evaluated reconstructed code")
 
+    def copy_dict_items(self, source_json_path: str = None, target_json_path: str = None, keys_to_copy: list = None):
+        if source_json_path is None:
+            source_json_path = self.metric_info_path
+            
+        if target_json_path is None:
+            target_json_path = self.numeric_baseline_path   
+            
+        copy_dict_items(source_json_path, target_json_path)
+        logger.info(f"Copied {keys_to_copy} from {source_json_path} to {target_json_path}")
+            
+
     ######################################################### Further reconstruct data for benchmark agents
     def reconstruct_dataset(self, input_dir: str = None, output_dir: str = None, column_names: list = None):
         if input_dir is None:
@@ -437,6 +449,7 @@ class PreprocessManager:
         ### run python notebook and evaluation
         self.run_python_notebook()
         self.run_evaluation()
+        self.copy_dict_items()
 
         ### reconstruct dataset
         self.reconstruct_dataset()
@@ -464,7 +477,7 @@ class PreprocessManager:
         self.update_data_dir_in_pyfile()
         self.run_python_notebook()
         self.run_evaluation()
-
+        self.copy_dict_items()
         ### narration
         self.narration()
         self.extract_instructions_and_knowledge()
