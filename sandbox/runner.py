@@ -129,30 +129,34 @@ def setup_task(test_case_id: str) -> list[dict[str, Any]]:
         else:
             # If no specific instructions directory, look for a general instructions file
             instructions_file = "/app/instructions/instructions.md"
-            if os.path.exists(instructions_file):
+            gatekeeper_reference_file = "/app/instructions/gatekeeper_reference.md"
+
+            # load instructions
+            try:
                 with open(instructions_file) as f:
                     instruction_text = f.read()
-
-                tasks = [
-                    {
-                        "id": test_case_id,
-                        "description": instruction_text,
-                        "success_criteria": "Complete the data analysis task as instructed.",
-                        "completed": False,
-                        "summary": "",
-                    }
-                ]
-            else:
+            except Exception as e:
                 logger.error(f"No instructions found for test case {test_case_id}")
-                tasks = [
-                    {
-                        "id": test_case_id,
-                        "description": "No instructions available. Please analyze the provided data.",
-                        "success_criteria": "Complete the data analysis task.",
-                        "completed": False,
-                        "summary": "",
-                    }
-                ]
+                instruction_text = "No instructions available. Please analyze the provided data."
+
+            # load gatekeeper reference
+            try:
+                with open(gatekeeper_reference_file) as f:
+                    gatekeeper_reference_text = f.read()
+            except Exception as e:
+                logger.error(f"No gatekeeper reference found for test case {test_case_id}")
+                gatekeeper_reference_text = instruction_text
+
+            tasks = [
+                {
+                    "id": test_case_id,
+                    "description": instruction_text,
+                    "success_criteria": "Complete the data analysis task as instructed.",
+                    "completed": False,
+                    "summary": "",
+                    "reference_instructions": gatekeeper_reference_text,
+                }
+            ]
 
         logger.info(f"Set up {len(tasks)} tasks for test case {test_case_id}")
         return tasks
@@ -200,16 +204,27 @@ def run_interaction(env_config: dict[str, Any], tasks: list[dict[str, Any]]):
             checkpoint_path=env_config["checkpoint_path"],
         )
 
-        # TODO: config these parameters properly
+        gatekeeper_llm_config = LLMConfig(
+            api_key=env_config["base_config"]["gatekeeper"]["api_key"],
+            model=env_config["base_config"]["gatekeeper"]["model"],
+            temperature=env_config["base_config"]["gatekeeper"]["temperature"],
+            max_retries=env_config["base_config"]["gatekeeper"].get("max_retries", 3),
+            retry_delay=env_config["base_config"]["gatekeeper"].get("retry_delay", 2),
+            run_code=False,  # User agent doesn't run code
+            api_base=env_config["base_config"]["gatekeeper"].get("api_base"),
+            system_prompt=env_config["base_config"]["gatekeeper"].get("system_prompt"),
+        )
+
         # Create environment config
         env_configuration = EnvironmentConfig(
             user_llm_config=user_llm_config,
             assistant_llm_config=assistant_llm_config,
-            assistant_agent_type=env_config["agent_config"].get("framework", "pure-model"),
+            gatekeeper_llm_config=gatekeeper_llm_config,
+            assistant_agent_type=env_config["agent_config"].get("framework", "base-agent"),
             interpreter_config_path="/app/configs/interpreter_config.toml",
-            user_prompt_template="You are a data scientist. You need to help solve this task:\n\n{task_list}\n\n{current_task}",
-            max_turns=20,
-            user_continue_prompt_template="The assistant has provided analysis: {assistant_summary}\n\nPlease provide further instructions or indicate if all tasks are completed by including '##ALL_TASKS_COMPLETED##' in your message.",
+            # user_prompt_template="You are a data scientist. You need to help solve this task:\n\n{task_list}\n\n{current_task}",
+            max_turns=20, # TODO: config max_turns somewhere
+            # user_continue_prompt_template="The assistant has provided analysis: {assistant_summary}\n\nPlease provide further instructions or indicate if all tasks are completed by including '##ALL_TASKS_COMPLETED##' in your message.",
             checkpoint_path=env_config["checkpoint_path"],
         )
 
@@ -219,18 +234,11 @@ def run_interaction(env_config: dict[str, Any], tasks: list[dict[str, Any]]):
         # Create and run the environment
         environment = Environment(env_configuration, task_objects)
 
-        # TODO: choose the right running mode
         # Run interaction based on the structure of tasks
-        if len(task_objects) > 1:
-            # Multiple tasks/rounds, use version1
-            from llm_interact_env import run
+        # Single task, use taubench mode
+        from llm_interact_env import run
 
-            run(environment, version_name="version1")
-        else:
-            # Single task, use taubench mode
-            from llm_interact_env import run
-
-            run(environment, version_name="taubench")
+        run(environment, version_name="taubench")
 
         # Interaction completed
         logger.info("Interaction completed successfully")

@@ -86,16 +86,34 @@ def run_docker_test(
 
     # Copy instructions if they exist
     instructions_dir = os.path.join(benchmark_dir, "instructions")
+    logger.info(f"Checking instructions directory: {instructions_dir}")
     if os.path.exists(instructions_dir):
+        logger.info(f"Instructions directory exists. Contents: {os.listdir(instructions_dir)}")
         # Copy all files from instructions directory to the temporary directory
         for item in os.listdir(instructions_dir):
+            logger.info(f"Copying item: {item}")
             source = os.path.join(instructions_dir, item)
             destination = os.path.join(temp_instructions_dir, item)
+            logger.info(f"From: {source} to: {destination}")
             if os.path.isdir(source):
                 shutil.copytree(source, destination)
             else:
                 shutil.copy2(source, destination)
-        logger.debug(f"Copied instructions from {instructions_dir} to {temp_instructions_dir}")
+        logger.info(f"Copied instructions from {instructions_dir} to {temp_instructions_dir}")
+        logger.info(f"Final temp instructions directory contents: {os.listdir(temp_instructions_dir)}")
+        
+        # Verify files exist and are readable
+        for item in os.listdir(temp_instructions_dir):
+            file_path = os.path.join(temp_instructions_dir, item)
+            if os.path.isfile(file_path):
+                try:
+                    with open(file_path, 'r') as f:
+                        content = f.read()
+                    logger.info(f"Successfully verified file {item} is readable")
+                except Exception as e:
+                    logger.error(f"Error reading file {item}: {e}")
+    else:
+        logger.error(f"Instructions directory does not exist: {instructions_dir}")
 
     # Define volumes to mount
     print("checkpoint_path", os.path.abspath(checkpoint_path))
@@ -113,14 +131,14 @@ def run_docker_test(
         os.path.abspath("data_manager"): {"bind": "/app/data_manager", "mode": "ro"},
         os.path.abspath("interpreter"): {"bind": "/app/interpreter", "mode": "ro"},
         os.path.abspath("logger.py"): {"bind": "/app/logger.py", "mode": "ro"},
-        os.path.abspath("llm_interact.py"): {"bind": "/app/llm_interact.py", "mode": "ro"},
+        os.path.abspath("backend"): {"bind": "/app/backend", "mode": "ro"},
+        os.path.abspath("llms"): {"bind": "/app/llms", "mode": "ro"},
         os.path.abspath("llm_interact_env.py"): {"bind": "/app/llm_interact_env.py", "mode": "ro"},
         os.path.abspath(os.path.join("sandbox", "runner.py")): {"bind": "/app/runner.py", "mode": "ro"},
         # Mount directories for logs and checkpoints (read-write)
         os.path.abspath(log_path): {"bind": f"/app/logs/{test_case_id}_{agent_config.get('id', 'unnamed_agent')}.log", "mode": "rw"},
         os.path.abspath(checkpoint_path): {"bind": f"/app/checkpoints/{test_case_id}_{agent_config.get('id', 'unnamed_agent')}.json", "mode": "rw"},
         os.path.abspath(submission_path): {"bind": "/app/checkpoints/submission.csv", "mode": "rw"},
-        # TODO first: create a new file in the host system: checkpoints/test_case_id-agent_id-timestamp.json
         # second: mount the file in the container
         # same for submission.csv
         # test_case_id-agent_id-timestamp-submission.csv -> /app/submission.csv

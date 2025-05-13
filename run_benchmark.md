@@ -4,7 +4,7 @@
     - 准备好benchmark本身相关的配置文件，放在`configs/`文件夹下：
         - 请准备好benchmark基础配置文件`configs/base_config.toml`，这个文件包含了user LLM agent的配置，以及benchmark的路径、checkpoint的路径、evaluation result的路径、log文件的路径。如果你希望并发跑实验，max_workers可以设置最大并发度，我们的benchmark将使用python的ThreadPoolExecutor来进行并发测试。如果只想测试benchmark中的某几个test case，请使用test_cases设置你要测试的benchmark ID。请参考`configs/sample_base_config.toml`来设置，通常情况下，你只需要配置LLM部分的API key和model即可。
         - 准备好agent框架相关的配置文件：
-        - 如果你使用的是LLMInteract作为agent（即pure-model agent），请准备好`configs/interpreter_config.toml`，你可以直接复制`configs/sample_interpreter_config.toml`，这是我们已经配置好的。
+        - 如果你使用的是LLMInteract作为agent（即base-agent agent），请准备好`configs/interpreter_config.toml`，你可以直接复制`configs/sample_interpreter_config.toml`，这是我们已经配置好的。
         - TODO：为AIDE准备配置文件
         - 如果你还有其他agent框架，我们需要你自己实现AgentClass定义好的Protocol，请参考LLMInteract，将你的agent定义好，然后放入agent_dict中。
     - 准备好agent相关的配置文件，放在`agent_configs/`文件夹下：

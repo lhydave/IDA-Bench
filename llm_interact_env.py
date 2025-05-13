@@ -555,8 +555,7 @@ def interact_version_taubench(env: Environment, user_agent: BaseMultiRoundHandle
         )
         env._save_checkpoint()
 
-        # TODO: debug, since gatekeeper may change the user message, we need to check if the user message is changed
-        if user_response['end'] and user_agent.follow_up_prompt is None:
+        if user_response['end'] and user_agent.follow_up_message is None:
             logger.info("All tasks completion marker detected, exiting loop")
             break
 
