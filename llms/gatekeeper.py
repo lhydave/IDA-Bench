@@ -38,6 +38,9 @@ gatekeeper_spec = FunctionSpec(
         "required": ["contradictory", "follow_up_instruction"],
         "additionalProperties": False
     },
+    cache_control={
+        "type": "ephemeral"
+    }
 )
 
 
@@ -56,7 +59,7 @@ class Gatekeeper(AgentClass):
             self._system_prompt = config.system_prompt
         logger.info(f"Initialized Gatekeeper with model: {config.model}, temperature: {config.temperature}")
         self.backend = LiteLLMBackend(config)
-        self.system_message = [{"role": "system", "content": [{"type": "text", "text": self.system_prompt,}]}]
+        self.system_message = [{"role": "system", "content": [{"type": "text", "text": self.system_prompt, "cache_control": {"type": "ephemeral"}}]}]
     @property
     def system_prompt(self) -> str | None:
         """Get the system prompt."""
@@ -69,7 +72,7 @@ class Gatekeeper(AgentClass):
 
     def reset_system_message(self):
         """Reset the system message."""
-        self.system_message = [{"role": "system", "content": [{"type": "text", "text": self.system_prompt,}]}]
+        self.system_message = [{"role": "system", "content": [{"type": "text", "text": self.system_prompt, "cache_control": {"type": "ephemeral"}}]}]
 
     def call_llm(self, message: str, retry: bool = True, output_raw: bool = False) -> dict[str, Any]:
         """Call the LLM to validate the user message.

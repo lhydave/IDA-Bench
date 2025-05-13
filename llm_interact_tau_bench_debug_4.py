@@ -10,6 +10,9 @@ from llm_interact_env import Environment, EnvironmentConfig, Task, run
 from logger import logger, configure_global_logger  # Import the logger
 import subprocess  # Added for running the script
 
+# Configure logger to show debug messages
+configure_global_logger(level=logging.DEBUG, log_file="llm_interact_tau_bench_debug_4.log")
+
 # Global variables
 dataset_path = "benchmark_final_test/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/datasets"
 train_path = f"{dataset_path}/train.csv"
@@ -28,7 +31,6 @@ console_handler.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 console_handler.setFormatter(formatter)
 logger.addHandler(console_handler)
-configure_global_logger(log_file="llm_interact_tau_bench_debug.log", level=logging.DEBUG)
 
 # Define configuration for both agents
 user_config = LLMConfig.from_toml("llm_configs/raw/llm_config_user.toml")

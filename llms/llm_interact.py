@@ -142,7 +142,11 @@ class BaseMultiRoundHandler(AgentClass):
         results = []
         user_turn_processed = False
         for turn in reversed(self.messages):
-            include_turn = turn
+            if turn["role"] == "user" and not user_turn_processed:
+                include_turn = {"role": "user", "content": [{"type": "text", "text": turn["content"], "cache_control": {"type": "ephemeral"}}]}
+                user_turn_processed = True
+            else:
+                include_turn = turn
             results.append(include_turn)
         return list(reversed(results))
 

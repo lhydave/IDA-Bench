@@ -22,10 +22,10 @@ from .run_text_llm import run_text_llm
 # from .run_function_calling_llm import run_function_calling_llm
 from .run_tool_calling_llm import run_tool_calling_llm
 from .utils.convert_to_openai_messages import convert_to_openai_messages
+from logger import logger
 
 # Create or get the logger
-logger = logging.getLogger("LiteLLM")
-
+# logger = logging.getLogger("LiteLLM")  # Remove this line
 
 class SuppressDebugFilter(logging.Filter):
     def filter(self, record):
@@ -34,6 +34,8 @@ class SuppressDebugFilter(logging.Filter):
             return False  # Suppress this log message
         return True  # Allow all other messages
 
+# Add the filter to the logger
+logger.addFilter(SuppressDebugFilter())
 
 class Llm:
     """
@@ -41,9 +43,6 @@ class Llm:
     """
 
     def __init__(self, interpreter):
-        # Add the filter to the logger
-        logger.addFilter(SuppressDebugFilter())
-
         # Store a reference to parent interpreter
         self.interpreter = interpreter
 
@@ -446,14 +445,15 @@ def fixed_litellm_completions(**params):
 
     params["num_retries"] = 0
 
-    marked_as_ephemeral = False
-    for msg in reversed(params["messages"]):
-        if msg["role"] == "system":
-            msg['content'] = [{"type": "text", "text": msg['content'], "cache_control": {"type": "ephemeral"}}]
-        elif msg["role"] == "user" and not marked_as_ephemeral:
-            msg['content'] = [{"type": "text", "text": msg['content'], "cache_control": {"type": "ephemeral"}}]
-            marked_as_ephemeral = True
-
+    if "claude" in params["model"]:
+        marked_as_ephemeral = False
+        for msg in reversed(params["messages"]):
+            if msg["role"] == "system":
+                msg['content'] = [{"type": "text", "text": msg['content'], "cache_control": {"type": "ephemeral"}}]
+            elif msg["role"] == "user" and not marked_as_ephemeral:
+                msg['content'] = [{"type": "text", "text": msg['content'], "cache_control": {"type": "ephemeral"}}]
+                marked_as_ephemeral = True
+    logger.debug(f"Messages Length: {len(params['messages'])}")
     for attempt in range(attempts):
         try:
             yield from litellm.completion(**params)
