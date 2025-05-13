@@ -2,6 +2,7 @@ import os
 import shutil
 from pathlib import Path
 import json
+import pandas as pd
 
 def create_directory_structure(base_folder, folder_name):
     """Create the required directory structure in benchmark_final/storage."""
@@ -36,11 +37,33 @@ def get_knowledge(folder_path):
     assert knowledge_path.exists()
     return knowledge_path.read_text()
 
+def get_sample_submission_columns(folder_path):
+    """Get column names from sample_submission.csv file."""
+    sample_submission_path = Path(folder_path) / "dataset" / "sample_submission.csv"
+    if not sample_submission_path.exists():
+        return None
+    
+    try:
+        df = pd.read_csv(sample_submission_path)
+        return list(df.columns)
+    except Exception as e:
+        print(f"Error reading sample submission file: {e}")
+        return None
+
 def get_objective(folder_path):
-    """Read the objective.md file."""
+    """Read the objective.md file and replace column names placeholder."""
     objective_path = Path(folder_path) / "objective.md"
     assert objective_path.exists()
-    return objective_path.read_text()
+    
+    objective_content = objective_path.read_text()
+    
+    # Get column names from sample submission
+    column_names = get_sample_submission_columns(folder_path)
+    if column_names:
+        # Replace the placeholder with actual column names
+        objective_content = objective_content.replace("{column_names}", ", ".join(column_names))
+    
+    return objective_content
 
 def create_instructions_file(storage_path, objective, knowledge):
     """Create the instructions.md file with the specified structure."""

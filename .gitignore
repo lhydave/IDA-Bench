@@ -53,6 +53,7 @@ llm_configs/llm_config_proxy.yaml
 llm_configs/llm_config_proxy_haoyu.yaml
 # checkpoints
 checkpoints
+!experiments/**
 
 # generated test files
 test/
