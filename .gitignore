@@ -12,6 +12,9 @@ wheels/
 # Virtual environments
 .venv
 
+# kaggle all notebooks
+test_data
+
 # # Datasets
 # *.csv
 

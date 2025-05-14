@@ -14,7 +14,7 @@ def get_dataset_path(notebook_name: str) -> str:
         str: Path to the dataset directory
     """
     # Construct path to meta_info file
-    meta_info_path = Path("benchmark_data_toSubmit/notebooks/meta_info/storage") / f"{notebook_name}.json"
+    meta_info_path = Path("test_data/notebooks/meta_info/storage") / f"{notebook_name}.json"
     
     if not meta_info_path.exists():
         raise FileNotFoundError(f"Meta info file not found: {meta_info_path}")
@@ -32,7 +32,7 @@ def get_dataset_path(notebook_name: str) -> str:
     dataset_name = input_path[0]
     
     # Construct path to dataset directory
-    dataset_path = Path("benchmark_data_toSubmit/datasets/storage") / dataset_name
+    dataset_path = Path("test_data/datasets/storage") / dataset_name
     
     if not dataset_path.exists():
         raise FileNotFoundError(f"Dataset directory not found: {dataset_path}")

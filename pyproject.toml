@@ -42,6 +42,9 @@ dependencies = [
     "selenium>=4.32.0",
     "webdriver-manager>=4.0.2",
     "psutil>=5.9.8",
+    "catboost>=1.2.8",
+    "holidays>=0.72",
+    "optuna>=4.3.0",
 ]
 
 [dependency-groups]

@@ -176,9 +176,10 @@ class NotebookManager:
 
         # Check if already in filtered notebooks
         if notebook_id in self.filtered_notebooks_ids:
-            raise ValueError(
-                f"Notebook {notebook_id} is already in filtered notebooks with reason: '{self.filtered_notebooks_ids[notebook_id]}'"  # noqa: E501
-            )
+            # raise ValueError(
+            #     f"Notebook {notebook_id} is already in filtered notebooks with reason: '{self.filtered_notebooks_ids[notebook_id]}'"  # noqa: E501
+            # )
+            return
 
         # Remove from kept notebooks if present
         if notebook_id in self.kept_notebooks_ids:

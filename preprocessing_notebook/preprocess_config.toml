@@ -1,5 +1,5 @@
 [minimizer]
-api_base ="http://localhost:4000"
+api_base ="http://localhost:41251"
 api_key = "test-123"
 model = "litellm_proxy/claude-3-7-sonnet"
 temperature = 0.1
@@ -8,7 +8,7 @@ retry_delay = 2
 
 
 [narrator]
-api_base ="http://localhost:4000"
+api_base ="http://localhost:41251"
 api_key = "test-123"
 model = "litellm_proxy/claude-3-7-sonnet"
 temperature = 0.1
@@ -16,7 +16,7 @@ max_retries = 3
 retry_delay = 2
 
 [reconstructor]
-api_base ="http://localhost:4000"
+api_base ="http://localhost:41251"
 api_key = "test-123"
 model = "litellm_proxy/claude-3-7-sonnet"
 temperature = 0.1
