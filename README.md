@@ -43,3 +43,9 @@ tmux a -t proxy
 
 I have changed ``llm_config_user.toml`` and ``llm_config_agent.toml``. Simply run ``python llm_interact_tau_bench_debug.py``.
 
+
+Trajactory to markdown:
+
+```sh
+python utils/trajactory_to_markdown_new.py --input 
+```
