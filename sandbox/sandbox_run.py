@@ -160,6 +160,7 @@ def run_docker_test(
         os.path.abspath(temp_instructions_dir): {"bind": "/app/instructions", "mode": "rw"},
     }
 
+    container = None  # Initialize container to None
     try:
         # Set environment variables
         environment = {
@@ -211,3 +212,16 @@ def run_docker_test(
         # Clean up temporary files and directories
         os.unlink(temp_agent_config.name)
         shutil.rmtree(temp_instructions_dir, ignore_errors=True)
+        # Clean up container if it exists
+        try:
+            if container:  # Check if container was successfully created
+                container.remove(force=True)
+        except Exception as e:
+            logger.error(f"Error removing container: {e}")
+
+        # Clean up any remaining files
+        try:
+            client.containers.prune()
+            client.volumes.prune()
+        except Exception as e:
+            logger.error(f"Error pruning Docker resources: {e}")

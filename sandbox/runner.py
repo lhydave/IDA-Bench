@@ -56,7 +56,7 @@ def setup_environment(test_case_id: str) -> dict[str, Any]:
         log_path = f"/app/logs/{test_case_id}_{agent_config.get('id', 'unnamed_agent')}.log"
 
         # Configure logging for the runner
-        configure_global_logger(level=os.environ.get("LOG_LEVEL", "INFO"), log_file=log_path)
+        configure_global_logger(level=os.environ.get("LOG_LEVEL", "DEBUG"), log_file=log_path)
 
         return {
             "test_case_id": test_case_id,
@@ -260,14 +260,33 @@ def run_interaction(env_config: dict[str, Any], tasks: list[dict[str, Any]]):
 
 def cleanup_instruction_material():
     """Remove instruction material after initialization to ensure agent can't access it."""
+    instruction_dir_path = "/app/instructions"
     try:
-        if os.path.exists("/app/instructions"):
-            logger.info("Cleaning up instruction material")
-            shutil.rmtree("/app/instructions", True)
+        if os.path.exists(instruction_dir_path) and os.path.isdir(instruction_dir_path):
+            logger.info(f"Cleaning up contents of instruction material directory: {instruction_dir_path}")
+            for item_name in os.listdir(instruction_dir_path):
+                item_path = os.path.join(instruction_dir_path, item_name)
+                try:
+                    if os.path.isfile(item_path) or os.path.islink(item_path):
+                        os.unlink(item_path)
+                        logger.debug(f"Removed file/link: {item_path}")
+                    elif os.path.isdir(item_path):
+                        shutil.rmtree(item_path)
+                        logger.debug(f"Removed directory: {item_path}")
+                except Exception as e_inner:
+                    # Log error for specific item but continue trying to clean others
+                    logger.error(f"Failed to remove {item_path} during cleanup: {e_inner}")
+            logger.info(
+                f"Finished cleaning contents of {instruction_dir_path}. The directory itself (mount point) remains but should be empty."  # noqa: E501
+            )
+        elif not os.path.exists(instruction_dir_path):
+            logger.warning(f"Instruction material directory {instruction_dir_path} not found to clean up.")
         else:
-            logger.warning("No instructions directory found to clean up")
+            # This case should ideally not happen if /app/instructions is always a directory when it exists
+            logger.warning(f"{instruction_dir_path} exists but is not a directory. Skipping cleanup.")
     except Exception as e:
-        logger.error(f"Error cleaning up instruction material: {e}")
+        # Catch-all for errors like permission issues with listdir itself, etc.
+        logger.error(f"Error during cleanup of instruction material from {instruction_dir_path}: {e}")
 
 
 def main():
