@@ -12,6 +12,25 @@ wheels/
 # Virtual environments
 .venv
 
+.$*
+
+# latex generated files
+*.aux
+*.log
+*.out
+neurips_*.pdf
+*.xdv
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.blg
+*.synctex(busy)
+
+.DS_Store
+_minted-neurips_2025/
+*.pygtex
+
+
 # kaggle all notebooks
 test_data
 
