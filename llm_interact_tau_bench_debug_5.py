@@ -14,15 +14,15 @@ import subprocess  # Added for running the script
 configure_global_logger(level=logging.DEBUG, log_file="llm_interact_tau_bench_debug_5.log")
 
 # Global variables
-dataset_path = "benchmark_final_test/storage/aarthi93-end-to-end-ml-pipeline/datasets"
-train_path = f"{dataset_path}/train.csv"
-test_path = f"{dataset_path}/test.csv"
+# dataset_path = "benchmark_final_test/storage/aarthi93-end-to-end-ml-pipeline/datasets"
+# train_path = f"{dataset_path}/train.csv"
+# test_path = f"{dataset_path}/test.csv"
 trajectory_path = "trajectories/aarthi93-end-to-end-ml-pipeline"
 instructions_path = "benchmark_final_test/storage/aarthi93-end-to-end-ml-pipeline/instructions"
-reference_instructions_path = f"{instructions_path}/instructions.md"
-project_context_path = f"{instructions_path}/project_context.md"
-submission_path = f"benchmark_final_test/storage/aarthi93-end-to-end-ml-pipeline/checkpoints/submission.csv"
-sample_submission_path = f"{dataset_path}/sample_submission.csv"
+# reference_instructions_path = f"{instructions_path}/instructions.md"
+# project_context_path = f"{instructions_path}/project_context.md"
+# submission_path = f"benchmark_final_test/storage/aarthi93-end-to-end-ml-pipeline/checkpoints/submission.csv"
+# sample_submission_path = f"{dataset_path}/sample_submission.csv"
 shards_path = f"{instructions_path}/shards.md"
 
 

@@ -28,9 +28,13 @@ for root, dirs, files in os.walk(storage_dir):
     # Check if this is an 'instructions' directory
     if os.path.basename(root) == "instructions":
         # Look for instructions.md file
-        instruction_file = os.path.join(root, "instructions.md")
-        if os.path.exists(instruction_file):
-            instruction_files.append(instruction_file)
+        try:
+            instruction_file = os.path.join(root, "cleaned_instructions.md")
+            if os.path.exists(instruction_file):
+                instruction_files.append(instruction_file)
+        except Exception as e:
+            print(f"Error processing {root}: {e}")
+            continue
 
 print(f"Found {len(instruction_files)} instruction files")
 
@@ -55,7 +59,7 @@ for instruction_file in instruction_files:
         modified_content = instruction_content
     
     # Call the retriever with the modified instruction content
-    response = retriever.call_llm(modified_content, thinking={"type": "enabled", "budget_tokens": 8196})
+    response = retriever.call_llm(modified_content, thinking={"type": "enabled", "budget_tokens": 20000})
     # Print the project name and response
     project_name = Path(instruction_file).parts[-3]  # Get the project name from the path
     print(f"Project: {project_name}")

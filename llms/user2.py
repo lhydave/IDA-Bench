@@ -165,20 +165,22 @@ class User2(AgentClass):
             # Remove any numbering prefix (e.g., "1. ", "2. ", "1.47214908 ") from the beginning of each line
             self.shards = []
             for line in lines:
+                # Skip empty lines
+                if not line:
+                    continue
+                    
                 # Find the first letter in the line
                 first_letter_pos = -1
                 for i, char in enumerate(line):
                     if char.isalpha():
                         first_letter_pos = i
                         break
-                
                 # If we found a letter and there's a period before it, assume it's a numbered item
                 if first_letter_pos > 0 and '.' in line[:first_letter_pos]:
                     period_pos = line.find('.')
                     self.shards.append(line[first_letter_pos:])
                 else:
                     self.shards.append(line)
-            
             return True
         except Exception as e:
             logger.error(f"Error parsing shards: {e}")
