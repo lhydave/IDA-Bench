@@ -1558,3 +1558,42 @@
 2025-05-13 14:56:06 - DataSciBench - INFO - Test for agent sample_agent_deepseek_r1 on test case ak5047-australia-weather completed successfully
 2025-05-13 14:56:06 - DataSciBench - INFO - Benchmark complete. 19/19 tests successful.
 2025-05-13 14:56:06 - DataSciBench - INFO - Summary written to ./experiments/results/summary.json
+2025-05-14 20:11:42 - DataSciBench - INFO - Log level set to INFO
+2025-05-14 20:11:42 - DataSciBench - INFO - Logging to file: run_benchmark.log
+2025-05-14 20:11:42 - DataSciBench - INFO - Loaded base config from configs/base_config.toml
+2025-05-14 20:11:42 - DataSciBench - INFO - Running full benchmark.
+2025-05-14 20:11:42 - DataSciBench - INFO - Loaded 1 agent configs from agent_configs/
+2025-05-14 20:11:42 - DataSciBench - INFO - Benchmark storage initialized at ./benchmark_final
+2025-05-14 20:11:42 - DataSciBench - INFO - Initialized benchmark manager with path: ./benchmark_final
+2025-05-14 20:11:42 - DataSciBench - INFO - Validated 1 test cases
+2025-05-14 20:11:42 - DataSciBench - INFO - Will run 1 test cases for 1 agents
+2025-05-14 20:11:42 - DataSciBench - INFO - Running tests sequentially
+2025-05-14 20:11:42 - DataSciBench - INFO - Starting test for agent deepseek-v3 on test case ayodejiibrahimlateef-integrative-analysis-early-depression-detection
+2025-05-14 20:11:42 - DataSciBench - INFO - Building Docker image...
+2025-05-14 20:11:42 - DataSciBench - INFO - Docker image built successfully
+2025-05-14 20:11:42 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/ayodejiibrahimlateef-integrative-analysis-early-depression-detection/instructions
+2025-05-14 20:11:42 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 20:11:42 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 20:11:42 - DataSciBench - INFO - From: ./benchmark_final/storage/ayodejiibrahimlateef-integrative-analysis-early-depression-detection/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpleo9mjlu/reference_insights.md
+2025-05-14 20:11:42 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 20:11:42 - DataSciBench - INFO - From: ./benchmark_final/storage/ayodejiibrahimlateef-integrative-analysis-early-depression-detection/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpleo9mjlu/shards.md
+2025-05-14 20:11:42 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 20:11:42 - DataSciBench - INFO - From: ./benchmark_final/storage/ayodejiibrahimlateef-integrative-analysis-early-depression-detection/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpleo9mjlu/cleaned_instructions.md
+2025-05-14 20:11:42 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 20:11:42 - DataSciBench - INFO - From: ./benchmark_final/storage/ayodejiibrahimlateef-integrative-analysis-early-depression-detection/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpleo9mjlu/gatekeeper_reference.md
+2025-05-14 20:11:42 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 20:11:42 - DataSciBench - INFO - From: ./benchmark_final/storage/ayodejiibrahimlateef-integrative-analysis-early-depression-detection/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpleo9mjlu/instructions.md
+2025-05-14 20:11:42 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/ayodejiibrahimlateef-integrative-analysis-early-depression-detection/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpleo9mjlu
+2025-05-14 20:11:42 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 20:11:42 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 20:11:42 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 20:11:42 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 20:11:42 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 20:11:42 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 20:11:42 - DataSciBench - INFO - Starting Docker container 'test-ayodejiibrahimlateef-integrative-analysis-early-depression-detection-deepseek-v3-20250514_201142' for test case ayodejiibrahimlateef-integrative-analysis-early-depression-detection
+2025-05-14 20:24:13 - DataSciBench - INFO - Docker container for test case ayodejiibrahimlateef-integrative-analysis-early-depression-detection completed successfully
+2025-05-14 20:24:13 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/ayodejiibrahimlateef-integrative-analysis-early-depression-detection_deepseek-v3_20250514_201142.json
+2025-05-14 20:24:47 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/ayodejiibrahimlateef-integrative-analysis-early-depression-detection_deepseek-v3_20250514_201142.json
+2025-05-14 20:24:47 - DataSciBench - INFO - Test for agent deepseek-v3 on test case ayodejiibrahimlateef-integrative-analysis-early-depression-detection completed successfully
+2025-05-14 20:24:47 - DataSciBench - INFO - Benchmark complete. 1/1 tests successful.
+2025-05-14 20:24:47 - DataSciBench - INFO - Summary written to ./experiments/results/summary.json
