@@ -1597,3 +1597,1037 @@
 2025-05-14 20:24:47 - DataSciBench - INFO - Test for agent deepseek-v3 on test case ayodejiibrahimlateef-integrative-analysis-early-depression-detection completed successfully
 2025-05-14 20:24:47 - DataSciBench - INFO - Benchmark complete. 1/1 tests successful.
 2025-05-14 20:24:47 - DataSciBench - INFO - Summary written to ./experiments/results/summary.json
+2025-05-14 21:01:07 - DataSciBench - INFO - Log level set to INFO
+2025-05-14 21:01:07 - DataSciBench - INFO - Logging to file: run_benchmark.log
+2025-05-14 21:01:07 - DataSciBench - INFO - Loaded base config from configs/base_config.toml
+2025-05-14 21:01:07 - DataSciBench - INFO - Running full benchmark.
+2025-05-14 21:01:07 - DataSciBench - INFO - Loaded 2 agent configs from agent_configs/
+2025-05-14 21:01:07 - DataSciBench - INFO - Benchmark storage initialized at ./benchmark_final
+2025-05-14 21:01:07 - DataSciBench - INFO - Initialized benchmark manager with path: ./benchmark_final
+2025-05-14 21:01:07 - DataSciBench - INFO - Will run 21 test cases for 2 agents
+2025-05-14 21:01:07 - DataSciBench - INFO - Running tests concurrently with 2 workers
+2025-05-14 21:01:07 - DataSciBench - INFO - Starting test for agent deepseek-r1 on test case jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm
+2025-05-14 21:01:07 - DataSciBench - INFO - Starting test for agent deepseek-v3 on test case jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm
+2025-05-14 21:01:07 - DataSciBench - INFO - Building Docker image...
+2025-05-14 21:01:07 - DataSciBench - INFO - Docker image built successfully
+2025-05-14 21:01:07 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 21:01:07 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm/instructions
+2025-05-14 21:01:07 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm/instructions
+2025-05-14 21:01:07 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:01:07 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 21:01:07 - DataSciBench - INFO - From: ./benchmark_final/storage/jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp4467mdwe/reference_insights.md
+2025-05-14 21:01:07 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:01:07 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 21:01:07 - DataSciBench - INFO - From: ./benchmark_final/storage/jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp5f1zratq/reference_insights.md
+2025-05-14 21:01:07 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 21:01:07 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 21:01:07 - DataSciBench - INFO - From: ./benchmark_final/storage/jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp4467mdwe/shards.md
+2025-05-14 21:01:07 - DataSciBench - INFO - From: ./benchmark_final/storage/jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp5f1zratq/shards.md
+2025-05-14 21:01:07 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 21:01:07 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 21:01:07 - DataSciBench - INFO - From: ./benchmark_final/storage/jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp4467mdwe/cleaned_instructions.md
+2025-05-14 21:01:07 - DataSciBench - INFO - From: ./benchmark_final/storage/jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp5f1zratq/cleaned_instructions.md
+2025-05-14 21:01:07 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 21:01:07 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 21:01:07 - DataSciBench - INFO - From: ./benchmark_final/storage/jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp5f1zratq/gatekeeper_reference.md
+2025-05-14 21:01:07 - DataSciBench - INFO - From: ./benchmark_final/storage/jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp4467mdwe/gatekeeper_reference.md
+2025-05-14 21:01:07 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 21:01:07 - DataSciBench - INFO - From: ./benchmark_final/storage/jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp4467mdwe/instructions.md
+2025-05-14 21:01:07 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 21:01:07 - DataSciBench - INFO - From: ./benchmark_final/storage/jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp5f1zratq/instructions.md
+2025-05-14 21:01:07 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp5f1zratq
+2025-05-14 21:01:07 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp4467mdwe
+2025-05-14 21:01:07 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:01:07 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:01:07 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 21:01:07 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 21:01:07 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 21:01:07 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 21:01:07 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 21:01:07 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 21:01:07 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 21:01:07 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 21:01:07 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 21:01:07 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 21:01:07 - DataSciBench - INFO - Starting Docker container 'test-jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm-deepseek-v3-20250514_210107' for test case jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm
+2025-05-14 21:01:07 - DataSciBench - INFO - Starting Docker container 'test-jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm-deepseek-r1-20250514_210107' for test case jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm
+2025-05-14 21:01:45 - DataSciBench - INFO - Log level set to INFO
+2025-05-14 21:01:45 - DataSciBench - INFO - Logging to file: run_benchmark.log
+2025-05-14 21:01:45 - DataSciBench - INFO - Loaded base config from configs/base_config.toml
+2025-05-14 21:01:45 - DataSciBench - INFO - Running full benchmark.
+2025-05-14 21:01:45 - DataSciBench - INFO - Loaded 2 agent configs from agent_configs/
+2025-05-14 21:01:45 - DataSciBench - INFO - Benchmark storage initialized at ./benchmark_final
+2025-05-14 21:01:45 - DataSciBench - INFO - Initialized benchmark manager with path: ./benchmark_final
+2025-05-14 21:01:45 - DataSciBench - INFO - Will run 21 test cases for 2 agents
+2025-05-14 21:01:45 - DataSciBench - INFO - Running tests concurrently with 8 workers
+2025-05-14 21:01:45 - DataSciBench - INFO - Starting test for agent deepseek-r1 on test case aarthi93-end-to-end-ml-pipeline
+2025-05-14 21:01:45 - DataSciBench - INFO - Starting test for agent deepseek-v3 on test case aarthi93-end-to-end-ml-pipeline
+2025-05-14 21:01:45 - DataSciBench - INFO - Starting test for agent deepseek-r1 on test case sasakitetsuya-predicting-startup-valuation-with-machine-learning
+2025-05-14 21:01:45 - DataSciBench - INFO - Starting test for agent deepseek-v3 on test case sasakitetsuya-predicting-startup-valuation-with-machine-learning
+2025-05-14 21:01:45 - DataSciBench - INFO - Starting test for agent deepseek-r1 on test case abdallaellaithy-titanic-in-space-ml-survival-predictions
+2025-05-14 21:01:45 - DataSciBench - INFO - Starting test for agent deepseek-v3 on test case abdallaellaithy-titanic-in-space-ml-survival-predictions
+2025-05-14 21:01:45 - DataSciBench - INFO - Starting test for agent deepseek-r1 on test case ak5047-australia-weather
+2025-05-14 21:01:45 - DataSciBench - INFO - Starting test for agent deepseek-v3 on test case ak5047-australia-weather
+2025-05-14 21:01:45 - DataSciBench - INFO - Building Docker image...
+2025-05-14 21:01:45 - DataSciBench - INFO - Docker image built successfully
+2025-05-14 21:01:45 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 21:01:45 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 21:01:45 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 21:01:45 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 21:01:45 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 21:01:45 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 21:01:45 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 21:01:45 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/sasakitetsuya-predicting-startup-valuation-with-machine-learning/instructions
+2025-05-14 21:01:45 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/sasakitetsuya-predicting-startup-valuation-with-machine-learning/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp_5rc5dks/reference_insights.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/sasakitetsuya-predicting-startup-valuation-with-machine-learning/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp_5rc5dks/shards.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions
+2025-05-14 21:01:45 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:01:45 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/sasakitetsuya-predicting-startup-valuation-with-machine-learning/instructions
+2025-05-14 21:01:45 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp2m7k9mpb/reference_insights.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/sasakitetsuya-predicting-startup-valuation-with-machine-learning/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpduz3bzs6/reference_insights.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/sasakitetsuya-predicting-startup-valuation-with-machine-learning/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpduz3bzs6/shards.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/sasakitetsuya-predicting-startup-valuation-with-machine-learning/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp_5rc5dks/cleaned_instructions.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/ak5047-australia-weather/instructions
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp2m7k9mpb/shards.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:01:45 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/sasakitetsuya-predicting-startup-valuation-with-machine-learning/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpduz3bzs6/cleaned_instructions.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/ak5047-australia-weather/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpuyp3md94/reference_insights.md
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp0d6ciyre/reference_insights.md
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp2m7k9mpb/cleaned_instructions.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/aarthi93-end-to-end-ml-pipeline/instructions
+2025-05-14 21:01:45 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/aarthi93-end-to-end-ml-pipeline/instructions
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/sasakitetsuya-predicting-startup-valuation-with-machine-learning/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp_5rc5dks/gatekeeper_reference.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/ak5047-australia-weather/instructions
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:01:45 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/sasakitetsuya-predicting-startup-valuation-with-machine-learning/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpduz3bzs6/gatekeeper_reference.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/aarthi93-end-to-end-ml-pipeline/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp0da5xyxq/reference_insights.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/aarthi93-end-to-end-ml-pipeline/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp87i9_cpt/reference_insights.md
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/ak5047-australia-weather/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpo6uamk94/reference_insights.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/ak5047-australia-weather/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpuyp3md94/shards.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp0d6ciyre/shards.md
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/sasakitetsuya-predicting-startup-valuation-with-machine-learning/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp_5rc5dks/instructions.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/sasakitetsuya-predicting-startup-valuation-with-machine-learning/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpduz3bzs6/instructions.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/sasakitetsuya-predicting-startup-valuation-with-machine-learning/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp_5rc5dks
+2025-05-14 21:01:45 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/aarthi93-end-to-end-ml-pipeline/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp87i9_cpt/shards.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/aarthi93-end-to-end-ml-pipeline/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp0da5xyxq/shards.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp2m7k9mpb/gatekeeper_reference.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/ak5047-australia-weather/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpo6uamk94/shards.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/ak5047-australia-weather/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpuyp3md94/cleaned_instructions.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/aarthi93-end-to-end-ml-pipeline/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp0da5xyxq/cleaned_instructions.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/aarthi93-end-to-end-ml-pipeline/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp87i9_cpt/cleaned_instructions.md
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp0d6ciyre/cleaned_instructions.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/ak5047-australia-weather/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpuyp3md94/gatekeeper_reference.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/sasakitetsuya-predicting-startup-valuation-with-machine-learning/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpduz3bzs6
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp2m7k9mpb/instructions.md
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/ak5047-australia-weather/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpo6uamk94/cleaned_instructions.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/aarthi93-end-to-end-ml-pipeline/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp0da5xyxq/gatekeeper_reference.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/aarthi93-end-to-end-ml-pipeline/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp87i9_cpt/gatekeeper_reference.md
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp0d6ciyre/gatekeeper_reference.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp2m7k9mpb
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/ak5047-australia-weather/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpuyp3md94/instructions.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/ak5047-australia-weather/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpo6uamk94/gatekeeper_reference.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/aarthi93-end-to-end-ml-pipeline/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp87i9_cpt/instructions.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/aarthi93-end-to-end-ml-pipeline/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp0da5xyxq/instructions.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/ak5047-australia-weather/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpuyp3md94
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp0d6ciyre/instructions.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Starting Docker container 'test-sasakitetsuya-predicting-startup-valuation-with-machine-learning-deepseek-v3-20250514_210145' for test case sasakitetsuya-predicting-startup-valuation-with-machine-learning
+2025-05-14 21:01:45 - DataSciBench - INFO - From: ./benchmark_final/storage/ak5047-australia-weather/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpo6uamk94/instructions.md
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/aarthi93-end-to-end-ml-pipeline/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp0da5xyxq
+2025-05-14 21:01:45 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/ak5047-australia-weather/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpo6uamk94
+2025-05-14 21:01:45 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp0d6ciyre
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:01:45 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/aarthi93-end-to-end-ml-pipeline/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp87i9_cpt
+2025-05-14 21:01:45 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Starting Docker container 'test-sasakitetsuya-predicting-startup-valuation-with-machine-learning-deepseek-r1-20250514_210145' for test case sasakitetsuya-predicting-startup-valuation-with-machine-learning
+2025-05-14 21:01:45 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Starting Docker container 'test-ak5047-australia-weather-deepseek-r1-20250514_210145' for test case ak5047-australia-weather
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Starting Docker container 'test-abdallaellaithy-titanic-in-space-ml-survival-predictions-deepseek-r1-20250514_210145' for test case abdallaellaithy-titanic-in-space-ml-survival-predictions
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Starting Docker container 'test-aarthi93-end-to-end-ml-pipeline-deepseek-r1-20250514_210145' for test case aarthi93-end-to-end-ml-pipeline
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Starting Docker container 'test-aarthi93-end-to-end-ml-pipeline-deepseek-v3-20250514_210145' for test case aarthi93-end-to-end-ml-pipeline
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 21:01:45 - DataSciBench - INFO - Starting Docker container 'test-abdallaellaithy-titanic-in-space-ml-survival-predictions-deepseek-v3-20250514_210145' for test case abdallaellaithy-titanic-in-space-ml-survival-predictions
+2025-05-14 21:01:45 - DataSciBench - INFO - Starting Docker container 'test-ak5047-australia-weather-deepseek-v3-20250514_210145' for test case ak5047-australia-weather
+2025-05-14 21:07:16 - DataSciBench - INFO - Docker container for test case sasakitetsuya-predicting-startup-valuation-with-machine-learning completed successfully
+2025-05-14 21:07:16 - DataSciBench - ERROR - Error removing container: 409 Client Error for http+docker://localhost/v1.49/containers/97c96f3137f1203e0cb390bae73d3f590dc97ecc67da5e45f94993f1ef65dce0?v=False&link=False&force=True: Conflict ("removal of container 97c96f3137f1203e0cb390bae73d3f590dc97ecc67da5e45f94993f1ef65dce0 is already in progress")
+2025-05-14 21:07:17 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/sasakitetsuya-predicting-startup-valuation-with-machine-learning_deepseek-v3_20250514_210145.json
+2025-05-14 21:07:20 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/sasakitetsuya-predicting-startup-valuation-with-machine-learning_deepseek-v3_20250514_210145.json
+2025-05-14 21:07:20 - DataSciBench - INFO - Test for agent deepseek-v3 on test case sasakitetsuya-predicting-startup-valuation-with-machine-learning completed successfully
+2025-05-14 21:07:20 - DataSciBench - INFO - Starting test for agent deepseek-r1 on test case esotericdata1-titanickaggle-ds
+2025-05-14 21:07:20 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 21:07:20 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/esotericdata1-titanickaggle-ds/instructions
+2025-05-14 21:07:20 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:07:20 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 21:07:20 - DataSciBench - INFO - From: ./benchmark_final/storage/esotericdata1-titanickaggle-ds/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmprmbhx6hq/reference_insights.md
+2025-05-14 21:07:20 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 21:07:20 - DataSciBench - INFO - From: ./benchmark_final/storage/esotericdata1-titanickaggle-ds/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmprmbhx6hq/shards.md
+2025-05-14 21:07:20 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 21:07:20 - DataSciBench - INFO - From: ./benchmark_final/storage/esotericdata1-titanickaggle-ds/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmprmbhx6hq/cleaned_instructions.md
+2025-05-14 21:07:20 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 21:07:20 - DataSciBench - INFO - From: ./benchmark_final/storage/esotericdata1-titanickaggle-ds/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmprmbhx6hq/gatekeeper_reference.md
+2025-05-14 21:07:20 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 21:07:20 - DataSciBench - INFO - From: ./benchmark_final/storage/esotericdata1-titanickaggle-ds/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmprmbhx6hq/instructions.md
+2025-05-14 21:07:20 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/esotericdata1-titanickaggle-ds/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmprmbhx6hq
+2025-05-14 21:07:20 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:07:20 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 21:07:20 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 21:07:20 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 21:07:20 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 21:07:20 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 21:07:20 - DataSciBench - INFO - Starting Docker container 'test-esotericdata1-titanickaggle-ds-deepseek-r1-20250514_210720' for test case esotericdata1-titanickaggle-ds
+2025-05-14 21:08:46 - DataSciBench - INFO - Docker container for test case aarthi93-end-to-end-ml-pipeline completed successfully
+2025-05-14 21:08:46 - DataSciBench - ERROR - Error removing container: 409 Client Error for http+docker://localhost/v1.49/containers/50b3ab21be3bd886a2f93ee97c0d7c8aba31be7e57b750640677507025051c05?v=False&link=False&force=True: Conflict ("removal of container 50b3ab21be3bd886a2f93ee97c0d7c8aba31be7e57b750640677507025051c05 is already in progress")
+2025-05-14 21:08:46 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/aarthi93-end-to-end-ml-pipeline_deepseek-v3_20250514_210145.json
+2025-05-14 21:08:46 - DataSciBench - ERROR - Error during evaluation script execution for ./experiments/checkpoints/aarthi93-end-to-end-ml-pipeline_deepseek-v3_20250514_210145.json: No columns to parse from file
+2025-05-14 21:08:46 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/aarthi93-end-to-end-ml-pipeline_deepseek-v3_20250514_210145.json
+2025-05-14 21:08:46 - DataSciBench - INFO - Test for agent deepseek-v3 on test case aarthi93-end-to-end-ml-pipeline completed successfully
+2025-05-14 21:08:46 - DataSciBench - INFO - Starting test for agent deepseek-v3 on test case esotericdata1-titanickaggle-ds
+2025-05-14 21:08:46 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 21:08:47 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/esotericdata1-titanickaggle-ds/instructions
+2025-05-14 21:08:47 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:08:47 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 21:08:47 - DataSciBench - INFO - From: ./benchmark_final/storage/esotericdata1-titanickaggle-ds/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpojqmrp_4/reference_insights.md
+2025-05-14 21:08:47 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 21:08:47 - DataSciBench - INFO - From: ./benchmark_final/storage/esotericdata1-titanickaggle-ds/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpojqmrp_4/shards.md
+2025-05-14 21:08:47 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 21:08:47 - DataSciBench - INFO - From: ./benchmark_final/storage/esotericdata1-titanickaggle-ds/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpojqmrp_4/cleaned_instructions.md
+2025-05-14 21:08:47 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 21:08:47 - DataSciBench - INFO - From: ./benchmark_final/storage/esotericdata1-titanickaggle-ds/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpojqmrp_4/gatekeeper_reference.md
+2025-05-14 21:08:47 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 21:08:47 - DataSciBench - INFO - From: ./benchmark_final/storage/esotericdata1-titanickaggle-ds/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpojqmrp_4/instructions.md
+2025-05-14 21:08:47 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/esotericdata1-titanickaggle-ds/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpojqmrp_4
+2025-05-14 21:08:47 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:08:47 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 21:08:47 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 21:08:47 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 21:08:47 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 21:08:47 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 21:08:47 - DataSciBench - INFO - Starting Docker container 'test-esotericdata1-titanickaggle-ds-deepseek-v3-20250514_210846' for test case esotericdata1-titanickaggle-ds
+2025-05-14 21:09:24 - DataSciBench - INFO - Docker container for test case abdallaellaithy-titanic-in-space-ml-survival-predictions completed successfully
+2025-05-14 21:09:24 - DataSciBench - ERROR - Error removing container: 409 Client Error for http+docker://localhost/v1.49/containers/deb0fd2800dbfa061a8415c835660f1531532fbe9c079fafd2a352968e317a92?v=False&link=False&force=True: Conflict ("removal of container deb0fd2800dbfa061a8415c835660f1531532fbe9c079fafd2a352968e317a92 is already in progress")
+2025-05-14 21:09:25 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/abdallaellaithy-titanic-in-space-ml-survival-predictions_deepseek-v3_20250514_210145.json
+2025-05-14 21:09:25 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/abdallaellaithy-titanic-in-space-ml-survival-predictions_deepseek-v3_20250514_210145.json
+2025-05-14 21:09:25 - DataSciBench - INFO - Test for agent deepseek-v3 on test case abdallaellaithy-titanic-in-space-ml-survival-predictions completed successfully
+2025-05-14 21:09:25 - DataSciBench - INFO - Starting test for agent deepseek-r1 on test case drpashamd4r-indian-floods-data-exploratory
+2025-05-14 21:09:25 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 21:09:25 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/drpashamd4r-indian-floods-data-exploratory/instructions
+2025-05-14 21:09:25 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:09:25 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 21:09:25 - DataSciBench - INFO - From: ./benchmark_final/storage/drpashamd4r-indian-floods-data-exploratory/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpzcti5sgn/reference_insights.md
+2025-05-14 21:09:25 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 21:09:25 - DataSciBench - INFO - From: ./benchmark_final/storage/drpashamd4r-indian-floods-data-exploratory/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpzcti5sgn/shards.md
+2025-05-14 21:09:25 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 21:09:25 - DataSciBench - INFO - From: ./benchmark_final/storage/drpashamd4r-indian-floods-data-exploratory/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpzcti5sgn/cleaned_instructions.md
+2025-05-14 21:09:25 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 21:09:25 - DataSciBench - INFO - From: ./benchmark_final/storage/drpashamd4r-indian-floods-data-exploratory/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpzcti5sgn/gatekeeper_reference.md
+2025-05-14 21:09:25 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 21:09:25 - DataSciBench - INFO - From: ./benchmark_final/storage/drpashamd4r-indian-floods-data-exploratory/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpzcti5sgn/instructions.md
+2025-05-14 21:09:25 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/drpashamd4r-indian-floods-data-exploratory/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpzcti5sgn
+2025-05-14 21:09:25 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:09:25 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 21:09:25 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 21:09:25 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 21:09:25 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 21:09:25 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 21:09:25 - DataSciBench - INFO - Starting Docker container 'test-drpashamd4r-indian-floods-data-exploratory-deepseek-r1-20250514_210925' for test case drpashamd4r-indian-floods-data-exploratory
+2025-05-14 21:14:59 - DataSciBench - INFO - Docker container for test case sasakitetsuya-predicting-startup-valuation-with-machine-learning completed successfully
+2025-05-14 21:14:59 - DataSciBench - ERROR - Error removing container: 409 Client Error for http+docker://localhost/v1.49/containers/afc7a9c9942e67fc6fb0ef7094dd5a44c875329ff5bbda35f48941f7974ad33b?v=False&link=False&force=True: Conflict ("removal of container afc7a9c9942e67fc6fb0ef7094dd5a44c875329ff5bbda35f48941f7974ad33b is already in progress")
+2025-05-14 21:15:02 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/sasakitetsuya-predicting-startup-valuation-with-machine-learning_deepseek-r1_20250514_210145.json
+2025-05-14 21:15:02 - DataSciBench - ERROR - Error during evaluation script execution for ./experiments/checkpoints/sasakitetsuya-predicting-startup-valuation-with-machine-learning_deepseek-r1_20250514_210145.json: Input contains NaN.
+2025-05-14 21:15:02 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/sasakitetsuya-predicting-startup-valuation-with-machine-learning_deepseek-r1_20250514_210145.json
+2025-05-14 21:15:02 - DataSciBench - INFO - Test for agent deepseek-r1 on test case sasakitetsuya-predicting-startup-valuation-with-machine-learning completed successfully
+2025-05-14 21:15:02 - DataSciBench - INFO - Starting test for agent deepseek-v3 on test case drpashamd4r-indian-floods-data-exploratory
+2025-05-14 21:15:02 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 21:15:03 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/drpashamd4r-indian-floods-data-exploratory/instructions
+2025-05-14 21:15:03 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:15:03 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 21:15:03 - DataSciBench - INFO - From: ./benchmark_final/storage/drpashamd4r-indian-floods-data-exploratory/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpfeb3xz24/reference_insights.md
+2025-05-14 21:15:03 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 21:15:03 - DataSciBench - INFO - From: ./benchmark_final/storage/drpashamd4r-indian-floods-data-exploratory/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpfeb3xz24/shards.md
+2025-05-14 21:15:03 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 21:15:03 - DataSciBench - INFO - From: ./benchmark_final/storage/drpashamd4r-indian-floods-data-exploratory/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpfeb3xz24/cleaned_instructions.md
+2025-05-14 21:15:03 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 21:15:03 - DataSciBench - INFO - From: ./benchmark_final/storage/drpashamd4r-indian-floods-data-exploratory/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpfeb3xz24/gatekeeper_reference.md
+2025-05-14 21:15:03 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 21:15:03 - DataSciBench - INFO - From: ./benchmark_final/storage/drpashamd4r-indian-floods-data-exploratory/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpfeb3xz24/instructions.md
+2025-05-14 21:15:03 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/drpashamd4r-indian-floods-data-exploratory/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpfeb3xz24
+2025-05-14 21:15:03 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:15:03 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 21:15:03 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 21:15:03 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 21:15:03 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 21:15:03 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 21:15:03 - DataSciBench - INFO - Starting Docker container 'test-drpashamd4r-indian-floods-data-exploratory-deepseek-v3-20250514_211502' for test case drpashamd4r-indian-floods-data-exploratory
+2025-05-14 21:18:13 - DataSciBench - INFO - Docker container for test case ak5047-australia-weather completed successfully
+2025-05-14 21:18:13 - DataSciBench - ERROR - Error removing container: 409 Client Error for http+docker://localhost/v1.49/containers/52f5d85c0fa4a10b55ce6314dd1477851c037ba1978ffcb1e8f983f11739477e?v=False&link=False&force=True: Conflict ("removal of container 52f5d85c0fa4a10b55ce6314dd1477851c037ba1978ffcb1e8f983f11739477e is already in progress")
+2025-05-14 21:18:13 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/ak5047-australia-weather_deepseek-v3_20250514_210145.json
+2025-05-14 21:18:13 - DataSciBench - ERROR - Error during evaluation script execution for ./experiments/checkpoints/ak5047-australia-weather_deepseek-v3_20250514_210145.json: No columns to parse from file
+2025-05-14 21:18:13 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/ak5047-australia-weather_deepseek-v3_20250514_210145.json
+2025-05-14 21:18:13 - DataSciBench - INFO - Test for agent deepseek-v3 on test case ak5047-australia-weather completed successfully
+2025-05-14 21:18:13 - DataSciBench - INFO - Starting test for agent deepseek-r1 on test case iseedeep-mission-podcast-listening-prediction
+2025-05-14 21:18:13 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 21:18:13 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/iseedeep-mission-podcast-listening-prediction/instructions
+2025-05-14 21:18:13 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:18:13 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 21:18:13 - DataSciBench - INFO - From: ./benchmark_final/storage/iseedeep-mission-podcast-listening-prediction/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpuho1ch6q/reference_insights.md
+2025-05-14 21:18:13 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 21:18:14 - DataSciBench - INFO - From: ./benchmark_final/storage/iseedeep-mission-podcast-listening-prediction/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpuho1ch6q/shards.md
+2025-05-14 21:18:14 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 21:18:14 - DataSciBench - INFO - From: ./benchmark_final/storage/iseedeep-mission-podcast-listening-prediction/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpuho1ch6q/cleaned_instructions.md
+2025-05-14 21:18:14 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 21:18:14 - DataSciBench - INFO - From: ./benchmark_final/storage/iseedeep-mission-podcast-listening-prediction/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpuho1ch6q/gatekeeper_reference.md
+2025-05-14 21:18:14 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 21:18:14 - DataSciBench - INFO - From: ./benchmark_final/storage/iseedeep-mission-podcast-listening-prediction/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpuho1ch6q/instructions.md
+2025-05-14 21:18:14 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/iseedeep-mission-podcast-listening-prediction/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpuho1ch6q
+2025-05-14 21:18:14 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:18:14 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 21:18:14 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 21:18:14 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 21:18:14 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 21:18:14 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 21:18:14 - DataSciBench - INFO - Starting Docker container 'test-iseedeep-mission-podcast-listening-prediction-deepseek-r1-20250514_211813' for test case iseedeep-mission-podcast-listening-prediction
+2025-05-14 21:19:55 - DataSciBench - INFO - Docker container for test case aarthi93-end-to-end-ml-pipeline completed successfully
+2025-05-14 21:19:55 - DataSciBench - ERROR - Error removing container: 409 Client Error for http+docker://localhost/v1.49/containers/72e1bc0acb4811638e5f2ae5bf4fc7419211050bb52174ed3a5e956d13382ffc?v=False&link=False&force=True: Conflict ("removal of container 72e1bc0acb4811638e5f2ae5bf4fc7419211050bb52174ed3a5e956d13382ffc is already in progress")
+2025-05-14 21:19:56 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/aarthi93-end-to-end-ml-pipeline_deepseek-r1_20250514_210145.json
+2025-05-14 21:19:56 - DataSciBench - ERROR - Error during evaluation script execution for ./experiments/checkpoints/aarthi93-end-to-end-ml-pipeline_deepseek-r1_20250514_210145.json: No columns to parse from file
+2025-05-14 21:19:56 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/aarthi93-end-to-end-ml-pipeline_deepseek-r1_20250514_210145.json
+2025-05-14 21:19:56 - DataSciBench - INFO - Test for agent deepseek-r1 on test case aarthi93-end-to-end-ml-pipeline completed successfully
+2025-05-14 21:19:56 - DataSciBench - INFO - Starting test for agent deepseek-v3 on test case iseedeep-mission-podcast-listening-prediction
+2025-05-14 21:19:56 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 21:19:56 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/iseedeep-mission-podcast-listening-prediction/instructions
+2025-05-14 21:19:56 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:19:56 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 21:19:56 - DataSciBench - INFO - From: ./benchmark_final/storage/iseedeep-mission-podcast-listening-prediction/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpzvsligye/reference_insights.md
+2025-05-14 21:19:56 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 21:19:56 - DataSciBench - INFO - From: ./benchmark_final/storage/iseedeep-mission-podcast-listening-prediction/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpzvsligye/shards.md
+2025-05-14 21:19:56 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 21:19:56 - DataSciBench - INFO - From: ./benchmark_final/storage/iseedeep-mission-podcast-listening-prediction/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpzvsligye/cleaned_instructions.md
+2025-05-14 21:19:56 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 21:19:56 - DataSciBench - INFO - From: ./benchmark_final/storage/iseedeep-mission-podcast-listening-prediction/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpzvsligye/gatekeeper_reference.md
+2025-05-14 21:19:56 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 21:19:56 - DataSciBench - INFO - From: ./benchmark_final/storage/iseedeep-mission-podcast-listening-prediction/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpzvsligye/instructions.md
+2025-05-14 21:19:56 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/iseedeep-mission-podcast-listening-prediction/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpzvsligye
+2025-05-14 21:19:56 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:19:56 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 21:19:56 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 21:19:56 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 21:19:56 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 21:19:56 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 21:19:56 - DataSciBench - INFO - Starting Docker container 'test-iseedeep-mission-podcast-listening-prediction-deepseek-v3-20250514_211956' for test case iseedeep-mission-podcast-listening-prediction
+2025-05-14 21:20:02 - DataSciBench - INFO - Docker container for test case esotericdata1-titanickaggle-ds completed successfully
+2025-05-14 21:20:02 - DataSciBench - ERROR - Error removing container: 409 Client Error for http+docker://localhost/v1.49/containers/ec1b5728405b33a7c37f2f79f812c71acca9e6de565ad0bca3b45567d43b646e?v=False&link=False&force=True: Conflict ("removal of container ec1b5728405b33a7c37f2f79f812c71acca9e6de565ad0bca3b45567d43b646e is already in progress")
+2025-05-14 21:20:04 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/esotericdata1-titanickaggle-ds_deepseek-v3_20250514_210846.json
+2025-05-14 21:20:04 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/esotericdata1-titanickaggle-ds_deepseek-v3_20250514_210846.json
+2025-05-14 21:20:04 - DataSciBench - INFO - Test for agent deepseek-v3 on test case esotericdata1-titanickaggle-ds completed successfully
+2025-05-14 21:20:04 - DataSciBench - INFO - Starting test for agent deepseek-r1 on test case ayodejiibrahimlateef-integrative-analysis-early-depression-detection
+2025-05-14 21:20:04 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 21:20:04 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/ayodejiibrahimlateef-integrative-analysis-early-depression-detection/instructions
+2025-05-14 21:20:04 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:20:04 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 21:20:04 - DataSciBench - INFO - From: ./benchmark_final/storage/ayodejiibrahimlateef-integrative-analysis-early-depression-detection/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp7gji4pph/reference_insights.md
+2025-05-14 21:20:04 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 21:20:04 - DataSciBench - INFO - From: ./benchmark_final/storage/ayodejiibrahimlateef-integrative-analysis-early-depression-detection/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp7gji4pph/shards.md
+2025-05-14 21:20:04 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 21:20:04 - DataSciBench - INFO - From: ./benchmark_final/storage/ayodejiibrahimlateef-integrative-analysis-early-depression-detection/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp7gji4pph/cleaned_instructions.md
+2025-05-14 21:20:04 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 21:20:04 - DataSciBench - INFO - From: ./benchmark_final/storage/ayodejiibrahimlateef-integrative-analysis-early-depression-detection/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp7gji4pph/gatekeeper_reference.md
+2025-05-14 21:20:04 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 21:20:04 - DataSciBench - INFO - From: ./benchmark_final/storage/ayodejiibrahimlateef-integrative-analysis-early-depression-detection/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp7gji4pph/instructions.md
+2025-05-14 21:20:04 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/ayodejiibrahimlateef-integrative-analysis-early-depression-detection/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp7gji4pph
+2025-05-14 21:20:04 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:20:04 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 21:20:04 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 21:20:04 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 21:20:04 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 21:20:04 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 21:20:04 - DataSciBench - INFO - Starting Docker container 'test-ayodejiibrahimlateef-integrative-analysis-early-depression-detection-deepseek-r1-20250514_212004' for test case ayodejiibrahimlateef-integrative-analysis-early-depression-detection
+2025-05-14 21:26:55 - DataSciBench - INFO - Docker container for test case drpashamd4r-indian-floods-data-exploratory completed successfully
+2025-05-14 21:26:55 - DataSciBench - ERROR - Error removing container: 409 Client Error for http+docker://localhost/v1.49/containers/94ac41985b83869669b83ff98522fdfb7c61f2d0d1d32323bf46b170e47aab27?v=False&link=False&force=True: Conflict ("removal of container 94ac41985b83869669b83ff98522fdfb7c61f2d0d1d32323bf46b170e47aab27 is already in progress")
+2025-05-14 21:26:56 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/drpashamd4r-indian-floods-data-exploratory_deepseek-r1_20250514_210925.json
+2025-05-14 21:26:56 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/drpashamd4r-indian-floods-data-exploratory_deepseek-r1_20250514_210925.json
+2025-05-14 21:26:56 - DataSciBench - INFO - Test for agent deepseek-r1 on test case drpashamd4r-indian-floods-data-exploratory completed successfully
+2025-05-14 21:26:56 - DataSciBench - INFO - Starting test for agent deepseek-v3 on test case ayodejiibrahimlateef-integrative-analysis-early-depression-detection
+2025-05-14 21:26:56 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 21:26:56 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/ayodejiibrahimlateef-integrative-analysis-early-depression-detection/instructions
+2025-05-14 21:26:56 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:26:56 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 21:26:56 - DataSciBench - INFO - From: ./benchmark_final/storage/ayodejiibrahimlateef-integrative-analysis-early-depression-detection/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpf493p0l2/reference_insights.md
+2025-05-14 21:26:56 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 21:26:56 - DataSciBench - INFO - From: ./benchmark_final/storage/ayodejiibrahimlateef-integrative-analysis-early-depression-detection/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpf493p0l2/shards.md
+2025-05-14 21:26:56 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 21:26:56 - DataSciBench - INFO - From: ./benchmark_final/storage/ayodejiibrahimlateef-integrative-analysis-early-depression-detection/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpf493p0l2/cleaned_instructions.md
+2025-05-14 21:26:56 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 21:26:56 - DataSciBench - INFO - From: ./benchmark_final/storage/ayodejiibrahimlateef-integrative-analysis-early-depression-detection/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpf493p0l2/gatekeeper_reference.md
+2025-05-14 21:26:56 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 21:26:56 - DataSciBench - INFO - From: ./benchmark_final/storage/ayodejiibrahimlateef-integrative-analysis-early-depression-detection/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpf493p0l2/instructions.md
+2025-05-14 21:26:56 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/ayodejiibrahimlateef-integrative-analysis-early-depression-detection/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpf493p0l2
+2025-05-14 21:26:56 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:26:56 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 21:26:56 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 21:26:56 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 21:26:56 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 21:26:56 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 21:26:56 - DataSciBench - INFO - Starting Docker container 'test-ayodejiibrahimlateef-integrative-analysis-early-depression-detection-deepseek-v3-20250514_212656' for test case ayodejiibrahimlateef-integrative-analysis-early-depression-detection
+2025-05-14 21:28:18 - DataSciBench - INFO - Docker container for test case abdallaellaithy-titanic-in-space-ml-survival-predictions completed successfully
+2025-05-14 21:28:18 - DataSciBench - ERROR - Error removing container: 409 Client Error for http+docker://localhost/v1.49/containers/03835a9dfc900fdf60e5e9e45795b59bc38ceda66cd098e423f3d509b6df1553?v=False&link=False&force=True: Conflict ("removal of container 03835a9dfc900fdf60e5e9e45795b59bc38ceda66cd098e423f3d509b6df1553 is already in progress")
+2025-05-14 21:28:18 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/abdallaellaithy-titanic-in-space-ml-survival-predictions_deepseek-r1_20250514_210145.json
+2025-05-14 21:28:18 - DataSciBench - ERROR - Error during evaluation script execution for ./experiments/checkpoints/abdallaellaithy-titanic-in-space-ml-survival-predictions_deepseek-r1_20250514_210145.json: Missing required columns. Both files must have: ['PassengerId', 'Transported']
+2025-05-14 21:28:18 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/abdallaellaithy-titanic-in-space-ml-survival-predictions_deepseek-r1_20250514_210145.json
+2025-05-14 21:28:18 - DataSciBench - INFO - Test for agent deepseek-r1 on test case abdallaellaithy-titanic-in-space-ml-survival-predictions completed successfully
+2025-05-14 21:28:18 - DataSciBench - INFO - Starting test for agent deepseek-r1 on test case vijaythurimella-bank-subscriptions-predictions-f1-score
+2025-05-14 21:28:18 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 21:28:18 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/vijaythurimella-bank-subscriptions-predictions-f1-score/instructions
+2025-05-14 21:28:18 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:28:18 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 21:28:18 - DataSciBench - INFO - From: ./benchmark_final/storage/vijaythurimella-bank-subscriptions-predictions-f1-score/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp4czp6wj8/reference_insights.md
+2025-05-14 21:28:18 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 21:28:18 - DataSciBench - INFO - From: ./benchmark_final/storage/vijaythurimella-bank-subscriptions-predictions-f1-score/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp4czp6wj8/shards.md
+2025-05-14 21:28:18 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 21:28:18 - DataSciBench - INFO - From: ./benchmark_final/storage/vijaythurimella-bank-subscriptions-predictions-f1-score/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp4czp6wj8/cleaned_instructions.md
+2025-05-14 21:28:18 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 21:28:18 - DataSciBench - INFO - From: ./benchmark_final/storage/vijaythurimella-bank-subscriptions-predictions-f1-score/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp4czp6wj8/gatekeeper_reference.md
+2025-05-14 21:28:18 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 21:28:18 - DataSciBench - INFO - From: ./benchmark_final/storage/vijaythurimella-bank-subscriptions-predictions-f1-score/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp4czp6wj8/instructions.md
+2025-05-14 21:28:18 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/vijaythurimella-bank-subscriptions-predictions-f1-score/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp4czp6wj8
+2025-05-14 21:28:18 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:28:18 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 21:28:18 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 21:28:18 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 21:28:18 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 21:28:18 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 21:28:18 - DataSciBench - INFO - Starting Docker container 'test-vijaythurimella-bank-subscriptions-predictions-f1-score-deepseek-r1-20250514_212818' for test case vijaythurimella-bank-subscriptions-predictions-f1-score
+2025-05-14 21:31:52 - DataSciBench - INFO - Docker container for test case ayodejiibrahimlateef-integrative-analysis-early-depression-detection completed successfully
+2025-05-14 21:31:52 - DataSciBench - ERROR - Error removing container: 409 Client Error for http+docker://localhost/v1.49/containers/802c9e471a4374769de0777a400c3b6d85b42c609b4b4a5b977b86556176d172?v=False&link=False&force=True: Conflict ("removal of container 802c9e471a4374769de0777a400c3b6d85b42c609b4b4a5b977b86556176d172 is already in progress")
+2025-05-14 21:31:52 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/ayodejiibrahimlateef-integrative-analysis-early-depression-detection_deepseek-v3_20250514_212656.json
+2025-05-14 21:31:52 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/ayodejiibrahimlateef-integrative-analysis-early-depression-detection_deepseek-v3_20250514_212656.json
+2025-05-14 21:31:52 - DataSciBench - INFO - Test for agent deepseek-v3 on test case ayodejiibrahimlateef-integrative-analysis-early-depression-detection completed successfully
+2025-05-14 21:31:52 - DataSciBench - INFO - Starting test for agent deepseek-v3 on test case vijaythurimella-bank-subscriptions-predictions-f1-score
+2025-05-14 21:31:52 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 21:31:52 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/vijaythurimella-bank-subscriptions-predictions-f1-score/instructions
+2025-05-14 21:31:52 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:31:52 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 21:31:52 - DataSciBench - INFO - From: ./benchmark_final/storage/vijaythurimella-bank-subscriptions-predictions-f1-score/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp6k3ln6da/reference_insights.md
+2025-05-14 21:31:52 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 21:31:52 - DataSciBench - INFO - From: ./benchmark_final/storage/vijaythurimella-bank-subscriptions-predictions-f1-score/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp6k3ln6da/shards.md
+2025-05-14 21:31:52 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 21:31:52 - DataSciBench - INFO - From: ./benchmark_final/storage/vijaythurimella-bank-subscriptions-predictions-f1-score/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp6k3ln6da/cleaned_instructions.md
+2025-05-14 21:31:52 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 21:31:52 - DataSciBench - INFO - From: ./benchmark_final/storage/vijaythurimella-bank-subscriptions-predictions-f1-score/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp6k3ln6da/gatekeeper_reference.md
+2025-05-14 21:31:52 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 21:31:52 - DataSciBench - INFO - From: ./benchmark_final/storage/vijaythurimella-bank-subscriptions-predictions-f1-score/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp6k3ln6da/instructions.md
+2025-05-14 21:31:52 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/vijaythurimella-bank-subscriptions-predictions-f1-score/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp6k3ln6da
+2025-05-14 21:31:52 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:31:52 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 21:31:52 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 21:31:52 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 21:31:52 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 21:31:52 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 21:31:52 - DataSciBench - INFO - Starting Docker container 'test-vijaythurimella-bank-subscriptions-predictions-f1-score-deepseek-v3-20250514_213152' for test case vijaythurimella-bank-subscriptions-predictions-f1-score
+2025-05-14 21:32:18 - DataSciBench - INFO - Docker container for test case esotericdata1-titanickaggle-ds completed successfully
+2025-05-14 21:32:18 - DataSciBench - ERROR - Error removing container: 409 Client Error for http+docker://localhost/v1.49/containers/d5216e0483ff4692b3f7f68a3747f99fdda8828eaeaf41281ac0ffdc925724ca?v=False&link=False&force=True: Conflict ("removal of container d5216e0483ff4692b3f7f68a3747f99fdda8828eaeaf41281ac0ffdc925724ca is already in progress")
+2025-05-14 21:32:19 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/esotericdata1-titanickaggle-ds_deepseek-r1_20250514_210720.json
+2025-05-14 21:32:20 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/esotericdata1-titanickaggle-ds_deepseek-r1_20250514_210720.json
+2025-05-14 21:32:20 - DataSciBench - INFO - Test for agent deepseek-r1 on test case esotericdata1-titanickaggle-ds completed successfully
+2025-05-14 21:32:20 - DataSciBench - INFO - Starting test for agent deepseek-r1 on test case mightyjiraiya-titanic-survival-prediction
+2025-05-14 21:32:20 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 21:32:20 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/mightyjiraiya-titanic-survival-prediction/instructions
+2025-05-14 21:32:20 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:32:20 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 21:32:20 - DataSciBench - INFO - From: ./benchmark_final/storage/mightyjiraiya-titanic-survival-prediction/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmppsd53qls/reference_insights.md
+2025-05-14 21:32:20 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 21:32:20 - DataSciBench - INFO - From: ./benchmark_final/storage/mightyjiraiya-titanic-survival-prediction/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmppsd53qls/shards.md
+2025-05-14 21:32:20 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 21:32:20 - DataSciBench - INFO - From: ./benchmark_final/storage/mightyjiraiya-titanic-survival-prediction/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmppsd53qls/cleaned_instructions.md
+2025-05-14 21:32:20 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 21:32:20 - DataSciBench - INFO - From: ./benchmark_final/storage/mightyjiraiya-titanic-survival-prediction/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmppsd53qls/gatekeeper_reference.md
+2025-05-14 21:32:20 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 21:32:20 - DataSciBench - INFO - From: ./benchmark_final/storage/mightyjiraiya-titanic-survival-prediction/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmppsd53qls/instructions.md
+2025-05-14 21:32:20 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/mightyjiraiya-titanic-survival-prediction/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmppsd53qls
+2025-05-14 21:32:20 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:32:20 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 21:32:20 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 21:32:20 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 21:32:20 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 21:32:20 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 21:32:20 - DataSciBench - INFO - Starting Docker container 'test-mightyjiraiya-titanic-survival-prediction-deepseek-r1-20250514_213220' for test case mightyjiraiya-titanic-survival-prediction
+2025-05-14 21:32:41 - DataSciBench - INFO - Docker container for test case drpashamd4r-indian-floods-data-exploratory completed successfully
+2025-05-14 21:32:41 - DataSciBench - ERROR - Error removing container: 409 Client Error for http+docker://localhost/v1.49/containers/75a95aa83cbd9fd82aff3710ee52b41c99a9f758850c1cccea9f03880bdcf425?v=False&link=False&force=True: Conflict ("removal of container 75a95aa83cbd9fd82aff3710ee52b41c99a9f758850c1cccea9f03880bdcf425 is already in progress")
+2025-05-14 21:32:41 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/drpashamd4r-indian-floods-data-exploratory_deepseek-v3_20250514_211502.json
+2025-05-14 21:32:41 - DataSciBench - ERROR - Error during evaluation script execution for ./experiments/checkpoints/drpashamd4r-indian-floods-data-exploratory_deepseek-v3_20250514_211502.json: 'Human fatality'
+2025-05-14 21:32:41 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/drpashamd4r-indian-floods-data-exploratory_deepseek-v3_20250514_211502.json
+2025-05-14 21:32:41 - DataSciBench - INFO - Test for agent deepseek-v3 on test case drpashamd4r-indian-floods-data-exploratory completed successfully
+2025-05-14 21:32:41 - DataSciBench - INFO - Starting test for agent deepseek-v3 on test case mightyjiraiya-titanic-survival-prediction
+2025-05-14 21:32:41 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 21:32:41 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/mightyjiraiya-titanic-survival-prediction/instructions
+2025-05-14 21:32:41 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:32:41 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 21:32:41 - DataSciBench - INFO - From: ./benchmark_final/storage/mightyjiraiya-titanic-survival-prediction/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpjqe3nrw3/reference_insights.md
+2025-05-14 21:32:41 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 21:32:41 - DataSciBench - INFO - From: ./benchmark_final/storage/mightyjiraiya-titanic-survival-prediction/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpjqe3nrw3/shards.md
+2025-05-14 21:32:41 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 21:32:41 - DataSciBench - INFO - From: ./benchmark_final/storage/mightyjiraiya-titanic-survival-prediction/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpjqe3nrw3/cleaned_instructions.md
+2025-05-14 21:32:41 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 21:32:41 - DataSciBench - INFO - From: ./benchmark_final/storage/mightyjiraiya-titanic-survival-prediction/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpjqe3nrw3/gatekeeper_reference.md
+2025-05-14 21:32:41 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 21:32:41 - DataSciBench - INFO - From: ./benchmark_final/storage/mightyjiraiya-titanic-survival-prediction/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpjqe3nrw3/instructions.md
+2025-05-14 21:32:41 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/mightyjiraiya-titanic-survival-prediction/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpjqe3nrw3
+2025-05-14 21:32:41 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:32:41 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 21:32:41 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 21:32:41 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 21:32:41 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 21:32:41 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 21:32:41 - DataSciBench - INFO - Starting Docker container 'test-mightyjiraiya-titanic-survival-prediction-deepseek-v3-20250514_213241' for test case mightyjiraiya-titanic-survival-prediction
+2025-05-14 21:35:20 - DataSciBench - INFO - Docker container for test case iseedeep-mission-podcast-listening-prediction completed successfully
+2025-05-14 21:35:20 - DataSciBench - ERROR - Error removing container: 409 Client Error for http+docker://localhost/v1.49/containers/9c6e14afc927b05ae265feb6e76650936610f31a0c5547b34109ebb23624a364?v=False&link=False&force=True: Conflict ("removal of container 9c6e14afc927b05ae265feb6e76650936610f31a0c5547b34109ebb23624a364 is already in progress")
+2025-05-14 21:35:21 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/iseedeep-mission-podcast-listening-prediction_deepseek-r1_20250514_211813.json
+2025-05-14 21:35:21 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/iseedeep-mission-podcast-listening-prediction_deepseek-r1_20250514_211813.json
+2025-05-14 21:35:21 - DataSciBench - INFO - Test for agent deepseek-r1 on test case iseedeep-mission-podcast-listening-prediction completed successfully
+2025-05-14 21:35:21 - DataSciBench - INFO - Starting test for agent deepseek-r1 on test case umerhayat123-how-i-achieved-83-accuracy
+2025-05-14 21:35:21 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 21:35:22 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/umerhayat123-how-i-achieved-83-accuracy/instructions
+2025-05-14 21:35:22 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:35:22 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 21:35:22 - DataSciBench - INFO - From: ./benchmark_final/storage/umerhayat123-how-i-achieved-83-accuracy/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpbp9tteqw/reference_insights.md
+2025-05-14 21:35:22 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 21:35:22 - DataSciBench - INFO - From: ./benchmark_final/storage/umerhayat123-how-i-achieved-83-accuracy/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpbp9tteqw/shards.md
+2025-05-14 21:35:22 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 21:35:22 - DataSciBench - INFO - From: ./benchmark_final/storage/umerhayat123-how-i-achieved-83-accuracy/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpbp9tteqw/cleaned_instructions.md
+2025-05-14 21:35:22 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 21:35:22 - DataSciBench - INFO - From: ./benchmark_final/storage/umerhayat123-how-i-achieved-83-accuracy/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpbp9tteqw/gatekeeper_reference.md
+2025-05-14 21:35:22 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 21:35:22 - DataSciBench - INFO - From: ./benchmark_final/storage/umerhayat123-how-i-achieved-83-accuracy/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpbp9tteqw/instructions.md
+2025-05-14 21:35:22 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/umerhayat123-how-i-achieved-83-accuracy/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpbp9tteqw
+2025-05-14 21:35:22 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:35:22 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 21:35:22 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 21:35:22 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 21:35:22 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 21:35:22 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 21:35:22 - DataSciBench - INFO - Starting Docker container 'test-umerhayat123-how-i-achieved-83-accuracy-deepseek-r1-20250514_213521' for test case umerhayat123-how-i-achieved-83-accuracy
+2025-05-14 21:41:23 - DataSciBench - INFO - Docker container for test case vijaythurimella-bank-subscriptions-predictions-f1-score completed successfully
+2025-05-14 21:41:23 - DataSciBench - ERROR - Error removing container: 409 Client Error for http+docker://localhost/v1.49/containers/212637048f609cf6949144b4c9ee3b363c7b267f57913ee3b7375bef8717dbfc?v=False&link=False&force=True: Conflict ("removal of container 212637048f609cf6949144b4c9ee3b363c7b267f57913ee3b7375bef8717dbfc is already in progress")
+2025-05-14 21:41:24 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/vijaythurimella-bank-subscriptions-predictions-f1-score_deepseek-v3_20250514_213152.json
+2025-05-14 21:41:25 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/vijaythurimella-bank-subscriptions-predictions-f1-score_deepseek-v3_20250514_213152.json
+2025-05-14 21:41:25 - DataSciBench - INFO - Test for agent deepseek-v3 on test case vijaythurimella-bank-subscriptions-predictions-f1-score completed successfully
+2025-05-14 21:41:25 - DataSciBench - INFO - Starting test for agent deepseek-v3 on test case umerhayat123-how-i-achieved-83-accuracy
+2025-05-14 21:41:25 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 21:41:25 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/umerhayat123-how-i-achieved-83-accuracy/instructions
+2025-05-14 21:41:25 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:41:25 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 21:41:25 - DataSciBench - INFO - From: ./benchmark_final/storage/umerhayat123-how-i-achieved-83-accuracy/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpbzq19sav/reference_insights.md
+2025-05-14 21:41:25 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 21:41:25 - DataSciBench - INFO - From: ./benchmark_final/storage/umerhayat123-how-i-achieved-83-accuracy/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpbzq19sav/shards.md
+2025-05-14 21:41:25 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 21:41:25 - DataSciBench - INFO - From: ./benchmark_final/storage/umerhayat123-how-i-achieved-83-accuracy/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpbzq19sav/cleaned_instructions.md
+2025-05-14 21:41:25 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 21:41:25 - DataSciBench - INFO - From: ./benchmark_final/storage/umerhayat123-how-i-achieved-83-accuracy/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpbzq19sav/gatekeeper_reference.md
+2025-05-14 21:41:25 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 21:41:25 - DataSciBench - INFO - From: ./benchmark_final/storage/umerhayat123-how-i-achieved-83-accuracy/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpbzq19sav/instructions.md
+2025-05-14 21:41:25 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/umerhayat123-how-i-achieved-83-accuracy/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpbzq19sav
+2025-05-14 21:41:25 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:41:25 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 21:41:25 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 21:41:25 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 21:41:25 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 21:41:25 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 21:41:25 - DataSciBench - INFO - Starting Docker container 'test-umerhayat123-how-i-achieved-83-accuracy-deepseek-v3-20250514_214125' for test case umerhayat123-how-i-achieved-83-accuracy
+2025-05-14 21:42:03 - DataSciBench - INFO - Docker container for test case ayodejiibrahimlateef-integrative-analysis-early-depression-detection completed successfully
+2025-05-14 21:42:03 - DataSciBench - ERROR - Error removing container: 409 Client Error for http+docker://localhost/v1.49/containers/f3d2e02466b1b8b03ee0a515ced45433ebe89ffa9129afa2eebdef3f52efef70?v=False&link=False&force=True: Conflict ("removal of container f3d2e02466b1b8b03ee0a515ced45433ebe89ffa9129afa2eebdef3f52efef70 is already in progress")
+2025-05-14 21:42:04 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/ayodejiibrahimlateef-integrative-analysis-early-depression-detection_deepseek-r1_20250514_212004.json
+2025-05-14 21:42:04 - DataSciBench - ERROR - Error during evaluation script execution for ./experiments/checkpoints/ayodejiibrahimlateef-integrative-analysis-early-depression-detection_deepseek-r1_20250514_212004.json: 'Depression'
+2025-05-14 21:42:04 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/ayodejiibrahimlateef-integrative-analysis-early-depression-detection_deepseek-r1_20250514_212004.json
+2025-05-14 21:42:04 - DataSciBench - INFO - Test for agent deepseek-r1 on test case ayodejiibrahimlateef-integrative-analysis-early-depression-detection completed successfully
+2025-05-14 21:42:04 - DataSciBench - INFO - Starting test for agent deepseek-r1 on test case shaswatatripathy-store-sales-prediction
+2025-05-14 21:42:04 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 21:42:04 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/shaswatatripathy-store-sales-prediction/instructions
+2025-05-14 21:42:04 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:42:04 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 21:42:04 - DataSciBench - INFO - From: ./benchmark_final/storage/shaswatatripathy-store-sales-prediction/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpa2frzfy8/reference_insights.md
+2025-05-14 21:42:04 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 21:42:04 - DataSciBench - INFO - From: ./benchmark_final/storage/shaswatatripathy-store-sales-prediction/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpa2frzfy8/shards.md
+2025-05-14 21:42:04 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 21:42:04 - DataSciBench - INFO - From: ./benchmark_final/storage/shaswatatripathy-store-sales-prediction/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpa2frzfy8/cleaned_instructions.md
+2025-05-14 21:42:04 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 21:42:04 - DataSciBench - INFO - From: ./benchmark_final/storage/shaswatatripathy-store-sales-prediction/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpa2frzfy8/gatekeeper_reference.md
+2025-05-14 21:42:04 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 21:42:04 - DataSciBench - INFO - From: ./benchmark_final/storage/shaswatatripathy-store-sales-prediction/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpa2frzfy8/instructions.md
+2025-05-14 21:42:04 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/shaswatatripathy-store-sales-prediction/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpa2frzfy8
+2025-05-14 21:42:04 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:42:04 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 21:42:04 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 21:42:04 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 21:42:04 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 21:42:04 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 21:42:04 - DataSciBench - INFO - Starting Docker container 'test-shaswatatripathy-store-sales-prediction-deepseek-r1-20250514_214204' for test case shaswatatripathy-store-sales-prediction
+2025-05-14 21:45:34 - DataSciBench - INFO - Docker container for test case mightyjiraiya-titanic-survival-prediction completed successfully
+2025-05-14 21:45:34 - DataSciBench - ERROR - Error removing container: 409 Client Error for http+docker://localhost/v1.49/containers/464c175ae4315b70d773c5c2995ca5bdb297481bb9511970ee04f544c4940434?v=False&link=False&force=True: Conflict ("removal of container 464c175ae4315b70d773c5c2995ca5bdb297481bb9511970ee04f544c4940434 is already in progress")
+2025-05-14 21:45:35 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/mightyjiraiya-titanic-survival-prediction_deepseek-v3_20250514_213241.json
+2025-05-14 21:45:35 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/mightyjiraiya-titanic-survival-prediction_deepseek-v3_20250514_213241.json
+2025-05-14 21:45:35 - DataSciBench - INFO - Test for agent deepseek-v3 on test case mightyjiraiya-titanic-survival-prediction completed successfully
+2025-05-14 21:45:35 - DataSciBench - INFO - Starting test for agent deepseek-v3 on test case shaswatatripathy-store-sales-prediction
+2025-05-14 21:45:35 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 21:45:35 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/shaswatatripathy-store-sales-prediction/instructions
+2025-05-14 21:45:35 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:45:35 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 21:45:35 - DataSciBench - INFO - From: ./benchmark_final/storage/shaswatatripathy-store-sales-prediction/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmph_u4smc1/reference_insights.md
+2025-05-14 21:45:35 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 21:45:35 - DataSciBench - INFO - From: ./benchmark_final/storage/shaswatatripathy-store-sales-prediction/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmph_u4smc1/shards.md
+2025-05-14 21:45:35 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 21:45:35 - DataSciBench - INFO - From: ./benchmark_final/storage/shaswatatripathy-store-sales-prediction/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmph_u4smc1/cleaned_instructions.md
+2025-05-14 21:45:35 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 21:45:35 - DataSciBench - INFO - From: ./benchmark_final/storage/shaswatatripathy-store-sales-prediction/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmph_u4smc1/gatekeeper_reference.md
+2025-05-14 21:45:35 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 21:45:35 - DataSciBench - INFO - From: ./benchmark_final/storage/shaswatatripathy-store-sales-prediction/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmph_u4smc1/instructions.md
+2025-05-14 21:45:35 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/shaswatatripathy-store-sales-prediction/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmph_u4smc1
+2025-05-14 21:45:35 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:45:35 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 21:45:35 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 21:45:35 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 21:45:35 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 21:45:35 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 21:45:35 - DataSciBench - INFO - Starting Docker container 'test-shaswatatripathy-store-sales-prediction-deepseek-v3-20250514_214535' for test case shaswatatripathy-store-sales-prediction
+2025-05-14 21:45:42 - DataSciBench - INFO - Docker container for test case vijaythurimella-bank-subscriptions-predictions-f1-score completed successfully
+2025-05-14 21:45:42 - DataSciBench - ERROR - Error removing container: 409 Client Error for http+docker://localhost/v1.49/containers/9bd607b17366a53112fd0d88daf83d6730af6af542bca1286c2279e90dc2a7d8?v=False&link=False&force=True: Conflict ("removal of container 9bd607b17366a53112fd0d88daf83d6730af6af542bca1286c2279e90dc2a7d8 is already in progress")
+2025-05-14 21:45:43 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/vijaythurimella-bank-subscriptions-predictions-f1-score_deepseek-r1_20250514_212818.json
+2025-05-14 21:45:43 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/vijaythurimella-bank-subscriptions-predictions-f1-score_deepseek-r1_20250514_212818.json
+2025-05-14 21:45:43 - DataSciBench - INFO - Test for agent deepseek-r1 on test case vijaythurimella-bank-subscriptions-predictions-f1-score completed successfully
+2025-05-14 21:45:43 - DataSciBench - INFO - Starting test for agent deepseek-r1 on test case dmytrobuhai-eda-rf
+2025-05-14 21:45:43 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 21:45:43 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/dmytrobuhai-eda-rf/instructions
+2025-05-14 21:45:43 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:45:43 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 21:45:43 - DataSciBench - INFO - From: ./benchmark_final/storage/dmytrobuhai-eda-rf/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpqda170po/reference_insights.md
+2025-05-14 21:45:43 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 21:45:43 - DataSciBench - INFO - From: ./benchmark_final/storage/dmytrobuhai-eda-rf/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpqda170po/shards.md
+2025-05-14 21:45:43 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 21:45:43 - DataSciBench - INFO - From: ./benchmark_final/storage/dmytrobuhai-eda-rf/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpqda170po/cleaned_instructions.md
+2025-05-14 21:45:43 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 21:45:43 - DataSciBench - INFO - From: ./benchmark_final/storage/dmytrobuhai-eda-rf/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpqda170po/gatekeeper_reference.md
+2025-05-14 21:45:43 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 21:45:43 - DataSciBench - INFO - From: ./benchmark_final/storage/dmytrobuhai-eda-rf/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpqda170po/instructions.md
+2025-05-14 21:45:43 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/dmytrobuhai-eda-rf/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpqda170po
+2025-05-14 21:45:43 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:45:43 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 21:45:43 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 21:45:43 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 21:45:43 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 21:45:43 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 21:45:43 - DataSciBench - INFO - Starting Docker container 'test-dmytrobuhai-eda-rf-deepseek-r1-20250514_214543' for test case dmytrobuhai-eda-rf
+2025-05-14 21:48:28 - DataSciBench - INFO - Docker container for test case umerhayat123-how-i-achieved-83-accuracy completed successfully
+2025-05-14 21:48:28 - DataSciBench - ERROR - Error removing container: 409 Client Error for http+docker://localhost/v1.49/containers/e8fd616bdb20bfafba2e6684bf02c35b9f38e5020027a3c64f00da456f27d3fa?v=False&link=False&force=True: Conflict ("removal of container e8fd616bdb20bfafba2e6684bf02c35b9f38e5020027a3c64f00da456f27d3fa is already in progress")
+2025-05-14 21:48:28 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/umerhayat123-how-i-achieved-83-accuracy_deepseek-v3_20250514_214125.json
+2025-05-14 21:48:28 - DataSciBench - ERROR - Error during evaluation script execution for ./experiments/checkpoints/umerhayat123-how-i-achieved-83-accuracy_deepseek-v3_20250514_214125.json: y contains previously unseen labels: 0.6792211617719016
+2025-05-14 21:48:28 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/umerhayat123-how-i-achieved-83-accuracy_deepseek-v3_20250514_214125.json
+2025-05-14 21:48:28 - DataSciBench - INFO - Test for agent deepseek-v3 on test case umerhayat123-how-i-achieved-83-accuracy completed successfully
+2025-05-14 21:48:28 - DataSciBench - INFO - Starting test for agent deepseek-v3 on test case dmytrobuhai-eda-rf
+2025-05-14 21:48:28 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 21:48:28 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/dmytrobuhai-eda-rf/instructions
+2025-05-14 21:48:28 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:48:28 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 21:48:28 - DataSciBench - INFO - From: ./benchmark_final/storage/dmytrobuhai-eda-rf/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpead3d0wd/reference_insights.md
+2025-05-14 21:48:28 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 21:48:28 - DataSciBench - INFO - From: ./benchmark_final/storage/dmytrobuhai-eda-rf/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpead3d0wd/shards.md
+2025-05-14 21:48:28 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 21:48:28 - DataSciBench - INFO - From: ./benchmark_final/storage/dmytrobuhai-eda-rf/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpead3d0wd/cleaned_instructions.md
+2025-05-14 21:48:28 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 21:48:28 - DataSciBench - INFO - From: ./benchmark_final/storage/dmytrobuhai-eda-rf/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpead3d0wd/gatekeeper_reference.md
+2025-05-14 21:48:28 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 21:48:28 - DataSciBench - INFO - From: ./benchmark_final/storage/dmytrobuhai-eda-rf/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpead3d0wd/instructions.md
+2025-05-14 21:48:28 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/dmytrobuhai-eda-rf/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpead3d0wd
+2025-05-14 21:48:28 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:48:28 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 21:48:28 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 21:48:28 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 21:48:28 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 21:48:28 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 21:48:28 - DataSciBench - INFO - Starting Docker container 'test-dmytrobuhai-eda-rf-deepseek-v3-20250514_214828' for test case dmytrobuhai-eda-rf
+2025-05-14 21:53:53 - DataSciBench - INFO - Docker container for test case umerhayat123-how-i-achieved-83-accuracy completed successfully
+2025-05-14 21:53:53 - DataSciBench - ERROR - Error removing container: 409 Client Error for http+docker://localhost/v1.49/containers/034db633b3474b25dba1d9a4991bec9f44e84c10f5ebb1da5cb3695bad2f1deb?v=False&link=False&force=True: Conflict ("removal of container 034db633b3474b25dba1d9a4991bec9f44e84c10f5ebb1da5cb3695bad2f1deb is already in progress")
+2025-05-14 21:53:54 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/umerhayat123-how-i-achieved-83-accuracy_deepseek-r1_20250514_213521.json
+2025-05-14 21:53:54 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/umerhayat123-how-i-achieved-83-accuracy_deepseek-r1_20250514_213521.json
+2025-05-14 21:53:54 - DataSciBench - INFO - Test for agent deepseek-r1 on test case umerhayat123-how-i-achieved-83-accuracy completed successfully
+2025-05-14 21:53:54 - DataSciBench - INFO - Starting test for agent deepseek-r1 on test case hanymato-mobile-price-prediction-model
+2025-05-14 21:53:54 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 21:53:54 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/hanymato-mobile-price-prediction-model/instructions
+2025-05-14 21:53:54 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:53:54 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 21:53:54 - DataSciBench - INFO - From: ./benchmark_final/storage/hanymato-mobile-price-prediction-model/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpf2uwemrf/reference_insights.md
+2025-05-14 21:53:54 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 21:53:54 - DataSciBench - INFO - From: ./benchmark_final/storage/hanymato-mobile-price-prediction-model/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpf2uwemrf/shards.md
+2025-05-14 21:53:54 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 21:53:54 - DataSciBench - INFO - From: ./benchmark_final/storage/hanymato-mobile-price-prediction-model/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpf2uwemrf/cleaned_instructions.md
+2025-05-14 21:53:54 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 21:53:54 - DataSciBench - INFO - From: ./benchmark_final/storage/hanymato-mobile-price-prediction-model/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpf2uwemrf/gatekeeper_reference.md
+2025-05-14 21:53:54 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 21:53:54 - DataSciBench - INFO - From: ./benchmark_final/storage/hanymato-mobile-price-prediction-model/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpf2uwemrf/instructions.md
+2025-05-14 21:53:54 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/hanymato-mobile-price-prediction-model/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpf2uwemrf
+2025-05-14 21:53:54 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:53:54 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 21:53:54 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 21:53:54 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 21:53:54 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 21:53:54 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 21:53:54 - DataSciBench - INFO - Starting Docker container 'test-hanymato-mobile-price-prediction-model-deepseek-r1-20250514_215354' for test case hanymato-mobile-price-prediction-model
+2025-05-14 21:53:56 - DataSciBench - INFO - Docker container for test case mightyjiraiya-titanic-survival-prediction completed successfully
+2025-05-14 21:53:56 - DataSciBench - ERROR - Error removing container: 409 Client Error for http+docker://localhost/v1.49/containers/051d028e1477855efc71f0777c168bc004e1400c9bf1b137be3718ed3c46cbcc?v=False&link=False&force=True: Conflict ("removal of container 051d028e1477855efc71f0777c168bc004e1400c9bf1b137be3718ed3c46cbcc is already in progress")
+2025-05-14 21:53:57 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/mightyjiraiya-titanic-survival-prediction_deepseek-r1_20250514_213220.json
+2025-05-14 21:53:57 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/mightyjiraiya-titanic-survival-prediction_deepseek-r1_20250514_213220.json
+2025-05-14 21:53:57 - DataSciBench - INFO - Test for agent deepseek-r1 on test case mightyjiraiya-titanic-survival-prediction completed successfully
+2025-05-14 21:53:57 - DataSciBench - INFO - Starting test for agent deepseek-v3 on test case hanymato-mobile-price-prediction-model
+2025-05-14 21:53:57 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 21:53:57 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/hanymato-mobile-price-prediction-model/instructions
+2025-05-14 21:53:57 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:53:57 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 21:53:57 - DataSciBench - INFO - From: ./benchmark_final/storage/hanymato-mobile-price-prediction-model/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpn7vz964g/reference_insights.md
+2025-05-14 21:53:57 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 21:53:57 - DataSciBench - INFO - From: ./benchmark_final/storage/hanymato-mobile-price-prediction-model/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpn7vz964g/shards.md
+2025-05-14 21:53:57 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 21:53:57 - DataSciBench - INFO - From: ./benchmark_final/storage/hanymato-mobile-price-prediction-model/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpn7vz964g/cleaned_instructions.md
+2025-05-14 21:53:57 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 21:53:57 - DataSciBench - INFO - From: ./benchmark_final/storage/hanymato-mobile-price-prediction-model/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpn7vz964g/gatekeeper_reference.md
+2025-05-14 21:53:57 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 21:53:57 - DataSciBench - INFO - From: ./benchmark_final/storage/hanymato-mobile-price-prediction-model/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpn7vz964g/instructions.md
+2025-05-14 21:53:57 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/hanymato-mobile-price-prediction-model/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpn7vz964g
+2025-05-14 21:53:57 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:53:57 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 21:53:57 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 21:53:57 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 21:53:57 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 21:53:57 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 21:53:57 - DataSciBench - INFO - Starting Docker container 'test-hanymato-mobile-price-prediction-model-deepseek-v3-20250514_215357' for test case hanymato-mobile-price-prediction-model
+2025-05-14 21:54:33 - DataSciBench - INFO - Docker container for test case shaswatatripathy-store-sales-prediction completed successfully
+2025-05-14 21:54:33 - DataSciBench - ERROR - Error removing container: 409 Client Error for http+docker://localhost/v1.49/containers/f345809644e33840931f0745ad07e49430ffd4d31e46476b11576a9d82dcfd76?v=False&link=False&force=True: Conflict ("removal of container f345809644e33840931f0745ad07e49430ffd4d31e46476b11576a9d82dcfd76 is already in progress")
+2025-05-14 21:54:35 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/shaswatatripathy-store-sales-prediction_deepseek-v3_20250514_214535.json
+2025-05-14 21:54:35 - DataSciBench - ERROR - Error during evaluation script execution for ./experiments/checkpoints/shaswatatripathy-store-sales-prediction_deepseek-v3_20250514_214535.json: No columns to parse from file
+2025-05-14 21:54:35 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/shaswatatripathy-store-sales-prediction_deepseek-v3_20250514_214535.json
+2025-05-14 21:54:35 - DataSciBench - INFO - Test for agent deepseek-v3 on test case shaswatatripathy-store-sales-prediction completed successfully
+2025-05-14 21:54:35 - DataSciBench - INFO - Starting test for agent deepseek-r1 on test case amitsinghbhadoria0-final-qt-project-analysis
+2025-05-14 21:54:35 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 21:54:35 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/amitsinghbhadoria0-final-qt-project-analysis/instructions
+2025-05-14 21:54:35 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:54:35 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 21:54:35 - DataSciBench - INFO - From: ./benchmark_final/storage/amitsinghbhadoria0-final-qt-project-analysis/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp9v0sihs0/reference_insights.md
+2025-05-14 21:54:35 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 21:54:35 - DataSciBench - INFO - From: ./benchmark_final/storage/amitsinghbhadoria0-final-qt-project-analysis/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp9v0sihs0/shards.md
+2025-05-14 21:54:35 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 21:54:35 - DataSciBench - INFO - From: ./benchmark_final/storage/amitsinghbhadoria0-final-qt-project-analysis/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp9v0sihs0/cleaned_instructions.md
+2025-05-14 21:54:35 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 21:54:35 - DataSciBench - INFO - From: ./benchmark_final/storage/amitsinghbhadoria0-final-qt-project-analysis/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp9v0sihs0/gatekeeper_reference.md
+2025-05-14 21:54:35 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 21:54:35 - DataSciBench - INFO - From: ./benchmark_final/storage/amitsinghbhadoria0-final-qt-project-analysis/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp9v0sihs0/instructions.md
+2025-05-14 21:54:35 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/amitsinghbhadoria0-final-qt-project-analysis/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp9v0sihs0
+2025-05-14 21:54:35 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:54:35 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 21:54:35 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 21:54:35 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 21:54:35 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 21:54:35 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 21:54:35 - DataSciBench - INFO - Starting Docker container 'test-amitsinghbhadoria0-final-qt-project-analysis-deepseek-r1-20250514_215435' for test case amitsinghbhadoria0-final-qt-project-analysis
+2025-05-14 21:57:20 - DataSciBench - INFO - Docker container for test case dmytrobuhai-eda-rf completed successfully
+2025-05-14 21:57:20 - DataSciBench - ERROR - Error removing container: 409 Client Error for http+docker://localhost/v1.49/containers/33e7cd5a2e79bfda423530f75db2559da35205564b8cfcf604425ec7daf0edef?v=False&link=False&force=True: Conflict ("removal of container 33e7cd5a2e79bfda423530f75db2559da35205564b8cfcf604425ec7daf0edef is already in progress")
+2025-05-14 21:57:21 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/dmytrobuhai-eda-rf_deepseek-v3_20250514_214828.json
+2025-05-14 21:57:21 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/dmytrobuhai-eda-rf_deepseek-v3_20250514_214828.json
+2025-05-14 21:57:21 - DataSciBench - INFO - Test for agent deepseek-v3 on test case dmytrobuhai-eda-rf completed successfully
+2025-05-14 21:57:21 - DataSciBench - INFO - Starting test for agent deepseek-v3 on test case amitsinghbhadoria0-final-qt-project-analysis
+2025-05-14 21:57:21 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 21:57:21 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/amitsinghbhadoria0-final-qt-project-analysis/instructions
+2025-05-14 21:57:21 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:57:21 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 21:57:21 - DataSciBench - INFO - From: ./benchmark_final/storage/amitsinghbhadoria0-final-qt-project-analysis/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpwvp95mia/reference_insights.md
+2025-05-14 21:57:21 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 21:57:21 - DataSciBench - INFO - From: ./benchmark_final/storage/amitsinghbhadoria0-final-qt-project-analysis/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpwvp95mia/shards.md
+2025-05-14 21:57:21 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 21:57:21 - DataSciBench - INFO - From: ./benchmark_final/storage/amitsinghbhadoria0-final-qt-project-analysis/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpwvp95mia/cleaned_instructions.md
+2025-05-14 21:57:21 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 21:57:21 - DataSciBench - INFO - From: ./benchmark_final/storage/amitsinghbhadoria0-final-qt-project-analysis/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpwvp95mia/gatekeeper_reference.md
+2025-05-14 21:57:21 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 21:57:21 - DataSciBench - INFO - From: ./benchmark_final/storage/amitsinghbhadoria0-final-qt-project-analysis/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpwvp95mia/instructions.md
+2025-05-14 21:57:21 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/amitsinghbhadoria0-final-qt-project-analysis/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpwvp95mia
+2025-05-14 21:57:21 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 21:57:21 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 21:57:21 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 21:57:21 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 21:57:21 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 21:57:21 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 21:57:21 - DataSciBench - INFO - Starting Docker container 'test-amitsinghbhadoria0-final-qt-project-analysis-deepseek-v3-20250514_215721' for test case amitsinghbhadoria0-final-qt-project-analysis
+2025-05-14 22:01:02 - DataSciBench - INFO - Docker container for test case dmytrobuhai-eda-rf completed successfully
+2025-05-14 22:01:02 - DataSciBench - ERROR - Error removing container: 409 Client Error for http+docker://localhost/v1.49/containers/a7d22e466329c79135079c9d0dd430a479b96c81fd3ee415090d0f074cc8b8b7?v=False&link=False&force=True: Conflict ("removal of container a7d22e466329c79135079c9d0dd430a479b96c81fd3ee415090d0f074cc8b8b7 is already in progress")
+2025-05-14 22:01:02 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/dmytrobuhai-eda-rf_deepseek-r1_20250514_214543.json
+2025-05-14 22:01:03 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/dmytrobuhai-eda-rf_deepseek-r1_20250514_214543.json
+2025-05-14 22:01:03 - DataSciBench - INFO - Test for agent deepseek-r1 on test case dmytrobuhai-eda-rf completed successfully
+2025-05-14 22:01:03 - DataSciBench - INFO - Starting test for agent deepseek-r1 on test case patilaakash619-backpack-price-prediction-ml-guide
+2025-05-14 22:01:03 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 22:01:03 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/patilaakash619-backpack-price-prediction-ml-guide/instructions
+2025-05-14 22:01:03 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 22:01:03 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 22:01:03 - DataSciBench - INFO - From: ./benchmark_final/storage/patilaakash619-backpack-price-prediction-ml-guide/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpk1fms6hn/reference_insights.md
+2025-05-14 22:01:03 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 22:01:03 - DataSciBench - INFO - From: ./benchmark_final/storage/patilaakash619-backpack-price-prediction-ml-guide/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpk1fms6hn/shards.md
+2025-05-14 22:01:03 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 22:01:03 - DataSciBench - INFO - From: ./benchmark_final/storage/patilaakash619-backpack-price-prediction-ml-guide/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpk1fms6hn/cleaned_instructions.md
+2025-05-14 22:01:03 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 22:01:03 - DataSciBench - INFO - From: ./benchmark_final/storage/patilaakash619-backpack-price-prediction-ml-guide/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpk1fms6hn/gatekeeper_reference.md
+2025-05-14 22:01:03 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 22:01:03 - DataSciBench - INFO - From: ./benchmark_final/storage/patilaakash619-backpack-price-prediction-ml-guide/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpk1fms6hn/instructions.md
+2025-05-14 22:01:03 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/patilaakash619-backpack-price-prediction-ml-guide/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpk1fms6hn
+2025-05-14 22:01:03 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 22:01:03 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 22:01:03 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 22:01:03 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 22:01:03 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 22:01:03 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 22:01:03 - DataSciBench - INFO - Starting Docker container 'test-patilaakash619-backpack-price-prediction-ml-guide-deepseek-r1-20250514_220103' for test case patilaakash619-backpack-price-prediction-ml-guide
+2025-05-14 22:04:07 - DataSciBench - INFO - Docker container for test case hanymato-mobile-price-prediction-model completed successfully
+2025-05-14 22:04:07 - DataSciBench - ERROR - Error removing container: 409 Client Error for http+docker://localhost/v1.49/containers/00a7cf35ea89a55e449f5726ed6894f47abf82fa5f48b9eab84100eea63f434d?v=False&link=False&force=True: Conflict ("removal of container 00a7cf35ea89a55e449f5726ed6894f47abf82fa5f48b9eab84100eea63f434d is already in progress")
+2025-05-14 22:04:07 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/hanymato-mobile-price-prediction-model_deepseek-v3_20250514_215357.json
+2025-05-14 22:04:07 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/hanymato-mobile-price-prediction-model_deepseek-v3_20250514_215357.json
+2025-05-14 22:04:07 - DataSciBench - INFO - Test for agent deepseek-v3 on test case hanymato-mobile-price-prediction-model completed successfully
+2025-05-14 22:04:07 - DataSciBench - INFO - Starting test for agent deepseek-v3 on test case patilaakash619-backpack-price-prediction-ml-guide
+2025-05-14 22:04:07 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 22:04:07 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/patilaakash619-backpack-price-prediction-ml-guide/instructions
+2025-05-14 22:04:07 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 22:04:07 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 22:04:07 - DataSciBench - INFO - From: ./benchmark_final/storage/patilaakash619-backpack-price-prediction-ml-guide/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpbo4l5t3e/reference_insights.md
+2025-05-14 22:04:07 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 22:04:07 - DataSciBench - INFO - From: ./benchmark_final/storage/patilaakash619-backpack-price-prediction-ml-guide/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpbo4l5t3e/shards.md
+2025-05-14 22:04:07 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 22:04:07 - DataSciBench - INFO - From: ./benchmark_final/storage/patilaakash619-backpack-price-prediction-ml-guide/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpbo4l5t3e/cleaned_instructions.md
+2025-05-14 22:04:07 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 22:04:07 - DataSciBench - INFO - From: ./benchmark_final/storage/patilaakash619-backpack-price-prediction-ml-guide/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpbo4l5t3e/gatekeeper_reference.md
+2025-05-14 22:04:07 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 22:04:07 - DataSciBench - INFO - From: ./benchmark_final/storage/patilaakash619-backpack-price-prediction-ml-guide/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpbo4l5t3e/instructions.md
+2025-05-14 22:04:07 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/patilaakash619-backpack-price-prediction-ml-guide/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpbo4l5t3e
+2025-05-14 22:04:07 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 22:04:07 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 22:04:07 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 22:04:07 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 22:04:07 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 22:04:07 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 22:04:07 - DataSciBench - INFO - Starting Docker container 'test-patilaakash619-backpack-price-prediction-ml-guide-deepseek-v3-20250514_220407' for test case patilaakash619-backpack-price-prediction-ml-guide
+2025-05-14 22:14:14 - DataSciBench - INFO - Docker container for test case hanymato-mobile-price-prediction-model completed successfully
+2025-05-14 22:14:14 - DataSciBench - ERROR - Error removing container: 409 Client Error for http+docker://localhost/v1.49/containers/1762f5536c9fcf8902ab2e1ac563f97e9313c491220b4cbad307679c245bad46?v=False&link=False&force=True: Conflict ("removal of container 1762f5536c9fcf8902ab2e1ac563f97e9313c491220b4cbad307679c245bad46 is already in progress")
+2025-05-14 22:14:14 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/hanymato-mobile-price-prediction-model_deepseek-r1_20250514_215354.json
+2025-05-14 22:14:14 - DataSciBench - ERROR - Error during evaluation script execution for ./experiments/checkpoints/hanymato-mobile-price-prediction-model_deepseek-r1_20250514_215354.json: 'Launched Price (USA)'
+2025-05-14 22:14:14 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/hanymato-mobile-price-prediction-model_deepseek-r1_20250514_215354.json
+2025-05-14 22:14:14 - DataSciBench - INFO - Test for agent deepseek-r1 on test case hanymato-mobile-price-prediction-model completed successfully
+2025-05-14 22:14:14 - DataSciBench - INFO - Starting test for agent deepseek-r1 on test case jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm
+2025-05-14 22:14:14 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 22:14:14 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm/instructions
+2025-05-14 22:14:14 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 22:14:14 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 22:14:14 - DataSciBench - INFO - From: ./benchmark_final/storage/jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpg4c_u8sb/reference_insights.md
+2025-05-14 22:14:14 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 22:14:14 - DataSciBench - INFO - From: ./benchmark_final/storage/jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpg4c_u8sb/shards.md
+2025-05-14 22:14:14 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 22:14:14 - DataSciBench - INFO - From: ./benchmark_final/storage/jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpg4c_u8sb/cleaned_instructions.md
+2025-05-14 22:14:14 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 22:14:14 - DataSciBench - INFO - From: ./benchmark_final/storage/jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpg4c_u8sb/gatekeeper_reference.md
+2025-05-14 22:14:14 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 22:14:14 - DataSciBench - INFO - From: ./benchmark_final/storage/jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpg4c_u8sb/instructions.md
+2025-05-14 22:14:14 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpg4c_u8sb
+2025-05-14 22:14:14 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 22:14:14 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 22:14:14 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 22:14:14 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 22:14:14 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 22:14:14 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 22:14:14 - DataSciBench - INFO - Starting Docker container 'test-jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm-deepseek-r1-20250514_221414' for test case jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm
+2025-05-14 22:14:21 - DataSciBench - INFO - Docker container for test case patilaakash619-backpack-price-prediction-ml-guide completed successfully
+2025-05-14 22:14:21 - DataSciBench - ERROR - Error removing container: 409 Client Error for http+docker://localhost/v1.49/containers/7e56ae2e4536d5fbf322a49859e4c20f41ccea5eef24d8ba03dc376fb583dcae?v=False&link=False&force=True: Conflict ("removal of container 7e56ae2e4536d5fbf322a49859e4c20f41ccea5eef24d8ba03dc376fb583dcae is already in progress")
+2025-05-14 22:14:22 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/patilaakash619-backpack-price-prediction-ml-guide_deepseek-v3_20250514_220407.json
+2025-05-14 22:14:22 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/patilaakash619-backpack-price-prediction-ml-guide_deepseek-v3_20250514_220407.json
+2025-05-14 22:14:22 - DataSciBench - INFO - Test for agent deepseek-v3 on test case patilaakash619-backpack-price-prediction-ml-guide completed successfully
+2025-05-14 22:14:22 - DataSciBench - INFO - Starting test for agent deepseek-v3 on test case jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm
+2025-05-14 22:14:22 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 22:14:23 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm/instructions
+2025-05-14 22:14:23 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 22:14:23 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 22:14:23 - DataSciBench - INFO - From: ./benchmark_final/storage/jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp8zgot8jg/reference_insights.md
+2025-05-14 22:14:23 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 22:14:23 - DataSciBench - INFO - From: ./benchmark_final/storage/jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp8zgot8jg/shards.md
+2025-05-14 22:14:23 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 22:14:23 - DataSciBench - INFO - From: ./benchmark_final/storage/jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp8zgot8jg/cleaned_instructions.md
+2025-05-14 22:14:23 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 22:14:23 - DataSciBench - INFO - From: ./benchmark_final/storage/jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp8zgot8jg/gatekeeper_reference.md
+2025-05-14 22:14:23 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 22:14:23 - DataSciBench - INFO - From: ./benchmark_final/storage/jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp8zgot8jg/instructions.md
+2025-05-14 22:14:23 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp8zgot8jg
+2025-05-14 22:14:23 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 22:14:23 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 22:14:23 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 22:14:23 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 22:14:23 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 22:14:23 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 22:14:23 - DataSciBench - INFO - Starting Docker container 'test-jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm-deepseek-v3-20250514_221422' for test case jakubkrasuski-store-sales-forecasting-modeling-with-lightgbm
+2025-05-14 22:21:59 - DataSciBench - INFO - Docker container for test case patilaakash619-backpack-price-prediction-ml-guide completed successfully
+2025-05-14 22:21:59 - DataSciBench - ERROR - Error removing container: 409 Client Error for http+docker://localhost/v1.49/containers/ad40a36df2125e50c2c5306ba72db2413cb8ec7947ba64c97fd2c3c286e62ce6?v=False&link=False&force=True: Conflict ("removal of container ad40a36df2125e50c2c5306ba72db2413cb8ec7947ba64c97fd2c3c286e62ce6 is already in progress")
+2025-05-14 22:21:59 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/patilaakash619-backpack-price-prediction-ml-guide_deepseek-r1_20250514_220103.json
+2025-05-14 22:22:00 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/patilaakash619-backpack-price-prediction-ml-guide_deepseek-r1_20250514_220103.json
+2025-05-14 22:22:00 - DataSciBench - INFO - Test for agent deepseek-r1 on test case patilaakash619-backpack-price-prediction-ml-guide completed successfully
+2025-05-14 22:22:00 - DataSciBench - INFO - Starting test for agent deepseek-r1 on test case hasangulec-feature-engineering-diabetes
+2025-05-14 22:22:00 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 22:22:00 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/hasangulec-feature-engineering-diabetes/instructions
+2025-05-14 22:22:00 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 22:22:00 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 22:22:00 - DataSciBench - INFO - From: ./benchmark_final/storage/hasangulec-feature-engineering-diabetes/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp0rm2os5d/reference_insights.md
+2025-05-14 22:22:00 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 22:22:00 - DataSciBench - INFO - From: ./benchmark_final/storage/hasangulec-feature-engineering-diabetes/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp0rm2os5d/shards.md
+2025-05-14 22:22:00 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 22:22:00 - DataSciBench - INFO - From: ./benchmark_final/storage/hasangulec-feature-engineering-diabetes/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp0rm2os5d/cleaned_instructions.md
+2025-05-14 22:22:00 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 22:22:00 - DataSciBench - INFO - From: ./benchmark_final/storage/hasangulec-feature-engineering-diabetes/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp0rm2os5d/gatekeeper_reference.md
+2025-05-14 22:22:00 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 22:22:00 - DataSciBench - INFO - From: ./benchmark_final/storage/hasangulec-feature-engineering-diabetes/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp0rm2os5d/instructions.md
+2025-05-14 22:22:00 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/hasangulec-feature-engineering-diabetes/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmp0rm2os5d
+2025-05-14 22:22:00 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 22:22:00 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 22:22:00 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 22:22:00 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 22:22:00 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 22:22:00 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 22:22:00 - DataSciBench - INFO - Starting Docker container 'test-hasangulec-feature-engineering-diabetes-deepseek-r1-20250514_222200' for test case hasangulec-feature-engineering-diabetes
+2025-05-14 22:40:13 - DataSciBench - INFO - Docker container for test case hasangulec-feature-engineering-diabetes completed successfully
+2025-05-14 22:40:13 - DataSciBench - ERROR - Error removing container: 409 Client Error for http+docker://localhost/v1.49/containers/4ab583986b4c42663ea804634a46fd0c00816707ac2e605d82258bdac015997c?v=False&link=False&force=True: Conflict ("removal of container 4ab583986b4c42663ea804634a46fd0c00816707ac2e605d82258bdac015997c is already in progress")
+2025-05-14 22:40:13 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/hasangulec-feature-engineering-diabetes_deepseek-r1_20250514_222200.json
+2025-05-14 22:40:13 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/hasangulec-feature-engineering-diabetes_deepseek-r1_20250514_222200.json
+2025-05-14 22:40:13 - DataSciBench - INFO - Test for agent deepseek-r1 on test case hasangulec-feature-engineering-diabetes completed successfully
+2025-05-14 22:40:13 - DataSciBench - INFO - Starting test for agent deepseek-v3 on test case hasangulec-feature-engineering-diabetes
+2025-05-14 22:40:13 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 22:40:13 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/hasangulec-feature-engineering-diabetes/instructions
+2025-05-14 22:40:13 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 22:40:13 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 22:40:13 - DataSciBench - INFO - From: ./benchmark_final/storage/hasangulec-feature-engineering-diabetes/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpv6eamb7_/reference_insights.md
+2025-05-14 22:40:13 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 22:40:13 - DataSciBench - INFO - From: ./benchmark_final/storage/hasangulec-feature-engineering-diabetes/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpv6eamb7_/shards.md
+2025-05-14 22:40:13 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 22:40:13 - DataSciBench - INFO - From: ./benchmark_final/storage/hasangulec-feature-engineering-diabetes/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpv6eamb7_/cleaned_instructions.md
+2025-05-14 22:40:13 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 22:40:13 - DataSciBench - INFO - From: ./benchmark_final/storage/hasangulec-feature-engineering-diabetes/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpv6eamb7_/gatekeeper_reference.md
+2025-05-14 22:40:13 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 22:40:13 - DataSciBench - INFO - From: ./benchmark_final/storage/hasangulec-feature-engineering-diabetes/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpv6eamb7_/instructions.md
+2025-05-14 22:40:13 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/hasangulec-feature-engineering-diabetes/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpv6eamb7_
+2025-05-14 22:40:13 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 22:40:13 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 22:40:13 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 22:40:13 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 22:40:13 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 22:40:13 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 22:40:13 - DataSciBench - INFO - Starting Docker container 'test-hasangulec-feature-engineering-diabetes-deepseek-v3-20250514_224013' for test case hasangulec-feature-engineering-diabetes
+2025-05-14 22:51:08 - DataSciBench - INFO - Docker container for test case hasangulec-feature-engineering-diabetes completed successfully
+2025-05-14 22:51:08 - DataSciBench - ERROR - Error removing container: 409 Client Error for http+docker://localhost/v1.49/containers/d502cfc1c3df8fd1142daa4d5e47cd9b1997cc08a385970c4fb5e5255c498bb2?v=False&link=False&force=True: Conflict ("removal of container d502cfc1c3df8fd1142daa4d5e47cd9b1997cc08a385970c4fb5e5255c498bb2 is already in progress")
+2025-05-14 22:51:08 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/hasangulec-feature-engineering-diabetes_deepseek-v3_20250514_224013.json
+2025-05-14 22:51:08 - DataSciBench - ERROR - Error during evaluation script execution for ./experiments/checkpoints/hasangulec-feature-engineering-diabetes_deepseek-v3_20250514_224013.json: No columns to parse from file
+2025-05-14 22:51:08 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/hasangulec-feature-engineering-diabetes_deepseek-v3_20250514_224013.json
+2025-05-14 22:51:08 - DataSciBench - INFO - Test for agent deepseek-v3 on test case hasangulec-feature-engineering-diabetes completed successfully
+2025-05-14 22:51:08 - DataSciBench - INFO - Starting test for agent deepseek-r1 on test case jakubkrasuski-llm-chatbot-arena-predicting-user-preferences
+2025-05-14 22:51:08 - DataSciBench - INFO - Docker image already built. Skipping build.
+2025-05-14 22:51:08 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/jakubkrasuski-llm-chatbot-arena-predicting-user-preferences/instructions
+2025-05-14 22:51:08 - DataSciBench - INFO - Instructions directory exists. Contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 22:51:08 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 22:51:08 - DataSciBench - INFO - From: ./benchmark_final/storage/jakubkrasuski-llm-chatbot-arena-predicting-user-preferences/instructions/reference_insights.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpep9vizlg/reference_insights.md
+2025-05-14 22:51:08 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 22:51:08 - DataSciBench - INFO - From: ./benchmark_final/storage/jakubkrasuski-llm-chatbot-arena-predicting-user-preferences/instructions/shards.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpep9vizlg/shards.md
+2025-05-14 22:51:08 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 22:51:08 - DataSciBench - INFO - From: ./benchmark_final/storage/jakubkrasuski-llm-chatbot-arena-predicting-user-preferences/instructions/cleaned_instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpep9vizlg/cleaned_instructions.md
+2025-05-14 22:51:08 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 22:51:08 - DataSciBench - INFO - From: ./benchmark_final/storage/jakubkrasuski-llm-chatbot-arena-predicting-user-preferences/instructions/gatekeeper_reference.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpep9vizlg/gatekeeper_reference.md
+2025-05-14 22:51:08 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 22:51:08 - DataSciBench - INFO - From: ./benchmark_final/storage/jakubkrasuski-llm-chatbot-arena-predicting-user-preferences/instructions/instructions.md to: /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpep9vizlg/instructions.md
+2025-05-14 22:51:08 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/jakubkrasuski-llm-chatbot-arena-predicting-user-preferences/instructions to /var/folders/20/x_6vdgbn0zngqj2lps4v27f40000gn/T/tmpep9vizlg
+2025-05-14 22:51:08 - DataSciBench - INFO - Final temp instructions directory contents: ['reference_insights.md', 'shards.md', 'cleaned_instructions.md', 'gatekeeper_reference.md', 'instructions.md']
+2025-05-14 22:51:08 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 22:51:08 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 22:51:08 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 22:51:08 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 22:51:08 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 22:51:08 - DataSciBench - INFO - Starting Docker container 'test-jakubkrasuski-llm-chatbot-arena-predicting-user-preferences-deepseek-r1-20250514_225108' for test case jakubkrasuski-llm-chatbot-arena-predicting-user-preferences
