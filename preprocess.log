@@ -20,3 +20,290 @@
 2025-05-13 00:04:12 - DataSciBench - INFO - Parsed knowledge saved to: preprocessing_notebook/preprocess_data/hasangulec#####feature-engineering-diabetes/knowledge.md
 2025-05-13 00:04:12 - DataSciBench - INFO - Found 18 instruction items and 10 knowledge items
 2025-05-13 00:04:12 - DataSciBench - INFO - Parsed instructions and knowledge from narration response and saved to preprocessing_notebook/preprocess_data/hasangulec#####feature-engineering-diabetes/instructions.md and preprocessing_notebook/preprocess_data/hasangulec#####feature-engineering-diabetes/knowledge.md
+2025-05-14 11:13:07 - DataSciBench - INFO - Converted notebook saved to: preprocessing_notebook/preprocess_data/jimmyyeung#####spaceship-titanic-xgb-top5/full_markdown.md
+2025-05-14 11:13:07 - DataSciBench - INFO - Converted jimmyyeung#####spaceship-titanic-xgb-top5.ipynb to jimmyyeung#####spaceship-titanic-xgb-top5.md
+2025-05-14 11:13:50 - DataSciBench - INFO - Full response saved to: preprocessing_notebook/preprocess_data/jimmyyeung#####spaceship-titanic-xgb-top5/minimizing_response.md
+2025-05-14 11:13:50 - DataSciBench - INFO - Minimized jimmyyeung#####spaceship-titanic-xgb-top5.md and saved full response to preprocessing_notebook/preprocess_data/jimmyyeung#####spaceship-titanic-xgb-top5/minimizing_response.md
+2025-05-14 11:13:50 - DataSciBench - INFO - Reading response from file: preprocessing_notebook/preprocess_data/jimmyyeung#####spaceship-titanic-xgb-top5/minimizing_response.md
+2025-05-14 11:13:50 - DataSciBench - INFO - Extracting markdown content from response
+2025-05-14 11:13:50 - DataSciBench - INFO - Found 1 markdown sections
+2025-05-14 11:13:50 - DataSciBench - INFO - Using longest section (length: 6326 characters)
+2025-05-14 11:13:50 - DataSciBench - INFO - Parsed markdown saved to: preprocessing_notebook/preprocess_data/jimmyyeung#####spaceship-titanic-xgb-top5/minimized_markdown.md
+2025-05-14 11:13:50 - DataSciBench - INFO - Parsed minimized notebook from full response and saved to preprocessing_notebook/preprocess_data/jimmyyeung#####spaceship-titanic-xgb-top5/minimized_markdown.md
+2025-05-14 11:13:50 - DataSciBench - INFO - Reading response from file: preprocessing_notebook/preprocess_data/jimmyyeung#####spaceship-titanic-xgb-top5/minimizing_response.md
+2025-05-14 11:13:50 - DataSciBench - INFO - Extracting main result from response
+2025-05-14 11:13:50 - DataSciBench - INFO - Found 1 main result sections
+2025-05-14 11:13:50 - DataSciBench - INFO - Using longest section (length: 180 characters)
+2025-05-14 11:13:50 - DataSciBench - INFO - Parsed main result saved to: preprocessing_notebook/preprocess_data/jimmyyeung#####spaceship-titanic-xgb-top5/metric_info.json
+2025-05-14 11:13:50 - DataSciBench - INFO - Parsed numerical result from minimizing response and saved to preprocessing_notebook/preprocess_data/jimmyyeung#####spaceship-titanic-xgb-top5/metric_info.json
+2025-05-14 11:13:50 - DataSciBench - INFO - Reading response from file: preprocessing_notebook/preprocess_data/jimmyyeung#####spaceship-titanic-xgb-top5/minimizing_response.md
+2025-05-14 11:13:50 - DataSciBench - INFO - Extracting evaluation metrics from response
+2025-05-14 11:13:50 - DataSciBench - INFO - Found 1 evaluation metrics sections
+2025-05-14 11:13:50 - DataSciBench - INFO - All 1 evaluation metrics sections saved to: preprocessing_notebook/preprocess_data/jimmyyeung#####spaceship-titanic-xgb-top5/evaluation_metrics.py
+2025-05-14 11:13:50 - DataSciBench - INFO - Parsed evaluation metrics from reconstruction response and saved to preprocessing_notebook/preprocess_data/jimmyyeung#####spaceship-titanic-xgb-top5/evaluation_metrics.py
+2025-05-14 11:13:50 - DataSciBench - INFO - Extracted 28 Python code blocks to preprocessing_notebook/preprocess_data/jimmyyeung#####spaceship-titanic-xgb-top5/minimized_notebook.py
+2025-05-14 11:13:50 - DataSciBench - INFO - Converted minimized jimmyyeung#####spaceship-titanic-xgb-top5 markdown file to python file
+2025-05-14 11:13:50 - DataSciBench - INFO - Set data directories in minimized notebook python file to preprocessing_notebook/preprocess_data/jimmyyeung#####spaceship-titanic-xgb-top5/dataset
+2025-05-14 11:13:58 - DataSciBench - INFO - Executed Python file: preprocessing_notebook/preprocess_data/jimmyyeung#####spaceship-titanic-xgb-top5/minimized_notebook.py
+2025-05-14 11:13:58 - DataSciBench - INFO - Running evaluation...
+2025-05-14 11:13:58 - DataSciBench - INFO - Evaluation completed. Score: 0.7940854326396495
+2025-05-14 11:13:58 - DataSciBench - INFO - Evaluation information saved to: preprocessing_notebook/preprocess_data/jimmyyeung#####spaceship-titanic-xgb-top5/numeric_baseline.json
+2025-05-14 11:13:58 - DataSciBench - INFO - Evaluated reconstructed code
+2025-05-14 11:13:58 - DataSciBench - INFO - Copied None from preprocessing_notebook/preprocess_data/jimmyyeung#####spaceship-titanic-xgb-top5/metric_info.json to preprocessing_notebook/preprocess_data/jimmyyeung#####spaceship-titanic-xgb-top5/numeric_baseline.json
+2025-05-14 11:13:58 - DataSciBench - INFO - Read notebook content from preprocessing_notebook/preprocess_data/jimmyyeung#####spaceship-titanic-xgb-top5/minimized_markdown.md
+2025-05-14 11:14:21 - DataSciBench - INFO - Full response from extractor saved to: preprocessing_notebook/preprocess_data/jimmyyeung#####spaceship-titanic-xgb-top5/narration_response.md
+2025-05-14 11:14:21 - DataSciBench - INFO - Collected narration response from jimmyyeung#####spaceship-titanic-xgb-top5.md
+2025-05-14 11:14:21 - DataSciBench - INFO - Reading response from file: preprocessing_notebook/preprocess_data/jimmyyeung#####spaceship-titanic-xgb-top5/narration_response.md
+2025-05-14 11:14:21 - DataSciBench - INFO - Extracting instructions and knowledge from response
+2025-05-14 11:14:21 - DataSciBench - INFO - Parsed instructions saved to: preprocessing_notebook/preprocess_data/jimmyyeung#####spaceship-titanic-xgb-top5/instructions.md
+2025-05-14 11:14:21 - DataSciBench - INFO - Parsed knowledge saved to: preprocessing_notebook/preprocess_data/jimmyyeung#####spaceship-titanic-xgb-top5/knowledge.md
+2025-05-14 11:14:21 - DataSciBench - INFO - Found 23 instruction items and 9 knowledge items
+2025-05-14 11:14:21 - DataSciBench - INFO - Parsed instructions and knowledge from narration response and saved to preprocessing_notebook/preprocess_data/jimmyyeung#####spaceship-titanic-xgb-top5/instructions.md and preprocessing_notebook/preprocess_data/jimmyyeung#####spaceship-titanic-xgb-top5/knowledge.md
+2025-05-14 11:15:30 - DataSciBench - INFO - Converted notebook saved to: preprocessing_notebook/preprocess_data/mohitsital#####top-10-bike-sharing-rf-gbm/full_markdown.md
+2025-05-14 11:15:30 - DataSciBench - INFO - Converted mohitsital#####top-10-bike-sharing-rf-gbm.ipynb to mohitsital#####top-10-bike-sharing-rf-gbm.md
+2025-05-14 11:16:14 - DataSciBench - INFO - Full response saved to: preprocessing_notebook/preprocess_data/mohitsital#####top-10-bike-sharing-rf-gbm/minimizing_response.md
+2025-05-14 11:16:14 - DataSciBench - INFO - Minimized mohitsital#####top-10-bike-sharing-rf-gbm.md and saved full response to preprocessing_notebook/preprocess_data/mohitsital#####top-10-bike-sharing-rf-gbm/minimizing_response.md
+2025-05-14 11:16:14 - DataSciBench - INFO - Reading response from file: preprocessing_notebook/preprocess_data/mohitsital#####top-10-bike-sharing-rf-gbm/minimizing_response.md
+2025-05-14 11:16:14 - DataSciBench - INFO - Extracting markdown content from response
+2025-05-14 11:16:14 - DataSciBench - INFO - Found 1 markdown sections
+2025-05-14 11:16:14 - DataSciBench - INFO - Using longest section (length: 5490 characters)
+2025-05-14 11:16:14 - DataSciBench - INFO - Parsed markdown saved to: preprocessing_notebook/preprocess_data/mohitsital#####top-10-bike-sharing-rf-gbm/minimized_markdown.md
+2025-05-14 11:16:14 - DataSciBench - INFO - Parsed minimized notebook from full response and saved to preprocessing_notebook/preprocess_data/mohitsital#####top-10-bike-sharing-rf-gbm/minimized_markdown.md
+2025-05-14 11:16:14 - DataSciBench - INFO - Reading response from file: preprocessing_notebook/preprocess_data/mohitsital#####top-10-bike-sharing-rf-gbm/minimizing_response.md
+2025-05-14 11:16:14 - DataSciBench - INFO - Extracting main result from response
+2025-05-14 11:16:14 - DataSciBench - INFO - Found 1 main result sections
+2025-05-14 11:16:14 - DataSciBench - INFO - Using longest section (length: 155 characters)
+2025-05-14 11:16:14 - DataSciBench - INFO - Parsed main result saved to: preprocessing_notebook/preprocess_data/mohitsital#####top-10-bike-sharing-rf-gbm/metric_info.json
+2025-05-14 11:16:14 - DataSciBench - INFO - Parsed numerical result from minimizing response and saved to preprocessing_notebook/preprocess_data/mohitsital#####top-10-bike-sharing-rf-gbm/metric_info.json
+2025-05-14 11:16:14 - DataSciBench - INFO - Reading response from file: preprocessing_notebook/preprocess_data/mohitsital#####top-10-bike-sharing-rf-gbm/minimizing_response.md
+2025-05-14 11:16:14 - DataSciBench - INFO - Extracting evaluation metrics from response
+2025-05-14 11:16:14 - DataSciBench - INFO - Found 1 evaluation metrics sections
+2025-05-14 11:16:14 - DataSciBench - INFO - All 1 evaluation metrics sections saved to: preprocessing_notebook/preprocess_data/mohitsital#####top-10-bike-sharing-rf-gbm/evaluation_metrics.py
+2025-05-14 11:16:14 - DataSciBench - INFO - Parsed evaluation metrics from reconstruction response and saved to preprocessing_notebook/preprocess_data/mohitsital#####top-10-bike-sharing-rf-gbm/evaluation_metrics.py
+2025-05-14 11:16:14 - DataSciBench - INFO - Extracted 14 Python code blocks to preprocessing_notebook/preprocess_data/mohitsital#####top-10-bike-sharing-rf-gbm/minimized_notebook.py
+2025-05-14 11:16:14 - DataSciBench - INFO - Converted minimized mohitsital#####top-10-bike-sharing-rf-gbm markdown file to python file
+2025-05-14 11:16:14 - DataSciBench - INFO - Set data directories in minimized notebook python file to preprocessing_notebook/preprocess_data/mohitsital#####top-10-bike-sharing-rf-gbm/dataset
+2025-05-14 11:16:21 - DataSciBench - INFO - Executed Python file: preprocessing_notebook/preprocess_data/mohitsital#####top-10-bike-sharing-rf-gbm/minimized_notebook.py
+2025-05-14 11:16:21 - DataSciBench - INFO - Running evaluation...
+2025-05-14 11:16:21 - DataSciBench - INFO - Evaluation completed. Score: 0.2875368274464537
+2025-05-14 11:16:21 - DataSciBench - INFO - Evaluation information saved to: preprocessing_notebook/preprocess_data/mohitsital#####top-10-bike-sharing-rf-gbm/numeric_baseline.json
+2025-05-14 11:16:21 - DataSciBench - INFO - Evaluated reconstructed code
+2025-05-14 11:16:21 - DataSciBench - INFO - Copied None from preprocessing_notebook/preprocess_data/mohitsital#####top-10-bike-sharing-rf-gbm/metric_info.json to preprocessing_notebook/preprocess_data/mohitsital#####top-10-bike-sharing-rf-gbm/numeric_baseline.json
+2025-05-14 11:16:21 - DataSciBench - INFO - Read notebook content from preprocessing_notebook/preprocess_data/mohitsital#####top-10-bike-sharing-rf-gbm/minimized_markdown.md
+2025-05-14 11:16:43 - DataSciBench - INFO - Full response from extractor saved to: preprocessing_notebook/preprocess_data/mohitsital#####top-10-bike-sharing-rf-gbm/narration_response.md
+2025-05-14 11:16:43 - DataSciBench - INFO - Collected narration response from mohitsital#####top-10-bike-sharing-rf-gbm.md
+2025-05-14 11:16:43 - DataSciBench - INFO - Reading response from file: preprocessing_notebook/preprocess_data/mohitsital#####top-10-bike-sharing-rf-gbm/narration_response.md
+2025-05-14 11:16:43 - DataSciBench - INFO - Extracting instructions and knowledge from response
+2025-05-14 11:16:43 - DataSciBench - INFO - Parsed instructions saved to: preprocessing_notebook/preprocess_data/mohitsital#####top-10-bike-sharing-rf-gbm/instructions.md
+2025-05-14 11:16:43 - DataSciBench - INFO - Parsed knowledge saved to: preprocessing_notebook/preprocess_data/mohitsital#####top-10-bike-sharing-rf-gbm/knowledge.md
+2025-05-14 11:16:43 - DataSciBench - INFO - Found 15 instruction items and 10 knowledge items
+2025-05-14 11:16:43 - DataSciBench - INFO - Parsed instructions and knowledge from narration response and saved to preprocessing_notebook/preprocess_data/mohitsital#####top-10-bike-sharing-rf-gbm/instructions.md and preprocessing_notebook/preprocess_data/mohitsital#####top-10-bike-sharing-rf-gbm/knowledge.md
+2025-05-14 11:18:07 - DataSciBench - INFO - Converted notebook saved to: preprocessing_notebook/preprocess_data/slimreaper#####random-forest-xgb-catboost-ensemble-t40/full_markdown.md
+2025-05-14 11:18:07 - DataSciBench - INFO - Converted slimreaper#####random-forest-xgb-catboost-ensemble-t40.ipynb to slimreaper#####random-forest-xgb-catboost-ensemble-t40.md
+2025-05-14 11:18:43 - DataSciBench - INFO - Full response saved to: preprocessing_notebook/preprocess_data/slimreaper#####random-forest-xgb-catboost-ensemble-t40/minimizing_response.md
+2025-05-14 11:18:43 - DataSciBench - INFO - Minimized slimreaper#####random-forest-xgb-catboost-ensemble-t40.md and saved full response to preprocessing_notebook/preprocess_data/slimreaper#####random-forest-xgb-catboost-ensemble-t40/minimizing_response.md
+2025-05-14 11:18:43 - DataSciBench - INFO - Reading response from file: preprocessing_notebook/preprocess_data/slimreaper#####random-forest-xgb-catboost-ensemble-t40/minimizing_response.md
+2025-05-14 11:18:43 - DataSciBench - INFO - Extracting markdown content from response
+2025-05-14 11:18:43 - DataSciBench - INFO - Found 1 markdown sections
+2025-05-14 11:18:43 - DataSciBench - INFO - Using longest section (length: 3367 characters)
+2025-05-14 11:18:43 - DataSciBench - INFO - Parsed markdown saved to: preprocessing_notebook/preprocess_data/slimreaper#####random-forest-xgb-catboost-ensemble-t40/minimized_markdown.md
+2025-05-14 11:18:43 - DataSciBench - INFO - Parsed minimized notebook from full response and saved to preprocessing_notebook/preprocess_data/slimreaper#####random-forest-xgb-catboost-ensemble-t40/minimized_markdown.md
+2025-05-14 11:18:43 - DataSciBench - INFO - Reading response from file: preprocessing_notebook/preprocess_data/slimreaper#####random-forest-xgb-catboost-ensemble-t40/minimizing_response.md
+2025-05-14 11:18:43 - DataSciBench - INFO - Extracting main result from response
+2025-05-14 11:18:43 - DataSciBench - INFO - Found 1 main result sections
+2025-05-14 11:18:43 - DataSciBench - INFO - Using longest section (length: 146 characters)
+2025-05-14 11:18:43 - DataSciBench - INFO - Parsed main result saved to: preprocessing_notebook/preprocess_data/slimreaper#####random-forest-xgb-catboost-ensemble-t40/metric_info.json
+2025-05-14 11:18:43 - DataSciBench - INFO - Parsed numerical result from minimizing response and saved to preprocessing_notebook/preprocess_data/slimreaper#####random-forest-xgb-catboost-ensemble-t40/metric_info.json
+2025-05-14 11:18:43 - DataSciBench - INFO - Reading response from file: preprocessing_notebook/preprocess_data/slimreaper#####random-forest-xgb-catboost-ensemble-t40/minimizing_response.md
+2025-05-14 11:18:43 - DataSciBench - INFO - Extracting evaluation metrics from response
+2025-05-14 11:18:43 - DataSciBench - INFO - Found 1 evaluation metrics sections
+2025-05-14 11:18:43 - DataSciBench - INFO - All 1 evaluation metrics sections saved to: preprocessing_notebook/preprocess_data/slimreaper#####random-forest-xgb-catboost-ensemble-t40/evaluation_metrics.py
+2025-05-14 11:18:43 - DataSciBench - INFO - Parsed evaluation metrics from reconstruction response and saved to preprocessing_notebook/preprocess_data/slimreaper#####random-forest-xgb-catboost-ensemble-t40/evaluation_metrics.py
+2025-05-14 11:18:43 - DataSciBench - INFO - Extracted 16 Python code blocks to preprocessing_notebook/preprocess_data/slimreaper#####random-forest-xgb-catboost-ensemble-t40/minimized_notebook.py
+2025-05-14 11:18:43 - DataSciBench - INFO - Converted minimized slimreaper#####random-forest-xgb-catboost-ensemble-t40 markdown file to python file
+2025-05-14 11:18:43 - DataSciBench - INFO - Set data directories in minimized notebook python file to preprocessing_notebook/preprocess_data/slimreaper#####random-forest-xgb-catboost-ensemble-t40/dataset
+2025-05-14 11:18:46 - DataSciBench - INFO - Executed Python file: preprocessing_notebook/preprocess_data/slimreaper#####random-forest-xgb-catboost-ensemble-t40/minimized_notebook.py
+2025-05-14 11:18:46 - DataSciBench - INFO - Running evaluation...
+2025-05-14 11:18:46 - DataSciBench - INFO - Evaluation completed. Score: 0.7874420998455997
+2025-05-14 11:18:46 - DataSciBench - INFO - Evaluation information saved to: preprocessing_notebook/preprocess_data/slimreaper#####random-forest-xgb-catboost-ensemble-t40/numeric_baseline.json
+2025-05-14 11:18:46 - DataSciBench - INFO - Evaluated reconstructed code
+2025-05-14 11:18:46 - DataSciBench - INFO - Copied None from preprocessing_notebook/preprocess_data/slimreaper#####random-forest-xgb-catboost-ensemble-t40/metric_info.json to preprocessing_notebook/preprocess_data/slimreaper#####random-forest-xgb-catboost-ensemble-t40/numeric_baseline.json
+2025-05-14 11:18:46 - DataSciBench - INFO - Read notebook content from preprocessing_notebook/preprocess_data/slimreaper#####random-forest-xgb-catboost-ensemble-t40/minimized_markdown.md
+2025-05-14 11:19:06 - DataSciBench - INFO - Full response from extractor saved to: preprocessing_notebook/preprocess_data/slimreaper#####random-forest-xgb-catboost-ensemble-t40/narration_response.md
+2025-05-14 11:19:06 - DataSciBench - INFO - Collected narration response from slimreaper#####random-forest-xgb-catboost-ensemble-t40.md
+2025-05-14 11:19:06 - DataSciBench - INFO - Reading response from file: preprocessing_notebook/preprocess_data/slimreaper#####random-forest-xgb-catboost-ensemble-t40/narration_response.md
+2025-05-14 11:19:06 - DataSciBench - INFO - Extracting instructions and knowledge from response
+2025-05-14 11:19:06 - DataSciBench - INFO - Parsed instructions saved to: preprocessing_notebook/preprocess_data/slimreaper#####random-forest-xgb-catboost-ensemble-t40/instructions.md
+2025-05-14 11:19:06 - DataSciBench - INFO - Parsed knowledge saved to: preprocessing_notebook/preprocess_data/slimreaper#####random-forest-xgb-catboost-ensemble-t40/knowledge.md
+2025-05-14 11:19:06 - DataSciBench - INFO - Found 10 instruction items and 7 knowledge items
+2025-05-14 11:19:06 - DataSciBench - INFO - Parsed instructions and knowledge from narration response and saved to preprocessing_notebook/preprocess_data/slimreaper#####random-forest-xgb-catboost-ensemble-t40/instructions.md and preprocessing_notebook/preprocess_data/slimreaper#####random-forest-xgb-catboost-ensemble-t40/knowledge.md
+2025-05-14 11:26:10 - DataSciBench - INFO - Converted notebook saved to: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/full_markdown.md
+2025-05-14 11:26:10 - DataSciBench - INFO - Converted sudalairajkumar#####simple-feature-engg-notebook-spooky-author.ipynb to sudalairajkumar#####simple-feature-engg-notebook-spooky-author.md
+2025-05-14 11:27:03 - DataSciBench - INFO - Full response saved to: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/minimizing_response.md
+2025-05-14 11:27:03 - DataSciBench - INFO - Minimized sudalairajkumar#####simple-feature-engg-notebook-spooky-author.md and saved full response to preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/minimizing_response.md
+2025-05-14 11:27:03 - DataSciBench - INFO - Reading response from file: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/minimizing_response.md
+2025-05-14 11:27:03 - DataSciBench - INFO - Extracting markdown content from response
+2025-05-14 11:27:03 - DataSciBench - ERROR - Error: Mismatched markdown tags. Found 1 opening tags and 0 closing tags.
+2025-05-14 11:27:03 - DataSciBench - INFO - Warning: Could not find <markdown> tags in the response. Using full response.
+2025-05-14 11:27:03 - DataSciBench - INFO - Full response saved to: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/minimized_markdown.md
+2025-05-14 11:27:03 - DataSciBench - INFO - Parsed minimized notebook from full response and saved to preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/minimized_markdown.md
+2025-05-14 11:27:03 - DataSciBench - INFO - Reading response from file: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/minimizing_response.md
+2025-05-14 11:27:03 - DataSciBench - INFO - Extracting main result from response
+2025-05-14 11:27:03 - DataSciBench - INFO - Found 1 main result sections
+2025-05-14 11:27:03 - DataSciBench - INFO - Using longest section (length: 161 characters)
+2025-05-14 11:27:03 - DataSciBench - INFO - Parsed main result saved to: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/metric_info.json
+2025-05-14 11:27:03 - DataSciBench - INFO - Parsed numerical result from minimizing response and saved to preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/metric_info.json
+2025-05-14 11:27:03 - DataSciBench - INFO - Reading response from file: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/minimizing_response.md
+2025-05-14 11:27:03 - DataSciBench - INFO - Extracting evaluation metrics from response
+2025-05-14 11:27:03 - DataSciBench - INFO - Found 1 evaluation metrics sections
+2025-05-14 11:27:03 - DataSciBench - INFO - All 1 evaluation metrics sections saved to: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/evaluation_metrics.py
+2025-05-14 11:27:03 - DataSciBench - INFO - Parsed evaluation metrics from reconstruction response and saved to preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/evaluation_metrics.py
+2025-05-14 11:27:03 - DataSciBench - INFO - Extracted 11 Python code blocks to preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/minimized_notebook.py
+2025-05-14 11:27:03 - DataSciBench - INFO - Converted minimized sudalairajkumar#####simple-feature-engg-notebook-spooky-author markdown file to python file
+2025-05-14 11:27:03 - DataSciBench - INFO - Set data directories in minimized notebook python file to preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/dataset
+2025-05-14 11:27:08 - DataSciBench - INFO - Executed Python file: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/minimized_notebook.py
+2025-05-14 11:27:08 - DataSciBench - INFO - Running evaluation...
+2025-05-14 11:27:08 - DataSciBench - ERROR - Error in run_evaluation: [Errno 2] No such file or directory: 'preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/dataset/baseline_submission.csv'
+2025-05-14 11:31:36 - DataSciBench - INFO - Converted notebook saved to: preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/full_markdown.md
+2025-05-14 11:31:36 - DataSciBench - INFO - Converted tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata.ipynb to tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata.md
+2025-05-14 11:32:34 - DataSciBench - INFO - Full response saved to: preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/minimizing_response.md
+2025-05-14 11:32:34 - DataSciBench - INFO - Minimized tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata.md and saved full response to preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/minimizing_response.md
+2025-05-14 11:32:34 - DataSciBench - INFO - Reading response from file: preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/minimizing_response.md
+2025-05-14 11:32:34 - DataSciBench - INFO - Extracting markdown content from response
+2025-05-14 11:32:34 - DataSciBench - ERROR - Error: Mismatched markdown tags. Found 1 opening tags and 0 closing tags.
+2025-05-14 11:32:34 - DataSciBench - INFO - Warning: Could not find <markdown> tags in the response. Using full response.
+2025-05-14 11:32:34 - DataSciBench - INFO - Full response saved to: preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/minimized_markdown.md
+2025-05-14 11:32:34 - DataSciBench - INFO - Parsed minimized notebook from full response and saved to preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/minimized_markdown.md
+2025-05-14 11:32:34 - DataSciBench - INFO - Reading response from file: preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/minimizing_response.md
+2025-05-14 11:32:34 - DataSciBench - INFO - Extracting main result from response
+2025-05-14 11:32:34 - DataSciBench - INFO - Found 1 main result sections
+2025-05-14 11:32:34 - DataSciBench - INFO - Using longest section (length: 178 characters)
+2025-05-14 11:32:34 - DataSciBench - INFO - Parsed main result saved to: preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/metric_info.json
+2025-05-14 11:32:34 - DataSciBench - INFO - Parsed numerical result from minimizing response and saved to preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/metric_info.json
+2025-05-14 11:32:34 - DataSciBench - INFO - Reading response from file: preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/minimizing_response.md
+2025-05-14 11:32:34 - DataSciBench - INFO - Extracting evaluation metrics from response
+2025-05-14 11:32:34 - DataSciBench - INFO - Found 1 evaluation metrics sections
+2025-05-14 11:32:34 - DataSciBench - INFO - All 1 evaluation metrics sections saved to: preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/evaluation_metrics.py
+2025-05-14 11:32:34 - DataSciBench - INFO - Parsed evaluation metrics from reconstruction response and saved to preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/evaluation_metrics.py
+2025-05-14 11:32:34 - DataSciBench - INFO - Extracted 9 Python code blocks to preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/minimized_notebook.py
+2025-05-14 11:32:34 - DataSciBench - INFO - Converted minimized tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata markdown file to python file
+2025-05-14 11:32:34 - DataSciBench - INFO - Set data directories in minimized notebook python file to preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/dataset
+2025-05-14 11:32:40 - DataSciBench - INFO - Executed Python file: preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/minimized_notebook.py
+2025-05-14 11:32:40 - DataSciBench - INFO - Running evaluation...
+2025-05-14 11:32:40 - DataSciBench - ERROR - Error in run_evaluation: [Errno 2] No such file or directory: 'preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/dataset/baseline_submission.csv'
+2025-05-14 11:35:54 - DataSciBench - INFO - Executed Python file: preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/minimized_notebook.py
+2025-05-14 11:37:58 - DataSciBench - INFO - Converted notebook saved to: preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/full_markdown.md
+2025-05-14 11:37:58 - DataSciBench - INFO - Converted tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata.ipynb to tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata.md
+2025-05-14 11:38:42 - DataSciBench - INFO - Full response saved to: preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/minimizing_response.md
+2025-05-14 11:38:42 - DataSciBench - INFO - Minimized tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata.md and saved full response to preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/minimizing_response.md
+2025-05-14 11:38:42 - DataSciBench - INFO - Reading response from file: preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/minimizing_response.md
+2025-05-14 11:38:42 - DataSciBench - INFO - Extracting markdown content from response
+2025-05-14 11:38:42 - DataSciBench - INFO - Found 1 markdown sections
+2025-05-14 11:38:42 - DataSciBench - INFO - Using longest section (length: 6617 characters)
+2025-05-14 11:38:42 - DataSciBench - INFO - Parsed markdown saved to: preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/minimized_markdown.md
+2025-05-14 11:38:42 - DataSciBench - INFO - Parsed minimized notebook from full response and saved to preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/minimized_markdown.md
+2025-05-14 11:38:42 - DataSciBench - INFO - Reading response from file: preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/minimizing_response.md
+2025-05-14 11:38:42 - DataSciBench - INFO - Extracting main result from response
+2025-05-14 11:38:42 - DataSciBench - INFO - Found 1 main result sections
+2025-05-14 11:38:42 - DataSciBench - INFO - Using longest section (length: 178 characters)
+2025-05-14 11:38:42 - DataSciBench - INFO - Parsed main result saved to: preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/metric_info.json
+2025-05-14 11:38:42 - DataSciBench - INFO - Parsed numerical result from minimizing response and saved to preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/metric_info.json
+2025-05-14 11:38:42 - DataSciBench - INFO - Reading response from file: preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/minimizing_response.md
+2025-05-14 11:38:42 - DataSciBench - INFO - Extracting evaluation metrics from response
+2025-05-14 11:38:42 - DataSciBench - INFO - Found 1 evaluation metrics sections
+2025-05-14 11:38:42 - DataSciBench - INFO - All 1 evaluation metrics sections saved to: preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/evaluation_metrics.py
+2025-05-14 11:38:42 - DataSciBench - INFO - Parsed evaluation metrics from reconstruction response and saved to preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/evaluation_metrics.py
+2025-05-14 11:38:42 - DataSciBench - INFO - Extracted 9 Python code blocks to preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/minimized_notebook.py
+2025-05-14 11:38:42 - DataSciBench - INFO - Converted minimized tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata markdown file to python file
+2025-05-14 11:38:42 - DataSciBench - INFO - Set data directories in minimized notebook python file to preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/dataset
+2025-05-14 11:38:49 - DataSciBench - INFO - Executed Python file: preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/minimized_notebook.py
+2025-05-14 11:38:49 - DataSciBench - INFO - Running evaluation...
+2025-05-14 11:38:49 - DataSciBench - INFO - Evaluation completed. Score: 12.078365721517464
+2025-05-14 11:38:49 - DataSciBench - INFO - Evaluation information saved to: preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/numeric_baseline.json
+2025-05-14 11:38:49 - DataSciBench - INFO - Evaluated reconstructed code
+2025-05-14 11:38:49 - DataSciBench - INFO - Copied None from preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/metric_info.json to preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/numeric_baseline.json
+2025-05-14 11:38:49 - DataSciBench - INFO - Read notebook content from preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/minimized_markdown.md
+2025-05-14 11:39:11 - DataSciBench - INFO - Full response from extractor saved to: preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/narration_response.md
+2025-05-14 11:39:11 - DataSciBench - INFO - Collected narration response from tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata.md
+2025-05-14 11:39:11 - DataSciBench - INFO - Reading response from file: preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/narration_response.md
+2025-05-14 11:39:11 - DataSciBench - INFO - Extracting instructions and knowledge from response
+2025-05-14 11:39:11 - DataSciBench - INFO - Parsed instructions saved to: preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/instructions.md
+2025-05-14 11:39:11 - DataSciBench - INFO - Parsed knowledge saved to: preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/knowledge.md
+2025-05-14 11:39:11 - DataSciBench - INFO - Found 8 instruction items and 8 knowledge items
+2025-05-14 11:39:11 - DataSciBench - INFO - Parsed instructions and knowledge from narration response and saved to preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/instructions.md and preprocessing_notebook/preprocess_data/tetsutani#####ps3e9-eda-and-gbdt-catboost-median-duplicatedata/knowledge.md
+2025-05-14 11:40:21 - DataSciBench - INFO - Converted notebook saved to: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/full_markdown.md
+2025-05-14 11:40:21 - DataSciBench - INFO - Converted sudalairajkumar#####simple-feature-engg-notebook-spooky-author.ipynb to sudalairajkumar#####simple-feature-engg-notebook-spooky-author.md
+2025-05-14 11:40:35 - DataSciBench - INFO - Converted notebook saved to: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/full_markdown.md
+2025-05-14 11:40:35 - DataSciBench - INFO - Converted sudalairajkumar#####simple-feature-engg-notebook-spooky-author.ipynb to sudalairajkumar#####simple-feature-engg-notebook-spooky-author.md
+2025-05-14 11:41:28 - DataSciBench - INFO - Full response saved to: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/minimizing_response.md
+2025-05-14 11:41:28 - DataSciBench - INFO - Minimized sudalairajkumar#####simple-feature-engg-notebook-spooky-author.md and saved full response to preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/minimizing_response.md
+2025-05-14 11:41:28 - DataSciBench - INFO - Reading response from file: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/minimizing_response.md
+2025-05-14 11:41:28 - DataSciBench - INFO - Extracting markdown content from response
+2025-05-14 11:41:28 - DataSciBench - ERROR - Error: Mismatched markdown tags. Found 1 opening tags and 0 closing tags.
+2025-05-14 11:41:28 - DataSciBench - INFO - Warning: Could not find <markdown> tags in the response. Using full response.
+2025-05-14 11:41:28 - DataSciBench - INFO - Full response saved to: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/minimized_markdown.md
+2025-05-14 11:41:28 - DataSciBench - INFO - Parsed minimized notebook from full response and saved to preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/minimized_markdown.md
+2025-05-14 11:41:28 - DataSciBench - INFO - Reading response from file: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/minimizing_response.md
+2025-05-14 11:41:28 - DataSciBench - INFO - Extracting main result from response
+2025-05-14 11:41:28 - DataSciBench - INFO - Found 1 main result sections
+2025-05-14 11:41:28 - DataSciBench - INFO - Using longest section (length: 161 characters)
+2025-05-14 11:41:28 - DataSciBench - INFO - Parsed main result saved to: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/metric_info.json
+2025-05-14 11:41:28 - DataSciBench - INFO - Parsed numerical result from minimizing response and saved to preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/metric_info.json
+2025-05-14 11:41:28 - DataSciBench - INFO - Reading response from file: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/minimizing_response.md
+2025-05-14 11:41:28 - DataSciBench - INFO - Extracting evaluation metrics from response
+2025-05-14 11:41:28 - DataSciBench - INFO - Found 1 evaluation metrics sections
+2025-05-14 11:41:28 - DataSciBench - INFO - All 1 evaluation metrics sections saved to: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/evaluation_metrics.py
+2025-05-14 11:41:28 - DataSciBench - INFO - Parsed evaluation metrics from reconstruction response and saved to preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/evaluation_metrics.py
+2025-05-14 11:41:28 - DataSciBench - INFO - Extracted 11 Python code blocks to preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/minimized_notebook.py
+2025-05-14 11:41:28 - DataSciBench - INFO - Converted minimized sudalairajkumar#####simple-feature-engg-notebook-spooky-author markdown file to python file
+2025-05-14 11:41:28 - DataSciBench - INFO - Set data directories in minimized notebook python file to preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/dataset
+2025-05-14 11:41:32 - DataSciBench - INFO - Executed Python file: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/minimized_notebook.py
+2025-05-14 11:41:32 - DataSciBench - INFO - Running evaluation...
+2025-05-14 11:41:32 - DataSciBench - ERROR - Error in run_evaluation: [Errno 2] No such file or directory: 'preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/dataset/baseline_submission.csv'
+2025-05-14 11:45:16 - DataSciBench - INFO - Executed Python file: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/minimized_notebook.py
+2025-05-14 11:47:07 - DataSciBench - INFO - Executed Python file: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/minimized_notebook.py
+2025-05-14 11:48:35 - DataSciBench - INFO - Executed Python file: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/minimized_notebook.py
+2025-05-14 11:48:35 - DataSciBench - INFO - Running evaluation...
+2025-05-14 11:48:35 - DataSciBench - ERROR - Error in run_evaluation: [Errno 2] No such file or directory: 'preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/dataset/baseline_submission.csv'
+2025-05-14 11:49:21 - DataSciBench - INFO - Executed Python file: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/minimized_notebook.py
+2025-05-14 11:49:21 - DataSciBench - INFO - Running evaluation...
+2025-05-14 11:49:21 - DataSciBench - INFO - Evaluation completed. Score: 0.4519759967278671
+2025-05-14 11:49:21 - DataSciBench - INFO - Evaluation information saved to: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/numeric_baseline.json
+2025-05-14 11:49:21 - DataSciBench - INFO - Evaluated reconstructed code
+2025-05-14 11:49:21 - DataSciBench - INFO - Read notebook content from preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/minimized_markdown.md
+2025-05-14 11:49:44 - DataSciBench - INFO - Full response from extractor saved to: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/narration_response.md
+2025-05-14 11:49:44 - DataSciBench - INFO - Collected narration response from sudalairajkumar#####simple-feature-engg-notebook-spooky-author.md
+2025-05-14 11:49:44 - DataSciBench - INFO - Reading response from file: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/narration_response.md
+2025-05-14 11:49:44 - DataSciBench - INFO - Extracting instructions and knowledge from response
+2025-05-14 11:49:44 - DataSciBench - INFO - Parsed instructions saved to: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/instructions.md
+2025-05-14 11:49:44 - DataSciBench - INFO - Parsed knowledge saved to: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/knowledge.md
+2025-05-14 11:49:44 - DataSciBench - INFO - Found 12 instruction items and 10 knowledge items
+2025-05-14 11:49:44 - DataSciBench - INFO - Parsed instructions and knowledge from narration response and saved to preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/instructions.md and preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/knowledge.md
+2025-05-14 11:54:29 - DataSciBench - INFO - Executed Python file: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/minimized_notebook.py
+2025-05-14 11:54:29 - DataSciBench - INFO - Running evaluation...
+2025-05-14 11:54:29 - DataSciBench - INFO - Evaluation completed. Score: 0.32835290155797936
+2025-05-14 11:54:29 - DataSciBench - INFO - Evaluation information saved to: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/numeric_baseline.json
+2025-05-14 11:54:29 - DataSciBench - INFO - Evaluated reconstructed code
+2025-05-14 11:54:29 - DataSciBench - INFO - Read notebook content from preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/minimized_markdown.md
+2025-05-14 11:54:53 - DataSciBench - INFO - Full response from extractor saved to: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/narration_response.md
+2025-05-14 11:54:53 - DataSciBench - INFO - Collected narration response from sudalairajkumar#####simple-feature-engg-notebook-spooky-author.md
+2025-05-14 11:54:53 - DataSciBench - INFO - Reading response from file: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/narration_response.md
+2025-05-14 11:54:53 - DataSciBench - INFO - Extracting instructions and knowledge from response
+2025-05-14 11:54:53 - DataSciBench - INFO - Parsed instructions saved to: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/instructions.md
+2025-05-14 11:54:53 - DataSciBench - INFO - Parsed knowledge saved to: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/knowledge.md
+2025-05-14 11:54:53 - DataSciBench - INFO - Found 10 instruction items and 10 knowledge items
+2025-05-14 11:54:53 - DataSciBench - INFO - Parsed instructions and knowledge from narration response and saved to preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/instructions.md and preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/knowledge.md
+2025-05-14 12:35:27 - DataSciBench - INFO - Running evaluation...
+2025-05-14 12:35:27 - DataSciBench - INFO - Evaluation completed. Score: 0.32835290155797936
+2025-05-14 12:35:27 - DataSciBench - INFO - Evaluation information saved to: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/numeric_baseline.json
+2025-05-14 12:35:27 - DataSciBench - INFO - Evaluated reconstructed code
+2025-05-14 12:35:27 - DataSciBench - INFO - Copied None from preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/metric_info.json to preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/numeric_baseline.json
+2025-05-14 12:35:27 - DataSciBench - INFO - Read notebook content from preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/minimized_markdown.md
+2025-05-14 12:35:55 - DataSciBench - INFO - Full response from extractor saved to: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/narration_response.md
+2025-05-14 12:35:55 - DataSciBench - INFO - Collected narration response from sudalairajkumar#####simple-feature-engg-notebook-spooky-author.md
+2025-05-14 12:35:55 - DataSciBench - INFO - Reading response from file: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/narration_response.md
+2025-05-14 12:35:55 - DataSciBench - INFO - Extracting instructions and knowledge from response
+2025-05-14 12:35:55 - DataSciBench - INFO - Parsed instructions saved to: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/instructions.md
+2025-05-14 12:35:55 - DataSciBench - INFO - Parsed knowledge saved to: preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/knowledge.md
+2025-05-14 12:35:55 - DataSciBench - INFO - Found 14 instruction items and 10 knowledge items
+2025-05-14 12:35:55 - DataSciBench - INFO - Parsed instructions and knowledge from narration response and saved to preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/instructions.md and preprocessing_notebook/preprocess_data/sudalairajkumar#####simple-feature-engg-notebook-spooky-author/knowledge.md
