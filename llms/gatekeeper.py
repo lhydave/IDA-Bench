@@ -69,6 +69,11 @@ class Gatekeeper(AgentClass):
     def system_prompt(self, value: str):
         """Set the system prompt."""
         self._system_prompt = value
+    
+    def intialize_reference_instructions(self, reference_instructions: str):
+        """Initialize the reference instructions."""
+        self.system_prompt = self.system_prompt.format(reference_instructions=reference_instructions)
+        self.reset_system_message()
 
     def reset_system_message(self):
         """Reset the system message."""

@@ -453,7 +453,7 @@ def fixed_litellm_completions(**params):
             elif msg["role"] == "user" and not marked_as_ephemeral:
                 msg['content'] = [{"type": "text", "text": msg['content'], "cache_control": {"type": "ephemeral"}}]
                 marked_as_ephemeral = True
-    logger.debug(f"Messages Length: {len(params['messages'])}")
+    logger.debug(f"Inside Interpreter, Assistant Messages Length: {len(params['messages'])}")
     for attempt in range(attempts):
         try:
             yield from litellm.completion(**params)

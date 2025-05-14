@@ -69,6 +69,9 @@ class User(BaseMultiRoundHandler):
         self.follow_up_message = None
     def add_gatekeeper(self, gatekeeper: AgentClass):
         self.gatekeeper = gatekeeper
+    def initialize_project_context(self, project_context: str):
+        self.system_prompt = self.system_prompt.format(project_context=project_context)
+        self.reset_conversation()
 
     def call_llm(self, message: str, retry: bool = True) -> tuple[list[dict[str, Any]], str]:
         """Call the LLM with the given message."""

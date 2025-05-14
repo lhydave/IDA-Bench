@@ -68,6 +68,7 @@ class EnvironmentConfig:
     assistant_llm_config: LLMConfig
     gatekeeper_llm_config: LLMConfig
     assistant_agent_type: Literal["base-agent", "aide"]  # TODO: check supported agent types
+    user_agent_type: Literal["user", "user2"]
     interpreter_config_path: str
     # user_prompt_template: str
     # assistant_prompt_template: str
@@ -144,7 +145,7 @@ class Environment:
         logger.debug(f"Environment initialized with current_task_idx={self.current_task_idx}")
 
         logger.debug("Creating user agent")
-        self.user_agent = agent_dict["user"](self.config.user_llm_config)
+        self.user_agent = agent_dict[self.config.user_agent_type](self.config.user_llm_config)
         logger.debug("Creating assistant agent")
         self.assistant_agent = agent_constructor(
             self.config.assistant_llm_config, interpreter_config_path=self.config.interpreter_config_path
@@ -156,7 +157,18 @@ class Environment:
             logger.debug("Creating gatekeeper agent")
             from llms.gatekeeper import Gatekeeper
             self.gatekeeper = Gatekeeper(self.config.gatekeeper_llm_config)
+        project_context = "".join([task.description for task in self.tasks])
+        reference_instructions = "".join([task.reference_instructions for task in self.tasks])
 
+        # Initialize user agent system prompt
+        if self.user_agent.system_prompt is not None:
+            logger.debug(f"Initializing user agent system prompt")
+            self.user_agent.initialize_project_context(project_context)
+        # Initialize gatekeeper system prompt
+        if self.gatekeeper is not None:
+            logger.debug(f"Initializing gatekeeper system prompt")
+            self.gatekeeper.intialize_reference_instructions(reference_instructions)
+            self.user_agent.add_gatekeeper(self.gatekeeper)
         # Reset interpreter state if it exists
         if hasattr(self.assistant_agent, "interpreter"):
             logger.debug("Resetting assistant agent's interpreter state")
@@ -267,6 +279,12 @@ To get started, could you please provide a bit of background information:
 	1.	What is the context of the dataset?
 	2.	What is the file name of the dataset?
 	3.	What is the first step of your analysis?"""
+
+
+def user_init_prompt2(env: Environment, ) -> str:
+    """Format the prompt for the user agent."""
+    return f"""Load data and make necessary preprocessing. If possible, try fitting a baseline model with as simple method as possible. If failed, simply provide potential plans for data analysis."""
+
 
 # def interact_version1(env: Environment, user_agent: BaseMultiRoundHandler, assistant_agent: BaseMultiRoundHandler):
 #     """Run the environment until all tasks are completed or max turns is reached."""
@@ -519,29 +537,41 @@ To get started, could you please provide a bit of background information:
 #         logger.info(f"Turn {number_of_turns} completed")
 
 
-def interact_version_taubench(env: Environment, user_agent: BaseMultiRoundHandler, assistant_agent: BaseMultiRoundHandler, gatekeeper: AgentClass):
+def interact_version_taubench(env: Environment, user_agent: BaseMultiRoundHandler, assistant_agent: BaseMultiRoundHandler, ):
     """Run the environment until all tasks are completed or max turns is reached."""
     logger.info("Starting interaction using taubench strategy")
     number_of_turns = 0
     logger.info(f"Starting task loop with max turns: {env.config.max_turns}")
     assistant_message = None
+    end_flag = False
+
+
+    if env.config.user_agent_type == "user2":
+        user_init_prompt = user_init_prompt2(env)
+        env.conversation_history.append(
+            {"role": "user agent", "prompt_received": None, "all_messages": user_init_prompt}
+        )
+        env._save_checkpoint()
+        user_agent.add_message(user_init_prompt, role="user")
+
+        logger.debug("Calling assistant agent with user message")
+        assistant_responses = assistant_agent.call_llm(user_init_prompt)
+        logger.debug(f"Assistant response generated with {len(assistant_responses)} messages")
+
+        env.conversation_history.append(
+            {"role": "assistant agent", "prompt_received": user_init_prompt, "all_messages": deepcopy(assistant_responses)}
+        )
+        env._save_checkpoint()
+
+        assistant_message = assistant_responses[-1]["content"]
+        logger.debug(f"First assistant message: {assistant_message}")
+
     
     while number_of_turns < env.config.max_turns:
         logger.debug(f"Starting turn {number_of_turns + 1}")
         # Generate user message based on task and conversation history
-        if number_of_turns == 0:
+        if number_of_turns == 0 and env.config.user_agent_type == "user":
             user_prompt = user_init_prompt(env)
-            project_context = "".join([task.description for task in env.tasks])
-            reference_instructions = "".join([task.reference_instructions for task in env.tasks])
-            if user_agent.system_prompt is not None:
-                user_agent.system_prompt = user_agent.system_prompt.format(
-                    project_context=project_context
-                )
-            if gatekeeper.system_prompt is not None:
-                gatekeeper.system_prompt = gatekeeper.system_prompt.format(reference_instructions=reference_instructions)
-            user_agent.reset_conversation()
-            gatekeeper.reset_system_message()
-            user_agent.add_gatekeeper(gatekeeper)
         else:
             user_prompt = assistant_message
         if user_prompt is None:
@@ -557,8 +587,8 @@ def interact_version_taubench(env: Environment, user_agent: BaseMultiRoundHandle
 
         # TODO: debug, since gatekeeper may change the user message, we need to check if the user message is changed
         if user_response['end'] and user_agent.follow_up_message is None:
+            end_flag = True
             logger.info("All tasks completion marker detected, exiting loop")
-            break
 
         # Generate assistant response
         logger.debug("Calling assistant agent with user message")
@@ -570,19 +600,14 @@ def interact_version_taubench(env: Environment, user_agent: BaseMultiRoundHandle
         )
         env._save_checkpoint()
 
+        # Extract last assistant message
         assistant_message = assistant_responses[-1]["content"]
-
-        # Extract content between the last <response> and </response> tags if present
-        if "<response>" in assistant_message and "</response>" in assistant_message:
-            response_matches = re.findall(r"<response>(.*?)</response>", assistant_message, re.DOTALL)
-            if response_matches:
-                assistant_message = response_matches[-1].strip()  # Get the last match
-        else:
-            logger.warning("No response tags found in assistant message")
-            assistant_message = assistant_responses[-1]["content"]
         number_of_turns += 1
         logger.info(f"Turn {number_of_turns} completed")
 
+        if end_flag:
+            logger.debug(f"End flag is True at turn {number_of_turns}. End the interaction.")
+            break
 
 INTERACT_VERSIONS = {
     # "version1": interact_version1,
@@ -605,5 +630,5 @@ def run(env: Environment, version_name: str = "version1"):
         raise ValueError(f"Setting not defined: {e}")
 
     logger.info("Starting interaction between agents")
-    runner(env, env.user_agent, env.assistant_agent, env.gatekeeper)
+    runner(env, env.user_agent, env.assistant_agent, )
     return env.tasks
