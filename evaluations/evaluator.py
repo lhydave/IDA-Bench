@@ -253,14 +253,14 @@ def evaluate_agent_performance(
             benchmark_manager.storage_path, benchmark_id, "ground_truth/groundtruth_df.csv"
         )
 
-        eval_error = False
+        eval_error = ""
 
         # Calculate absolute metric score obtained by the agent
         try:
             evaluation["metrics"]["absolute_metric_score"] = eval_module.evaluate(ground_truth_path, submission_path)
         except Exception as e:
             logger.error(f"Error during evaluation script execution for {checkpoint_file}: {e}")
-            eval_error = True
+            eval_error = str(e)
 
         # Calculate skill score, which is the relative ratio of the absolute metric score to the baseline metric score
         numeric_baseline_path = os.path.join(
@@ -270,6 +270,7 @@ def evaluate_agent_performance(
             numeric_baseline = json.load(f)
         if eval_error:
             evaluation["metrics"]["skill_score"] = -10000.0  # for now, the lower the worse
+            evaluation["evaluation_error"] = eval_error
         elif numeric_baseline["is_higher_better"]:
             evaluation["metrics"]["skill_score"] = (
                 evaluation["metrics"]["absolute_metric_score"] - numeric_baseline["score"]
