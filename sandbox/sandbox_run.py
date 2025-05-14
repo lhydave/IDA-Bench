@@ -2,6 +2,7 @@ import os
 import docker
 import tempfile
 import toml as toml_writer  # fall back to toml-0.10+
+import threading  # Added import
 
 import shutil
 from typing import Any
@@ -9,29 +10,40 @@ from typing import Any
 from data_manager.benchmark_manager import BenchmarkManager
 from logger import logger
 
+_docker_image_built = False
+_docker_build_lock = threading.Lock()
+
 
 def build_docker_image():
-    """Build the Docker image for running benchmarks."""
-    client = docker.from_env()
+    """Build the Docker image for running benchmarks. Ensures image is built only once."""
+    global _docker_image_built
 
-    # Path to the Dockerfile
-    dockerfile_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Dockerfile")
+    with _docker_build_lock:
+        if _docker_image_built:
+            logger.info("Docker image already built. Skipping build.")
+            return True
 
-    # Build the Docker image
-    try:
-        logger.info("Building Docker image...")
-        image, logs = client.images.build(
-            path=os.path.dirname(dockerfile_path),
-            dockerfile="Dockerfile",
-            tag="datasci-benchmark:latest",
-            rm=True,  # Remove intermediate containers
-        )
+        client = docker.from_env()
 
-        logger.info("Docker image built successfully")
-        return True
-    except Exception as e:
-        logger.error(f"Failed to build Docker image: {e}")
-        return False
+        # Path to the Dockerfile
+        dockerfile_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Dockerfile")
+
+        # Build the Docker image
+        try:
+            logger.info("Building Docker image...")
+            image, logs = client.images.build(
+                path=os.path.dirname(dockerfile_path),
+                dockerfile="Dockerfile",
+                tag="datasci-benchmark:latest",
+                rm=True,  # Remove intermediate containers
+            )
+
+            logger.info("Docker image built successfully")
+            _docker_image_built = True  # Set flag after successful build
+            return True
+        except Exception as e:
+            logger.error(f"Failed to build Docker image: {e}")
+            return False
 
 
 def run_docker_test(

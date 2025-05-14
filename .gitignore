@@ -16,7 +16,7 @@ wheels/
 
 # latex generated files
 *.aux
-*.log
+paper/*.log
 *.out
 neurips_*.pdf
 *.xdv

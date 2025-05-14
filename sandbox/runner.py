@@ -56,7 +56,7 @@ def setup_environment(test_case_id: str) -> dict[str, Any]:
         log_path = f"/app/logs/{test_case_id}_{agent_config.get('id', 'unnamed_agent')}.log"
 
         # Configure logging for the runner
-        configure_global_logger(level=os.environ.get("LOG_LEVEL", "DEBUG"), log_file=log_path)
+        configure_global_logger(level=os.environ.get("LOG_LEVEL", "INFO"), log_file=log_path)
 
         return {
             "test_case_id": test_case_id,
@@ -211,21 +211,19 @@ def run_interaction(env_config: dict[str, Any], tasks: list[dict[str, Any]]):
             checkpoint_path=env_config["checkpoint_path"],
         )
 
-        gatekeeper_llm_config = LLMConfig(
-            api_key=env_config["base_config"]["gatekeeper"]["api_key"],
-            model=env_config["base_config"]["gatekeeper"]["model"],
-            temperature=env_config["base_config"]["gatekeeper"]["temperature"],
-            max_retries=env_config["base_config"]["gatekeeper"].get("max_retries", 3),
-            retry_delay=env_config["base_config"]["gatekeeper"].get("retry_delay", 2),
-            run_code=False,  # User agent doesn't run code
-            api_base=env_config["base_config"]["gatekeeper"].get("api_base"),
-            system_prompt=env_config["base_config"]["gatekeeper"].get("system_prompt"),
-        )
-        # TODO: to use user2, set getkeeper=None
+        # gatekeeper_llm_config = LLMConfig(
+        #     api_key=env_config["base_config"]["gatekeeper"]["api_key"],
+        #     model=env_config["base_config"]["gatekeeper"]["model"],
+        #     temperature=env_config["base_config"]["gatekeeper"]["temperature"],
+        #     max_retries=env_config["base_config"]["gatekeeper"].get("max_retries", 3),
+        #     retry_delay=env_config["base_config"]["gatekeeper"].get("retry_delay", 2),
+        #     run_code=False,  # User agent doesn't run code
+        #     api_base=env_config["base_config"]["gatekeeper"].get("api_base"),
+        #     system_prompt=env_config["base_config"]["gatekeeper"].get("system_prompt"),
+        # )
         gatekeeper_llm_config = None
 
         # Create environment config
-        # TODO: to use user2, set user_agent_type="user2"
         env_configuration = EnvironmentConfig(
             user_llm_config=user_llm_config,
             assistant_llm_config=assistant_llm_config,
@@ -233,9 +231,9 @@ def run_interaction(env_config: dict[str, Any], tasks: list[dict[str, Any]]):
             assistant_agent_type=env_config["agent_config"].get("framework", "base-agent"),
             interpreter_config_path="/app/configs/interpreter_config.toml",
             user_agent_type="user2",
-            # user_prompt_template="You are a data scientist. You need to help solve this task:\n\n{task_list}\n\n{current_task}",
+            # user_prompt_template="You are a data scientist. You need to help solve this task:\n\n{task_list}\n\n{current_task}",  # noqa: E501
             max_turns=20,  # TODO: config max_turns somewhere
-            # user_continue_prompt_template="The assistant has provided analysis: {assistant_summary}\n\nPlease provide further instructions or indicate if all tasks are completed by including '##ALL_TASKS_COMPLETED##' in your message.",
+            # user_continue_prompt_template="The assistant has provided analysis: {assistant_summary}\n\nPlease provide further instructions or indicate if all tasks are completed by including '##ALL_TASKS_COMPLETED##' in your message.",  # noqa: E501
             checkpoint_path=env_config["checkpoint_path"],
         )
 

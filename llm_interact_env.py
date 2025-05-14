@@ -66,7 +66,7 @@ class EnvironmentConfig:
 
     user_llm_config: LLMConfig
     assistant_llm_config: LLMConfig
-    gatekeeper_llm_config: LLMConfig
+    gatekeeper_llm_config: LLMConfig | None
     assistant_agent_type: Literal["base-agent", "aide"]  # TODO: check supported agent types
     user_agent_type: Literal["user", "user2"]
     interpreter_config_path: str
