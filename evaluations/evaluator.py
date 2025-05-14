@@ -29,40 +29,42 @@ def load_checkpoint(checkpoint_file: str) -> dict[str, Any]:
         raise
 
 
-def extract_code_snippets(conversation_history: list[dict[str, Any]]) -> list[str]:
+def extract_code_snippets(conversation_history: list[dict[str, Any]]) -> tuple[list[str], list[str]]:
     """
-    Extract all code snippets from the conversation history.
+    Extract all code snippets and computer outputs from the conversation history.
 
     Args:
         conversation_history: List of conversation messages
 
     Returns:
-        List of code snippets
+        A tuple containing:
+            - List of code snippets
+            - List of computer output messages
     """
     code_snippets = []
+    computer_outputs = []
 
     for message in conversation_history:
         if message.get("role") == "assistant agent" and "all_messages" in message:
             for msg in message["all_messages"]:
                 if isinstance(msg, dict) and "content" in msg:
-                    content = msg["content"]
-
-                    # Extract code blocks from markdown-style code blocks
-                    code_blocks = re.findall(r"```(?:python)?\s*(.*?)```", content, re.DOTALL)
-                    code_snippets.extend(code_blocks)
-
-    return code_snippets
+                    if msg.get("type") == "code" and msg.get("format") == "python":
+                        code_snippets.append(msg["content"])
+                    elif msg.get("role") == "computer" and msg.get("type") == "console":
+                        computer_outputs.append(msg["content"])
+    return code_snippets, computer_outputs
 
 
-def count_code_operations(code_snippets: list[str]) -> dict[str, int]:
+def count_code_operations(code_snippets: list[str], computer_outputs: list[str]) -> dict[str, int]:
     """
-    Count various operations in the code snippets.
+    Count various operations in the code snippets and errors from computer outputs.
 
     Args:
         code_snippets: List of code snippets
+        computer_outputs: List of computer output messages
 
     Returns:
-        Dictionary with counts of various operations
+        Dictionary with counts of various operations and errors
     """
     operations = {
         "pandas_operations": 0,
@@ -73,6 +75,7 @@ def count_code_operations(code_snippets: list[str]) -> dict[str, int]:
         "loops": 0,
         "functions": 0,
         "imports": 0,
+        "error_count": 0,  # Added for counting errors
     }
 
     # Define regexes for different operations
@@ -102,8 +105,15 @@ def count_code_operations(code_snippets: list[str]) -> dict[str, int]:
     # Count occurrences of each pattern in the code snippets
     for code in code_snippets:
         for category, pattern_list in patterns.items():
+            if category == "error_count":  # Skip error_count for code snippets
+                continue
             for pattern in pattern_list:
                 operations[category] += len(re.findall(pattern, code))
+
+    # Count errors from computer outputs
+    for output in computer_outputs:
+        if "Traceback" in output:
+            operations["error_count"] += 1
 
     return operations
 
@@ -201,12 +211,21 @@ def evaluate_agent_performance(
         # Count conversation turns
         evaluation["metrics"]["conversation_turns"] = count_conversation_turns(conversation_history)
 
-        # Extract and analyze code snippets
-        code_snippets = extract_code_snippets(conversation_history)
+        # Extract and analyze code snippets and computer outputs
+        code_snippets, computer_outputs = extract_code_snippets(conversation_history)
         evaluation["metrics"]["code_snippets_count"] = len(code_snippets)
 
-        # Analyze code operations
-        code_operations = count_code_operations(code_snippets)
+        # Count total code executions
+        total_code_executions = 0
+        for message in conversation_history:
+            if message.get("role") == "assistant agent" and "all_messages" in message:
+                for msg_detail in message["all_messages"]:
+                    if isinstance(msg_detail, dict) and msg_detail.get("type") == "code":
+                        total_code_executions += 1
+        evaluation["metrics"]["total_code_executions"] = total_code_executions
+
+        # Analyze code operations and errors
+        code_operations = count_code_operations(code_snippets, computer_outputs)
         evaluation["metrics"]["code_operations"] = code_operations
 
         # Calculate aggregate scores
