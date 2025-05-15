@@ -2849,3 +2849,184 @@ Traceback (most recent call last):
 docker.errors.DockerException: Error while fetching server API version: ('Connection aborted.', PermissionError(13, 'Permission denied'))
 2025-05-14 11:00:40 - DataSciBench - INFO - Benchmark complete. 0/2 tests successful.
 2025-05-14 11:00:40 - DataSciBench - INFO - Summary written to ./experiments/results/summary.json
+2025-05-14 17:53:57 - DataSciBench - INFO - Log level set to INFO
+2025-05-14 17:53:57 - DataSciBench - INFO - Logging to file: run_benchmark.log
+2025-05-14 17:53:57 - DataSciBench - INFO - Loaded base config from configs_tianyu/base_config.toml
+2025-05-14 17:53:57 - DataSciBench - INFO - Running full benchmark.
+2025-05-14 17:53:57 - DataSciBench - INFO - Loaded single agent config from agent_configs/agent_config_claude_3_7.toml
+2025-05-14 17:53:57 - DataSciBench - INFO - Benchmark storage initialized at ./benchmark_final
+2025-05-14 17:53:57 - DataSciBench - INFO - Initialized benchmark manager with path: ./benchmark_final
+2025-05-14 17:53:57 - DataSciBench - INFO - Validated 1 test cases
+2025-05-14 17:53:57 - DataSciBench - INFO - Will run 1 test cases for 1 agents
+2025-05-14 17:53:57 - DataSciBench - INFO - Running tests sequentially
+2025-05-14 17:53:57 - DataSciBench - INFO - Starting test for agent claude-3-7-sonnet on test case abdallaellaithy-titanic-in-space-ml-survival-predictions
+2025-05-14 17:53:57 - DataSciBench - INFO - Building Docker image...
+2025-05-14 17:57:21 - DataSciBench - INFO - Docker image built successfully
+2025-05-14 17:57:21 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions
+2025-05-14 17:57:21 - DataSciBench - INFO - Instructions directory exists. Contents: ['shards.md', 'reference_insights.md', 'gatekeeper_reference.md', 'instructions.md', 'cleaned_instructions.md']
+2025-05-14 17:57:21 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 17:57:21 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/shards.md to: /tmp/tmpqgu0dpof/shards.md
+2025-05-14 17:57:21 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 17:57:21 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/reference_insights.md to: /tmp/tmpqgu0dpof/reference_insights.md
+2025-05-14 17:57:21 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 17:57:21 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/gatekeeper_reference.md to: /tmp/tmpqgu0dpof/gatekeeper_reference.md
+2025-05-14 17:57:21 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 17:57:21 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/instructions.md to: /tmp/tmpqgu0dpof/instructions.md
+2025-05-14 17:57:21 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 17:57:21 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/cleaned_instructions.md to: /tmp/tmpqgu0dpof/cleaned_instructions.md
+2025-05-14 17:57:21 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions to /tmp/tmpqgu0dpof
+2025-05-14 17:57:21 - DataSciBench - INFO - Final temp instructions directory contents: ['shards.md', 'reference_insights.md', 'gatekeeper_reference.md', 'instructions.md', 'cleaned_instructions.md']
+2025-05-14 17:57:21 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 17:57:21 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 17:57:21 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 17:57:21 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 17:57:21 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 17:57:21 - DataSciBench - INFO - Starting Docker container 'test-abdallaellaithy-titanic-in-space-ml-survival-predictions-claude-3-7-sonnet-20250514_175357' for test case abdallaellaithy-titanic-in-space-ml-survival-predictions
+2025-05-14 17:58:29 - DataSciBench - ERROR - Container exited with non-zero status code: 1
+2025-05-14 17:58:29 - DataSciBench - ERROR - Docker test failed for abdallaellaithy-titanic-in-space-ml-survival-predictions with agent claude-3-7-sonnet
+2025-05-14 17:58:29 - DataSciBench - INFO - Benchmark complete. 0/1 tests successful.
+2025-05-14 17:58:29 - DataSciBench - INFO - Summary written to ./experiments/results/summary.json
+2025-05-14 18:00:12 - DataSciBench - INFO - Log level set to INFO
+2025-05-14 18:00:12 - DataSciBench - INFO - Logging to file: run_benchmark.log
+2025-05-14 18:00:12 - DataSciBench - INFO - Loaded base config from configs_tianyu/base_config.toml
+2025-05-14 18:00:12 - DataSciBench - INFO - Running full benchmark.
+2025-05-14 18:00:12 - DataSciBench - INFO - Loaded single agent config from agent_configs/agent_config_claude_3_7.toml
+2025-05-14 18:00:12 - DataSciBench - INFO - Benchmark storage initialized at ./benchmark_final
+2025-05-14 18:00:12 - DataSciBench - INFO - Initialized benchmark manager with path: ./benchmark_final
+2025-05-14 18:00:12 - DataSciBench - INFO - Validated 1 test cases
+2025-05-14 18:00:12 - DataSciBench - INFO - Will run 1 test cases for 1 agents
+2025-05-14 18:00:12 - DataSciBench - INFO - Running tests sequentially
+2025-05-14 18:00:12 - DataSciBench - INFO - Starting test for agent claude-3-7-sonnet on test case abdallaellaithy-titanic-in-space-ml-survival-predictions
+2025-05-14 18:00:12 - DataSciBench - INFO - Building Docker image...
+2025-05-14 18:00:12 - DataSciBench - INFO - Docker image built successfully
+2025-05-14 18:00:12 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions
+2025-05-14 18:00:12 - DataSciBench - INFO - Instructions directory exists. Contents: ['shards.md', 'reference_insights.md', 'gatekeeper_reference.md', 'instructions.md', 'cleaned_instructions.md']
+2025-05-14 18:00:12 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 18:00:12 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/shards.md to: /tmp/tmpb9vwqmwp/shards.md
+2025-05-14 18:00:12 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 18:00:12 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/reference_insights.md to: /tmp/tmpb9vwqmwp/reference_insights.md
+2025-05-14 18:00:12 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 18:00:12 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/gatekeeper_reference.md to: /tmp/tmpb9vwqmwp/gatekeeper_reference.md
+2025-05-14 18:00:12 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 18:00:12 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/instructions.md to: /tmp/tmpb9vwqmwp/instructions.md
+2025-05-14 18:00:12 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 18:00:12 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/cleaned_instructions.md to: /tmp/tmpb9vwqmwp/cleaned_instructions.md
+2025-05-14 18:00:12 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions to /tmp/tmpb9vwqmwp
+2025-05-14 18:00:12 - DataSciBench - INFO - Final temp instructions directory contents: ['shards.md', 'reference_insights.md', 'gatekeeper_reference.md', 'instructions.md', 'cleaned_instructions.md']
+2025-05-14 18:00:12 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 18:00:12 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 18:00:12 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 18:00:12 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 18:00:12 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 18:00:12 - DataSciBench - INFO - Starting Docker container 'test-abdallaellaithy-titanic-in-space-ml-survival-predictions-claude-3-7-sonnet-20250514_180012' for test case abdallaellaithy-titanic-in-space-ml-survival-predictions
+2025-05-14 18:06:34 - DataSciBench - INFO - Docker container for test case abdallaellaithy-titanic-in-space-ml-survival-predictions completed successfully
+2025-05-14 18:06:34 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/abdallaellaithy-titanic-in-space-ml-survival-predictions_claude-3-7-sonnet_20250514_180012.json
+2025-05-14 18:06:35 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/abdallaellaithy-titanic-in-space-ml-survival-predictions_claude-3-7-sonnet_20250514_180012.json
+2025-05-14 18:06:35 - DataSciBench - INFO - Test for agent claude-3-7-sonnet on test case abdallaellaithy-titanic-in-space-ml-survival-predictions completed successfully
+2025-05-14 18:06:35 - DataSciBench - INFO - Benchmark complete. 1/1 tests successful.
+2025-05-14 18:06:35 - DataSciBench - INFO - Summary written to ./experiments/results/summary.json
+2025-05-14 18:23:15 - DataSciBench - INFO - Log level set to INFO
+2025-05-14 18:23:15 - DataSciBench - INFO - Logging to file: run_benchmark.log
+2025-05-14 18:23:15 - DataSciBench - INFO - Loaded base config from configs_tianyu/base_config.toml
+2025-05-14 18:23:15 - DataSciBench - INFO - Running full benchmark.
+2025-05-14 18:23:15 - DataSciBench - INFO - Loaded single agent config from agent_configs/agent_config_claude_3_7.toml
+2025-05-14 18:23:15 - DataSciBench - INFO - Benchmark storage initialized at ./benchmark_final
+2025-05-14 18:23:15 - DataSciBench - INFO - Initialized benchmark manager with path: ./benchmark_final
+2025-05-14 18:23:15 - DataSciBench - INFO - Validated 1 test cases
+2025-05-14 18:23:15 - DataSciBench - INFO - Will run 1 test cases for 1 agents
+2025-05-14 18:23:15 - DataSciBench - INFO - Running tests sequentially
+2025-05-14 18:23:15 - DataSciBench - INFO - Starting test for agent claude-3-7-sonnet on test case abdallaellaithy-titanic-in-space-ml-survival-predictions
+2025-05-14 18:23:15 - DataSciBench - INFO - Building Docker image...
+2025-05-14 18:23:15 - DataSciBench - INFO - Docker image built successfully
+2025-05-14 18:23:15 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions
+2025-05-14 18:23:15 - DataSciBench - INFO - Instructions directory exists. Contents: ['shards.md', 'reference_insights.md', 'gatekeeper_reference.md', 'instructions.md', 'cleaned_instructions.md']
+2025-05-14 18:23:15 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 18:23:15 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/shards.md to: /tmp/tmpjlgglbrf/shards.md
+2025-05-14 18:23:15 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 18:23:15 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/reference_insights.md to: /tmp/tmpjlgglbrf/reference_insights.md
+2025-05-14 18:23:15 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 18:23:15 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/gatekeeper_reference.md to: /tmp/tmpjlgglbrf/gatekeeper_reference.md
+2025-05-14 18:23:15 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 18:23:15 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/instructions.md to: /tmp/tmpjlgglbrf/instructions.md
+2025-05-14 18:23:15 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 18:23:15 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/cleaned_instructions.md to: /tmp/tmpjlgglbrf/cleaned_instructions.md
+2025-05-14 18:23:15 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions to /tmp/tmpjlgglbrf
+2025-05-14 18:23:15 - DataSciBench - INFO - Final temp instructions directory contents: ['shards.md', 'reference_insights.md', 'gatekeeper_reference.md', 'instructions.md', 'cleaned_instructions.md']
+2025-05-14 18:23:15 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 18:23:15 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 18:23:15 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 18:23:15 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 18:23:15 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 18:23:15 - DataSciBench - INFO - Starting Docker container 'test-abdallaellaithy-titanic-in-space-ml-survival-predictions-claude-3-7-sonnet-20250514_182315' for test case abdallaellaithy-titanic-in-space-ml-survival-predictions
+2025-05-14 18:25:03 - DataSciBench - INFO - Log level set to INFO
+2025-05-14 18:25:03 - DataSciBench - INFO - Logging to file: run_benchmark.log
+2025-05-14 18:25:03 - DataSciBench - INFO - Loaded base config from configs_tianyu/base_config.toml
+2025-05-14 18:25:03 - DataSciBench - INFO - Running full benchmark.
+2025-05-14 18:25:03 - DataSciBench - INFO - Loaded single agent config from agent_configs/agent_config_claude_3_7.toml
+2025-05-14 18:25:03 - DataSciBench - INFO - Benchmark storage initialized at ./benchmark_final
+2025-05-14 18:25:03 - DataSciBench - INFO - Initialized benchmark manager with path: ./benchmark_final
+2025-05-14 18:25:03 - DataSciBench - INFO - Validated 1 test cases
+2025-05-14 18:25:03 - DataSciBench - INFO - Will run 1 test cases for 1 agents
+2025-05-14 18:25:03 - DataSciBench - INFO - Running tests sequentially
+2025-05-14 18:25:03 - DataSciBench - INFO - Starting test for agent claude-3-7-sonnet on test case abdallaellaithy-titanic-in-space-ml-survival-predictions
+2025-05-14 18:25:03 - DataSciBench - INFO - Building Docker image...
+2025-05-14 18:25:03 - DataSciBench - INFO - Docker image built successfully
+2025-05-14 18:25:03 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions
+2025-05-14 18:25:03 - DataSciBench - INFO - Instructions directory exists. Contents: ['shards.md', 'reference_insights.md', 'gatekeeper_reference.md', 'instructions.md', 'cleaned_instructions.md']
+2025-05-14 18:25:03 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 18:25:03 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/shards.md to: /tmp/tmp5habcvvw/shards.md
+2025-05-14 18:25:03 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 18:25:03 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/reference_insights.md to: /tmp/tmp5habcvvw/reference_insights.md
+2025-05-14 18:25:03 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 18:25:03 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/gatekeeper_reference.md to: /tmp/tmp5habcvvw/gatekeeper_reference.md
+2025-05-14 18:25:03 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 18:25:03 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/instructions.md to: /tmp/tmp5habcvvw/instructions.md
+2025-05-14 18:25:03 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 18:25:03 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/cleaned_instructions.md to: /tmp/tmp5habcvvw/cleaned_instructions.md
+2025-05-14 18:25:03 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions to /tmp/tmp5habcvvw
+2025-05-14 18:25:03 - DataSciBench - INFO - Final temp instructions directory contents: ['shards.md', 'reference_insights.md', 'gatekeeper_reference.md', 'instructions.md', 'cleaned_instructions.md']
+2025-05-14 18:25:03 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 18:25:03 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 18:25:03 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 18:25:03 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 18:25:03 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 18:25:03 - DataSciBench - INFO - Starting Docker container 'test-abdallaellaithy-titanic-in-space-ml-survival-predictions-claude-3-7-sonnet-20250514_182503' for test case abdallaellaithy-titanic-in-space-ml-survival-predictions
+2025-05-14 18:27:00 - DataSciBench - INFO - Docker container for test case abdallaellaithy-titanic-in-space-ml-survival-predictions completed successfully
+2025-05-14 18:27:00 - DataSciBench - INFO - Loaded checkpoint for evaluation: ./experiments/checkpoints/abdallaellaithy-titanic-in-space-ml-survival-predictions_claude-3-7-sonnet_20250514_182503.json
+2025-05-14 18:27:00 - DataSciBench - INFO - Evaluation complete, results saved to ./experiments/results/abdallaellaithy-titanic-in-space-ml-survival-predictions_claude-3-7-sonnet_20250514_182503.json
+2025-05-14 18:27:00 - DataSciBench - INFO - Test for agent claude-3-7-sonnet on test case abdallaellaithy-titanic-in-space-ml-survival-predictions completed successfully
+2025-05-14 18:27:00 - DataSciBench - INFO - Benchmark complete. 1/1 tests successful.
+2025-05-14 18:27:00 - DataSciBench - INFO - Summary written to ./experiments/results/summary.json
+2025-05-14 18:29:08 - DataSciBench - INFO - Log level set to INFO
+2025-05-14 18:29:08 - DataSciBench - INFO - Logging to file: run_benchmark.log
+2025-05-14 18:29:08 - DataSciBench - INFO - Loaded base config from configs_tianyu/base_config.toml
+2025-05-14 18:29:08 - DataSciBench - INFO - Running full benchmark.
+2025-05-14 18:29:08 - DataSciBench - INFO - Loaded single agent config from agent_configs/agent_config_claude_3_7.toml
+2025-05-14 18:29:08 - DataSciBench - INFO - Benchmark storage initialized at ./benchmark_final
+2025-05-14 18:29:08 - DataSciBench - INFO - Initialized benchmark manager with path: ./benchmark_final
+2025-05-14 18:29:08 - DataSciBench - INFO - Validated 1 test cases
+2025-05-14 18:29:08 - DataSciBench - INFO - Will run 1 test cases for 1 agents
+2025-05-14 18:29:08 - DataSciBench - INFO - Running tests sequentially
+2025-05-14 18:29:08 - DataSciBench - INFO - Starting test for agent claude-3-7-sonnet on test case abdallaellaithy-titanic-in-space-ml-survival-predictions
+2025-05-14 18:29:08 - DataSciBench - INFO - Building Docker image...
+2025-05-14 18:29:08 - DataSciBench - INFO - Docker image built successfully
+2025-05-14 18:29:08 - DataSciBench - INFO - Checking instructions directory: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions
+2025-05-14 18:29:08 - DataSciBench - INFO - Instructions directory exists. Contents: ['shards.md', 'reference_insights.md', 'gatekeeper_reference.md', 'instructions.md', 'cleaned_instructions.md']
+2025-05-14 18:29:08 - DataSciBench - INFO - Copying item: shards.md
+2025-05-14 18:29:08 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/shards.md to: /tmp/tmpal99xr9f/shards.md
+2025-05-14 18:29:08 - DataSciBench - INFO - Copying item: reference_insights.md
+2025-05-14 18:29:08 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/reference_insights.md to: /tmp/tmpal99xr9f/reference_insights.md
+2025-05-14 18:29:08 - DataSciBench - INFO - Copying item: gatekeeper_reference.md
+2025-05-14 18:29:08 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/gatekeeper_reference.md to: /tmp/tmpal99xr9f/gatekeeper_reference.md
+2025-05-14 18:29:08 - DataSciBench - INFO - Copying item: instructions.md
+2025-05-14 18:29:08 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/instructions.md to: /tmp/tmpal99xr9f/instructions.md
+2025-05-14 18:29:08 - DataSciBench - INFO - Copying item: cleaned_instructions.md
+2025-05-14 18:29:08 - DataSciBench - INFO - From: ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions/cleaned_instructions.md to: /tmp/tmpal99xr9f/cleaned_instructions.md
+2025-05-14 18:29:08 - DataSciBench - INFO - Copied instructions from ./benchmark_final/storage/abdallaellaithy-titanic-in-space-ml-survival-predictions/instructions to /tmp/tmpal99xr9f
+2025-05-14 18:29:08 - DataSciBench - INFO - Final temp instructions directory contents: ['shards.md', 'reference_insights.md', 'gatekeeper_reference.md', 'instructions.md', 'cleaned_instructions.md']
+2025-05-14 18:29:08 - DataSciBench - INFO - Successfully verified file shards.md is readable
+2025-05-14 18:29:08 - DataSciBench - INFO - Successfully verified file reference_insights.md is readable
+2025-05-14 18:29:08 - DataSciBench - INFO - Successfully verified file gatekeeper_reference.md is readable
+2025-05-14 18:29:08 - DataSciBench - INFO - Successfully verified file instructions.md is readable
+2025-05-14 18:29:08 - DataSciBench - INFO - Successfully verified file cleaned_instructions.md is readable
+2025-05-14 18:29:08 - DataSciBench - INFO - Starting Docker container 'test-abdallaellaithy-titanic-in-space-ml-survival-predictions-claude-3-7-sonnet-20250514_182908' for test case abdallaellaithy-titanic-in-space-ml-survival-predictions

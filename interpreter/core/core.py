@@ -81,6 +81,7 @@ class OpenInterpreter:
         multi_line=True,
         contribute_conversation=False,
         plain_text_display=False,
+        timeout=None,
     ):
         # State
         self.messages = [] if messages is None else messages
@@ -102,6 +103,7 @@ class OpenInterpreter:
         self.contribute_conversation = contribute_conversation
         self.plain_text_display = plain_text_display
         self.highlight_active_line = True  # additional setting to toggle active line highlighting. Defaults to True
+        self.timeout = timeout  # Add timeout parameter
 
         # Loop messages
         self.loop = loop

@@ -67,3 +67,17 @@ computer = interpreter.computer
 #  / /_/ / /_/ /  __/ / / /  _/ // / / / /_/  __/ /  / /_/ / /  /  __/ /_/  __/ /
 #  \____/ .___/\___/_/ /_/  /___/_/ /_/\__/\___/_/  / .___/_/   \___/\__/\___/_/
 #      /_/                                         /_/
+
+# Usage examples:
+# 
+# Basic usage:
+# interpreter.chat("Hello")
+# 
+# Run code with a timeout (in seconds):
+# interpreter = OpenInterpreter(timeout=30)
+# interpreter.chat("Run a computation that might take too long")
+#
+# Debugging timeouts:
+# To monitor timeout events, enable debug mode:
+# interpreter = OpenInterpreter(timeout=30, debug=True)
+# This will log timeout events with details about the code that timed out

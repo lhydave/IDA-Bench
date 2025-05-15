@@ -133,7 +133,22 @@ import matplotlib.pyplot as plt
     def _execute_code(self, code, message_queue):
         def iopub_message_listener():
             max_retries = 100
+            start_time = time.time()
+            
             while True:
+                # Check for timeout
+                if self.computer.interpreter.timeout is not None and time.time() - start_time > self.computer.interpreter.timeout:
+                    self.finish_flag = True
+                    message_queue.put(
+                        {
+                            "type": "console",
+                            "format": "output",
+                            "content": f"\n\nCode execution timed out after {self.computer.interpreter.timeout} seconds.\n",
+                        }
+                    )
+                    self.km.interrupt_kernel()
+                    return
+                    
                 # If self.finish_flag = True, and we didn't set it (we do below), we need to stop. That's our "stop"
                 if self.finish_flag == True:
                     if DEBUG_MODE:
@@ -206,7 +221,7 @@ import matplotlib.pyplot as plt
                         raise
                     print("Jupyter error, retrying:", str(e))
                     continue
-
+                
                 if DEBUG_MODE:
                     print("-----------" * 10)
                     print("Message received:", msg["content"])

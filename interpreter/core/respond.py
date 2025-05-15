@@ -361,8 +361,34 @@ def respond(interpreter):
 
                 ## ↓ CODE IS RUN HERE
 
-                for line in interpreter.computer.run(language, code, stream=True):
-                    yield {"role": "computer", **line}
+                for output in interpreter.computer.run(language, code, stream=True):
+                    # Check if this is a timeout message
+                    if (output.get("type") == "console" and 
+                        output.get("format") == "output" and 
+                        "Code execution timed out after" in output.get("content", "")):
+                        # Handle the timeout by sending a special message to the LLM
+                        timeout_msg = output.get("content")
+                        interpreter.messages.append(
+                            {
+                                "role": "computer", 
+                                "type": "console", 
+                                "format": "output", 
+                                "content": timeout_msg
+                            }
+                        )
+                        # Tell the user about the timeout
+                        yield {"role": "computer", "type": "console", "format": "output", "content": timeout_msg}
+                        break  # Exit the loop after handling timeout
+                    
+                    # Normal output processing
+                    yield {"role": "computer", **output}
+                    if output.get("format") != "active_line":
+                        # Save normal outputs
+                        if (
+                            "role" not in output
+                        ):  # Already has role=computer internally... TODO clean this.
+                            output["role"] = "computer"
+                        interpreter.messages.append(output)
 
                 ## ↑ CODE IS RUN HERE
 
@@ -406,7 +432,7 @@ def respond(interpreter):
                     print("Failed to sync your Computer with iComputer. Continuing.")
 
                 # yield final "active_line" message, as if to say, no more code is running. unlightlight active lines
-                # (is this a good idea? is this our responsibility? i think so — we're saying what line of code is running! ...?)
+                # (is this a good idea? is this our responsibility? i think so — we're saying what line of code is running! ...?)
                 yield {
                     "role": "computer",
                     "type": "console",
