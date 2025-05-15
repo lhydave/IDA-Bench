@@ -5,11 +5,10 @@ from dataclasses import dataclass, asdict
 from typing import Any
 from copy import deepcopy
 from logger import logger
-import re
 import datetime
 from typing import Literal
 from llms import agent_dict
-from llms.llm_interact import LLMConfig, BaseMultiRoundHandler, AgentClass
+from llms.llm_interact import LLMConfig, BaseMultiRoundHandler
 
 # TODO from lihy
 # To handle different agent framework, you need to define an abstract agent class, with LLMInteractor as an instance.
@@ -164,11 +163,11 @@ class Environment:
 
         # Initialize user agent system prompt
         if self.user_agent.system_prompt is not None:
-            logger.debug(f"Initializing user agent system prompt")
+            logger.debug("Initializing user agent system prompt")
             self.user_agent.initialize_project_context(project_context)
         # Initialize gatekeeper system prompt
         if self.gatekeeper is not None:
-            logger.debug(f"Initializing gatekeeper system prompt")
+            logger.debug("Initializing gatekeeper system prompt")
             self.gatekeeper.intialize_reference_instructions(reference_instructions)
             self.user_agent.add_gatekeeper(self.gatekeeper)
         # Reset interpreter state if it exists
@@ -287,7 +286,7 @@ def user_init_prompt2(
     env: Environment,
 ) -> str:
     """Format the prompt for the user agent."""
-    return f"""Load data and make necessary preprocessing. If possible, try fitting a baseline model with as simple method as possible. If failed, simply provide potential plans for data analysis."""
+    return """Load data and make necessary preprocessing. If possible, try fitting a baseline model with as simple method as possible. If failed, simply provide potential plans for data analysis."""  # noqa: E501
 
 
 # def interact_version1(env: Environment, user_agent: BaseMultiRoundHandler, assistant_agent: BaseMultiRoundHandler):
@@ -574,7 +573,7 @@ def interact_version_taubench(
         )
         env._save_checkpoint()
 
-        assistant_message = assistant_responses[-1]["content"]
+        assistant_message = assistant_responses[-1]["content"]  # type: ignore
         logger.debug(f"First assistant message: {assistant_message}")
 
     while number_of_turns < env.config.max_turns:
@@ -588,34 +587,34 @@ def interact_version_taubench(
             raise ValueError("user_prompt cannot be None")
 
         user_response = user_agent.call_llm(user_prompt)
-        logger.debug(f"User message generated, length: {len(user_response['user_response'])}")
+        logger.debug(f"User message generated, length: {len(user_response['user_response'])}")  # type: ignore
 
         env.conversation_history.append(
             {"role": "user agent", "prompt_received": user_prompt, "all_messages": deepcopy(user_response)}
         )
         env._save_checkpoint()
 
-        # TODO: debug, since gatekeeper may change the user message, we need to check if the user message is changed
-        if user_response["end"] and user_agent.follow_up_message is None:
+        # debug, since gatekeeper may change the user message, we need to check if the user message is changed
+        if user_response["end"] and user_agent.follow_up_message is None:  # type: ignore
             end_flag = True
             logger.info("All tasks completion marker detected, exiting loop")
 
         # Generate assistant response
         logger.debug("Calling assistant agent with user message")
-        assistant_responses = assistant_agent.call_llm(user_response["user_response"])
+        assistant_responses = assistant_agent.call_llm(user_response["user_response"])  # type: ignore
         logger.debug(f"Assistant response generated with {len(assistant_responses)} messages")
 
         env.conversation_history.append(
             {
                 "role": "assistant agent",
-                "prompt_received": user_response["user_response"],
+                "prompt_received": user_response["user_response"],  # type: ignore
                 "all_messages": deepcopy(assistant_responses),
             }
         )
         env._save_checkpoint()
 
         # Extract last assistant message
-        assistant_message = assistant_responses[-1]["content"]
+        assistant_message = assistant_responses[-1]["content"]  # type: ignore
         number_of_turns += 1
         logger.info(f"Turn {number_of_turns} completed")
 
