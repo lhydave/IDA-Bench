@@ -3,12 +3,24 @@ import os
 import re
 import time
 import traceback
+from logger import logger
 
 os.environ["LITELLM_LOCAL_MODEL_COST_MAP"] = "True"
 import litellm
 import openai
 
 from .render_message import render_message
+from ..terminal_interface.utils.display_markdown_message import display_markdown_message
+
+
+
+# Initialize the logger
+def log_code_block(language, code, source="LLM"):
+    """Log a code block that has been parsed out"""
+    logger.info(f"Code block detected ({source}):")
+    logger.info(f"Language: {language}")
+    logger.info(f"Code:\n{code}")
+    logger.info("-" * 50)
 
 
 def respond(interpreter):
@@ -21,6 +33,7 @@ def respond(interpreter):
     insert_loop_message = False
     max_code_blocks = interpreter.max_code_blocks
     num_code_blocks = 0
+    loop_message = interpreter.loop_message if hasattr(interpreter, 'loop_message') else ""
 
     while True:
         ## RENDER SYSTEM MESSAGE ##
@@ -174,6 +187,9 @@ def respond(interpreter):
                 language = interpreter.messages[-1]["format"].lower().strip()
                 code = interpreter.messages[-1]["content"]
 
+                # Log the code block that was parsed out
+                log_code_block(language, code)
+
                 if code.startswith("`\n"):
                     code = code[2:].strip()
                     if interpreter.verbose:
@@ -193,6 +209,9 @@ def respond(interpreter):
                         interpreter.messages[-1][
                             "format"
                         ] = language  # So the LLM can see it.
+                        
+                        # Log the updated code block after parsing
+                        log_code_block(language, code, source="functions.execute")
                     except:
                         pass
 
@@ -206,6 +225,9 @@ def respond(interpreter):
                         interpreter.messages[-1][
                             "content"
                         ] = code  # So the LLM can see it.
+                        
+                        # Log the updated code block after parsing
+                        log_code_block(language, code, source="executeexecute")
                     except:
                         pass
 
@@ -221,6 +243,9 @@ def respond(interpreter):
                             interpreter.messages[-1][
                                 "format"
                             ] = language  # So the LLM can see it.
+                            
+                            # Log the updated code block after parsing
+                            log_code_block(language, code, source="JSON format")
                     except:
                         pass
 
@@ -239,6 +264,9 @@ def respond(interpreter):
                             interpreter.messages[-1][
                                 "format"
                             ] = language  # So the LLM can see it.
+                            
+                            # Log the updated code block after parsing
+                            log_code_block(language, code, source="language: format")
                     except:
                         pass
 
