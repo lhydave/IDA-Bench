@@ -135,7 +135,7 @@ def setup_task(test_case_id: str) -> list[dict[str, Any]]:
     # instructions_file = "/app/instructions/instructions.md"
     # alternatively, load reference_insights.md if it exists
     # TODO: to use user2, set instructions_file==/app/instructions/shards.md
-    instructions_file = "/app/instructions/shards.md"
+    instructions_file = "/app/instructions/reference_insights.md"
     gatekeeper_reference_file = "/app/instructions/gatekeeper_reference.md"
 
     # load instructions
@@ -211,17 +211,18 @@ def run_interaction(env_config: dict[str, Any], tasks: list[dict[str, Any]]):
             checkpoint_path=env_config["checkpoint_path"],
         )
 
-        # gatekeeper_llm_config = LLMConfig(
-        #     api_key=env_config["base_config"]["gatekeeper"]["api_key"],
-        #     model=env_config["base_config"]["gatekeeper"]["model"],
-        #     temperature=env_config["base_config"]["gatekeeper"]["temperature"],
-        #     max_retries=env_config["base_config"]["gatekeeper"].get("max_retries", 3),
-        #     retry_delay=env_config["base_config"]["gatekeeper"].get("retry_delay", 2),
-        #     run_code=False,  # User agent doesn't run code
-        #     api_base=env_config["base_config"]["gatekeeper"].get("api_base"),
-        #     system_prompt=env_config["base_config"]["gatekeeper"].get("system_prompt"),
-        # )
-        gatekeeper_llm_config = None
+        # TODO: to use user2, set gatekeeper_llm_config=None. comment the following line and uncomment the line after it
+        gatekeeper_llm_config = LLMConfig(
+            api_key=env_config["base_config"]["gatekeeper"]["api_key"],
+            model=env_config["base_config"]["gatekeeper"]["model"],
+            temperature=env_config["base_config"]["gatekeeper"]["temperature"],
+            max_retries=env_config["base_config"]["gatekeeper"].get("max_retries", 3),
+            retry_delay=env_config["base_config"]["gatekeeper"].get("retry_delay", 2),
+            run_code=False,  # User agent doesn't run code
+            api_base=env_config["base_config"]["gatekeeper"].get("api_base"),
+            system_prompt=env_config["base_config"]["gatekeeper"].get("system_prompt"),
+        )
+        # gatekeeper_llm_config = None
 
         # Create environment config
         env_configuration = EnvironmentConfig(
@@ -230,7 +231,7 @@ def run_interaction(env_config: dict[str, Any], tasks: list[dict[str, Any]]):
             gatekeeper_llm_config=gatekeeper_llm_config,
             assistant_agent_type=env_config["agent_config"].get("framework", "base-agent"),
             interpreter_config_path="/app/configs/interpreter_config.toml",
-            user_agent_type="user2",
+            user_agent_type="user",
             # user_prompt_template="You are a data scientist. You need to help solve this task:\n\n{task_list}\n\n{current_task}",  # noqa: E501
             max_turns=20,  # TODO: config max_turns somewhere
             # user_continue_prompt_template="The assistant has provided analysis: {assistant_summary}\n\nPlease provide further instructions or indicate if all tasks are completed by including '##ALL_TASKS_COMPLETED##' in your message.",  # noqa: E501

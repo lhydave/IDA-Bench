@@ -547,19 +547,19 @@ def interact_version_taubench(env: Environment, user_agent: BaseMultiRoundHandle
 
 
     if env.config.user_agent_type == "user2":
-        user_init_prompt = user_init_prompt2(env)
+        user_initial_prompt = user_init_prompt2(env)
         env.conversation_history.append(
-            {"role": "user agent", "prompt_received": None, "all_messages": user_init_prompt}
+            {"role": "user agent", "prompt_received": None, "all_messages": user_initial_prompt}
         )
         env._save_checkpoint()
-        user_agent.add_message(user_init_prompt, role="user")
+        user_agent.add_message(user_initial_prompt, role="user")
 
         logger.debug("Calling assistant agent with user message")
-        assistant_responses = assistant_agent.call_llm(user_init_prompt)
+        assistant_responses = assistant_agent.call_llm(user_initial_prompt)
         logger.debug(f"Assistant response generated with {len(assistant_responses)} messages")
 
         env.conversation_history.append(
-            {"role": "assistant agent", "prompt_received": user_init_prompt, "all_messages": deepcopy(assistant_responses)}
+            {"role": "assistant agent", "prompt_received": user_initial_prompt, "all_messages": deepcopy(assistant_responses)}
         )
         env._save_checkpoint()
 
