@@ -1,15 +1,12 @@
 """Backend for LiteLLM API."""
 
-import logging
 import time
 import re
 import json
-from typing import Any, Dict
 
 import litellm
 
-from .utils import FunctionSpec, OutputType, opt_messages_to_list, backoff_create
-from funcy import notnone, once, select_values
+from .utils import FunctionSpec, OutputType, opt_messages_to_list
 from llms.llm_interact import LLMConfig
 from logger import logger
 
@@ -56,7 +53,7 @@ class LiteLLMBackend:
                 # TODO: prompt caching has bugs, so we disable it for now
                 logger.debug(f"Trying to call LLM API with model: {self.config.model}")
                 response = litellm.completion(
-                            messages=messages,
+                            messages=messages, # type: ignore
                             model=self.config.model,
                             temperature=self.config.temperature,
                             api_base=self.config.api_base,
@@ -65,13 +62,13 @@ class LiteLLMBackend:
                             **kwargs
                             )
                 if output_raw:
-                    return response
-                choice = response.choices[0]
-                logger.debug(f"Cached Tokens: {response.usage.prompt_tokens_details.cached_tokens}")
+                    return response # type: ignore
+                choice = response.choices[0] # type: ignore
+                logger.debug(f"Cached Tokens: {response.usage.prompt_tokens_details.cached_tokens}") # type: ignore
                 break
             except Exception as e:
                 if attempt < self.config.max_retries - 1 and retry:
-                    retryDelay = re.search(r"retryDelay\": \"(\d+)s\"", str(e.message))
+                    retryDelay = re.search(r"retryDelay\": \"(\d+)s\"", str(e))
                     if retryDelay:
                         retryDelay = int(retryDelay.group(1))
                         logger.info(f"RPM reached. Retry delay: {retryDelay} seconds")
@@ -82,24 +79,24 @@ class LiteLLMBackend:
                         logger.info(f"Retrying in {backoff_time} seconds...")
                         time.sleep(backoff_time)
                 else:
-                    error_message = f"All {self.config.max_retries} attempts to call LLM API failed. Last error: {str(e)}"
+                    error_message = f"All {self.config.max_retries} attempts to call LLM API failed. Last error: {str(e)}"  # noqa: E501
                     logger.error(error_message)
                     return error_message
 
         # Decide how to parse the response
         # No function calling was used
         if func_spec is None or "tools" not in additional_kwargs:
-            output = choice.message.content
-            return output
+            output = choice.message.content # type: ignore
+            return output # type: ignore
         # Attempt to extract tool calls
-        tool_calls = getattr(choice.message, "tool_calls", None)
+        tool_calls = getattr(choice.message, "tool_calls", None) # type: ignore
         if not tool_calls:
             logger.warning(
                 "No function call was used despite function spec. Fallback to text.\n"
-                f"Message content: {choice.message.content}"
+                f"Message content: {choice.message.content}" # type: ignore
             )
-            output = choice.message.content
-            return output
+            output = choice.message.content # type: ignore
+            return output # type: ignore
         first_call = tool_calls[0]
         # Optional: verify that the function name matches
         if first_call.function.name != func_spec.name:
@@ -107,8 +104,8 @@ class LiteLLMBackend:
                 f"Function name mismatch: expected {func_spec.name}, "
                 f"got {first_call.function.name}. Fallback to text."
             )
-            output = choice.message.content
-            return output
+            output = choice.message.content # type: ignore
+            return output # type: ignore
         try:
             output = json.loads(first_call.function.arguments)
             return output

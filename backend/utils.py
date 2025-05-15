@@ -1,10 +1,10 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 import jsonschema
 from dataclasses_json import DataClassJsonMixin
 import backoff
 import logging
-from typing import Callable
+from collections.abc import Callable
 
 PromptType = str | dict | list
 FunctionCallType = dict
@@ -20,7 +20,7 @@ logger = logging.getLogger("aide")
     factor=1.5,
 )
 def backoff_create(
-    create_fn: Callable, retry_exceptions: list[Exception], *args, **kwargs
+    create_fn: Callable, retry_exceptions: tuple[type[Exception], ...] | type[Exception], *args, **kwargs
 ):
     try:
         return create_fn(*args, **kwargs)
@@ -29,18 +29,31 @@ def backoff_create(
         return False
 
 
-def opt_messages_to_list(
-    system_message: list | str | None, user_message: list | str | None
-) -> list[dict[str, str]]:
+def opt_messages_to_list(system_message: list | str | None, user_message: list | str | None) -> list[dict[str, str]]:
     messages = []
     if system_message:
         if isinstance(system_message, str):
-            messages.append({"role": "system", "content": [{"type": "text", "text": system_message, "cache_control": {"type": "ephemeral"}}]})
+            messages.append(
+                {
+                    "role": "system",
+                    "content": [{"type": "text", "text": system_message, "cache_control": {"type": "ephemeral"}}],
+                }
+            )
         else:
             messages.extend(system_message)
     if user_message:
         if isinstance(user_message, str):
-            messages.append({"role": "user", "content": [{"type": "text", "text": user_message, }]})
+            messages.append(
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": user_message,
+                        }
+                    ],
+                }
+            )
         else:
             messages.extend(user_message)
     return messages
@@ -66,6 +79,7 @@ class FunctionSpec(DataClassJsonMixin):
     json_schema: dict  # JSON schema
     description: str
     cache_control: dict | None = None
+
     def __post_init__(self):
         # validate the schema
         jsonschema.Draft7Validator.check_schema(self.json_schema)

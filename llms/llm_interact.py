@@ -58,15 +58,13 @@ class LLMConfig:
             raise ValueError("System prompt must be a string or None.")
 
 
-
-
 class AgentClass(Protocol):
     """
     Protocol for the agent class. It should implement the call_llm method and system_prompt property.
     """
 
     # call the LLM with the given prompt and return the response
-    def call_llm(self, message: str, retry: bool = True) -> list[dict[str, Any]]: ...
+    def call_llm(self, message: str, retry: bool = True) -> list[dict[str, Any]] | dict[str, Any] | str: ...
 
     # return the system prompt
     @property
@@ -74,12 +72,12 @@ class AgentClass(Protocol):
 
     # set the system prompt
     @system_prompt.setter
-    def system_prompt(self, value: str): ...
-
+    def system_prompt(self, value: str | None): ...
 
 
 class BaseMultiRoundHandler(AgentClass):
     """Base class for LLM agents with common functionality."""
+
     def __init__(self, config: LLMConfig):
         """Initialize the base LLM agent with configuration.
 
@@ -100,7 +98,7 @@ class BaseMultiRoundHandler(AgentClass):
         return self._system_prompt
 
     @system_prompt.setter
-    def system_prompt(self, value: str):
+    def system_prompt(self, value: str | None):
         """Set the system prompt."""
         self._system_prompt = value
 
@@ -124,7 +122,7 @@ class BaseMultiRoundHandler(AgentClass):
         if not self.messages:
             return None
         return self.messages[-1]
-    
+
     def update_last_message(self, message: str):
         """Update the last message in the conversation.
 
@@ -143,7 +141,12 @@ class BaseMultiRoundHandler(AgentClass):
         user_turn_processed = False
         for turn in reversed(self.messages):
             if turn["role"] == "user" and not user_turn_processed:
-                include_turn = {"role": "user", "content": [{"type": "text", "text": turn["content"][0]["text"], "cache_control": {"type": "ephemeral"}}]}
+                include_turn = {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": turn["content"][0]["text"], "cache_control": {"type": "ephemeral"}}
+                    ],
+                }
                 user_turn_processed = True
             else:
                 include_turn = turn
@@ -232,7 +235,3 @@ class BaseMultiRoundHandler(AgentClass):
         except Exception as e:
             logger.error(f"Failed to load checkpoint from {checkpoint_path}: {str(e)}")
             raise ValueError(f"Could not load checkpoint: {str(e)}")
-
-
-
-

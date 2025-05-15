@@ -1,16 +1,14 @@
 """Backend for OpenInterpreter API."""
 
-import logging
 import time
 import tomllib
-from typing import Any, Dict
 
 from interpreter import OpenInterpreter
 from .utils import FunctionSpec, OutputType, opt_messages_to_list
-from funcy import notnone, once, select_values
 from llms.llm_interact import LLMConfig
 from logger import logger
 import re
+
 
 def initialize_interpreter(config_path: str) -> OpenInterpreter:
     try:
@@ -56,7 +54,7 @@ class InterpreterBackend:
         messages: list | None = None,
         func_spec: FunctionSpec | None = None,
         retry: bool = True,
-    ) -> OutputType:
+    ) -> OutputType: # type: ignore
         """
         Query the OpenInterpreter API.
             - The OpenInterpreter already includes the system message, so we don't need to pass it in.
@@ -75,12 +73,12 @@ class InterpreterBackend:
                 response_messages = self.interpreter.chat(messages[-1]["content"][0]["text"], display=False)
                 if not isinstance(response_messages, list):
                     logger.warning("Response is not a list, may cause issues.")
-                    return response_messages
+                    return response_messages  # type: ignore
                 # Return the response as is, letting the caller handle the parsing
-                return response_messages
+                return response_messages  # type: ignore
             except Exception as e:
                 if attempt < self.config.max_retries - 1 and retry:
-                    retryDelay = re.search(r"retryDelay\": \"(\d+)s\"", str(e.message))
+                    retryDelay = re.search(r"retryDelay\": \"(\d+)s\"", str(e))
                     if retryDelay:
                         retryDelay = int(retryDelay.group(1))
                         logger.info(f"RPM reached. Retry delay: {retryDelay} seconds")
@@ -91,6 +89,8 @@ class InterpreterBackend:
                         logger.info(f"Retrying in {backoff_time} seconds...")
                         time.sleep(backoff_time)
                 else:
-                    error_message = f"All {self.config.max_retries} attempts to call LLM API failed. Last error: {str(e)}"
+                    error_message = (
+                        f"All {self.config.max_retries} attempts to call LLM API failed. Last error: {str(e)}"
+                    )
                     logger.error(error_message)
                     return error_message

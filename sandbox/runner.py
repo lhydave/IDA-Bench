@@ -73,69 +73,28 @@ def setup_environment(test_case_id: str) -> dict[str, Any]:
         raise
 
 
-def setup_task(test_case_id: str) -> list[dict[str, Any]]:
+def setup_task(test_case_id: str, env_config: dict[str, Any]) -> list[dict[str, Any]]:
     """
     Set up the task by loading instruction material.
 
     Args:
         test_case_id: ID of the test case to run
+        env_config: Environment configuration
 
     Returns:
         List of task dictionaries
     """
-    # try:
-    #     # TODO: it would be far simpler if the instructions are given in a single markdown file,
-    #     # that is, even if the task is multi-round, we can just have a single file with all the instructions
-    #     # and then parse it into rounds
-    #     # Check if we have a dedicated instructions directory for this test case
-    #     instructions_dir = f"/app/instructions/{test_case_id}"
-    #     if os.path.exists(instructions_dir):
-    #         # Look for instructions.md or round_*.md files
-    #         # if os.path.exists(os.path.join(instructions_dir, "instructions.md")):
-    #         #     with open(os.path.join(instructions_dir, "instructions.md")) as f:
-    #         #         instruction_text = f.read()
-    #         # Alternatively, load reference_insights.md if it exists
-    #         if os.path.exists(os.path.join(instructions_dir, "reference_insights.md")):
-    #             with open(os.path.join(instructions_dir, "reference_insights.md")) as f:
-    #                 instruction_text = f.read()
+    # Check user_type from benchmark config to determine which instruction file to use
+    user_type = env_config["base_config"]["benchmark"].get("user_type", "user")
 
-    #             # Create a single task from the instruction
-    #             tasks = [
-    #                 {
-    #                     "id": test_case_id,
-    #                     "description": instruction_text,
-    #                     "success_criteria": "Complete the data analysis task as instructed.",
-    #                     "completed": False,
-    #                     "summary": "",
-    #                 }
-    #             ]
+    # Select the appropriate instruction file based on user_type
+    if user_type == "user2":
+        instructions_file = "/app/instructions/shards.md"
+        logger.info(f"Using user2 instructions file: {instructions_file}")
+    else:  # Default to "user" with reference_insights
+        instructions_file = "/app/instructions/reference_insights.md"
+        logger.info(f"Using standard user instructions file: {instructions_file}")
 
-    #         else:
-    #             # Look for round_*.md files for multi-round instructions
-    #             tasks = []
-    #             round_files = sorted(
-    #                 [f for f in os.listdir(instructions_dir) if f.startswith("round_") and f.endswith(".md")]
-    #             )
-
-    #             for i, round_file in enumerate(round_files):
-    #                 with open(os.path.join(instructions_dir, round_file)) as f:
-    #                     instruction_text = f.read()
-
-    #                 tasks.append(
-    #                     {
-    #                         "id": f"{test_case_id}_round_{i + 1}",
-    #                         "description": instruction_text,
-    #                         "success_criteria": f"Complete round {i + 1} of the task as instructed.",
-    #                         "completed": False,
-    #                         "summary": "",
-    #                     }
-    #                 )
-    #     else:
-    #         # If no specific instructions directory, look for a general instructions file
-    # instructions_file = "/app/instructions/instructions.md"
-    # alternatively, load reference_insights.md if it exists
-    # TODO: to use user2, set instructions_file==/app/instructions/shards.md
-    instructions_file = "/app/instructions/reference_insights.md"
     gatekeeper_reference_file = "/app/instructions/gatekeeper_reference.md"
 
     # load instructions
@@ -167,11 +126,6 @@ def setup_task(test_case_id: str) -> list[dict[str, Any]]:
 
     logger.info(f"Set up {len(tasks)} tasks for test case {test_case_id}")
     return tasks
-
-    # except Exception as e:
-    #     logger.error(f"Failed to set up task: {e}")
-    #     traceback.print_exc()
-    #     raise
 
 
 def run_interaction(env_config: dict[str, Any], tasks: list[dict[str, Any]]):
@@ -211,18 +165,30 @@ def run_interaction(env_config: dict[str, Any], tasks: list[dict[str, Any]]):
             checkpoint_path=env_config["checkpoint_path"],
         )
 
-        # TODO: to use user2, set gatekeeper_llm_config=None. comment the following line and uncomment the line after it
-        gatekeeper_llm_config = LLMConfig(
-            api_key=env_config["base_config"]["gatekeeper"]["api_key"],
-            model=env_config["base_config"]["gatekeeper"]["model"],
-            temperature=env_config["base_config"]["gatekeeper"]["temperature"],
-            max_retries=env_config["base_config"]["gatekeeper"].get("max_retries", 3),
-            retry_delay=env_config["base_config"]["gatekeeper"].get("retry_delay", 2),
-            run_code=False,  # User agent doesn't run code
-            api_base=env_config["base_config"]["gatekeeper"].get("api_base"),
-            system_prompt=env_config["base_config"]["gatekeeper"].get("system_prompt"),
-        )
-        # gatekeeper_llm_config = None
+        # Check user_type from benchmark config to determine whether to use gatekeeper
+        user_type = env_config["base_config"]["benchmark"].get("user_type", "user")
+        logger.info(f"Using user_type: {user_type}")
+
+        # Configure gatekeeper based on user_type
+        if user_type == "user2":
+            gatekeeper_llm_config = None
+            logger.info("Using user2 mode - gatekeeper disabled")
+        else:  # Default to "user" with gatekeeper
+            gatekeeper_llm_config = LLMConfig(
+                api_key=env_config["base_config"]["gatekeeper"]["api_key"],
+                model=env_config["base_config"]["gatekeeper"]["model"],
+                temperature=env_config["base_config"]["gatekeeper"]["temperature"],
+                max_retries=env_config["base_config"]["gatekeeper"].get("max_retries", 3),
+                retry_delay=env_config["base_config"]["gatekeeper"].get("retry_delay", 2),
+                run_code=False,  # User agent doesn't run code
+                api_base=env_config["base_config"]["gatekeeper"].get("api_base"),
+                system_prompt=env_config["base_config"]["gatekeeper"].get("system_prompt"),
+            )
+            logger.info("Using standard user mode with gatekeeper enabled")
+
+        # Get max_turns from benchmark config, default to 20 if not specified
+        max_turns = env_config["base_config"]["benchmark"].get("max_turns", 20)
+        logger.info(f"Setting maximum conversation turns to: {max_turns}")
 
         # Create environment config
         env_configuration = EnvironmentConfig(
@@ -231,9 +197,9 @@ def run_interaction(env_config: dict[str, Any], tasks: list[dict[str, Any]]):
             gatekeeper_llm_config=gatekeeper_llm_config,
             assistant_agent_type=env_config["agent_config"].get("framework", "base-agent"),
             interpreter_config_path="/app/configs/interpreter_config.toml",
-            user_agent_type="user",
+            user_agent_type=user_type,
             # user_prompt_template="You are a data scientist. You need to help solve this task:\n\n{task_list}\n\n{current_task}",  # noqa: E501
-            max_turns=20,  # TODO: config max_turns somewhere
+            max_turns=max_turns,
             # user_continue_prompt_template="The assistant has provided analysis: {assistant_summary}\n\nPlease provide further instructions or indicate if all tasks are completed by including '##ALL_TASKS_COMPLETED##' in your message.",  # noqa: E501
             checkpoint_path=env_config["checkpoint_path"],
         )
@@ -245,10 +211,13 @@ def run_interaction(env_config: dict[str, Any], tasks: list[dict[str, Any]]):
         environment = Environment(env_configuration, task_objects)
 
         # Run interaction based on the structure of tasks
-        # Single task, use taubench mode
+        # Get version_name from benchmark config, default to "taubench" if not specified
+        version_name = env_config["base_config"]["benchmark"].get("version_name", "taubench")
+        logger.info(f"Using benchmark version: {version_name}")
+
         from llm_interact_env import run
 
-        run(environment, version_name="taubench")
+        run(environment, version_name=version_name)
 
         # Interaction completed
         logger.info("Interaction completed successfully")
@@ -306,8 +275,8 @@ def main():
         # Set up the environment
         env_config = setup_environment(test_case_id)
 
-        # Set up tasks
-        tasks = setup_task(test_case_id)
+        # Set up tasks - pass env_config as argument
+        tasks = setup_task(test_case_id, env_config)
 
         # Clean up instruction material
         cleanup_instruction_material()

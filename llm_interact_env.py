@@ -28,6 +28,7 @@ class Task:
     completed: bool = False
     summary: str = ""
     reference_instructions: str = ""
+
     @classmethod
     def from_toml(cls, config_path: str) -> "Task":
         try:
@@ -150,12 +151,13 @@ class Environment:
         self.assistant_agent = agent_constructor(
             self.config.assistant_llm_config, interpreter_config_path=self.config.interpreter_config_path
         )
-        
+
         # Initialize gatekeeper if config is provided
         self.gatekeeper = None
         if self.config.gatekeeper_llm_config:
             logger.debug("Creating gatekeeper agent")
             from llms.gatekeeper import Gatekeeper
+
             self.gatekeeper = Gatekeeper(self.config.gatekeeper_llm_config)
         project_context = "".join([task.description for task in self.tasks])
         reference_instructions = "".join([task.reference_instructions for task in self.tasks])
@@ -281,7 +283,9 @@ To get started, could you please provide a bit of background information:
 	3.	What is the first step of your analysis?"""
 
 
-def user_init_prompt2(env: Environment, ) -> str:
+def user_init_prompt2(
+    env: Environment,
+) -> str:
     """Format the prompt for the user agent."""
     return f"""Load data and make necessary preprocessing. If possible, try fitting a baseline model with as simple method as possible. If failed, simply provide potential plans for data analysis."""
 
@@ -537,14 +541,17 @@ def user_init_prompt2(env: Environment, ) -> str:
 #         logger.info(f"Turn {number_of_turns} completed")
 
 
-def interact_version_taubench(env: Environment, user_agent: BaseMultiRoundHandler, assistant_agent: BaseMultiRoundHandler, ):
+def interact_version_taubench(
+    env: Environment,
+    user_agent: BaseMultiRoundHandler,
+    assistant_agent: BaseMultiRoundHandler,
+):
     """Run the environment until all tasks are completed or max turns is reached."""
     logger.info("Starting interaction using taubench strategy")
     number_of_turns = 0
     logger.info(f"Starting task loop with max turns: {env.config.max_turns}")
     assistant_message = None
     end_flag = False
-
 
     if env.config.user_agent_type == "user2":
         user_initial_prompt = user_init_prompt2(env)
@@ -559,14 +566,17 @@ def interact_version_taubench(env: Environment, user_agent: BaseMultiRoundHandle
         logger.debug(f"Assistant response generated with {len(assistant_responses)} messages")
 
         env.conversation_history.append(
-            {"role": "assistant agent", "prompt_received": user_initial_prompt, "all_messages": deepcopy(assistant_responses)}
+            {
+                "role": "assistant agent",
+                "prompt_received": user_initial_prompt,
+                "all_messages": deepcopy(assistant_responses),
+            }
         )
         env._save_checkpoint()
 
         assistant_message = assistant_responses[-1]["content"]
         logger.debug(f"First assistant message: {assistant_message}")
 
-    
     while number_of_turns < env.config.max_turns:
         logger.debug(f"Starting turn {number_of_turns + 1}")
         # Generate user message based on task and conversation history
@@ -586,17 +596,21 @@ def interact_version_taubench(env: Environment, user_agent: BaseMultiRoundHandle
         env._save_checkpoint()
 
         # TODO: debug, since gatekeeper may change the user message, we need to check if the user message is changed
-        if user_response['end'] and user_agent.follow_up_message is None:
+        if user_response["end"] and user_agent.follow_up_message is None:
             end_flag = True
             logger.info("All tasks completion marker detected, exiting loop")
 
         # Generate assistant response
         logger.debug("Calling assistant agent with user message")
-        assistant_responses = assistant_agent.call_llm(user_response['user_response'])
+        assistant_responses = assistant_agent.call_llm(user_response["user_response"])
         logger.debug(f"Assistant response generated with {len(assistant_responses)} messages")
 
         env.conversation_history.append(
-            {"role": "assistant agent", "prompt_received": user_response['user_response'], "all_messages": deepcopy(assistant_responses)}
+            {
+                "role": "assistant agent",
+                "prompt_received": user_response["user_response"],
+                "all_messages": deepcopy(assistant_responses),
+            }
         )
         env._save_checkpoint()
 
@@ -608,6 +622,7 @@ def interact_version_taubench(env: Environment, user_agent: BaseMultiRoundHandle
         if end_flag:
             logger.debug(f"End flag is True at turn {number_of_turns}. End the interaction.")
             break
+
 
 INTERACT_VERSIONS = {
     # "version1": interact_version1,
@@ -630,5 +645,9 @@ def run(env: Environment, version_name: str = "version1"):
         raise ValueError(f"Setting not defined: {e}")
 
     logger.info("Starting interaction between agents")
-    runner(env, env.user_agent, env.assistant_agent, )
+    runner(
+        env,
+        env.user_agent,
+        env.assistant_agent,
+    )
     return env.tasks

@@ -1,12 +1,8 @@
 import json
 from logger import logger
 import os
-from typing import Any
 from backend import InterpreterBackend
 from llms.llm_interact import LLMConfig, BaseMultiRoundHandler
-
-
-
 
 
 class BaseAgent(BaseMultiRoundHandler):
@@ -38,7 +34,7 @@ class BaseAgent(BaseMultiRoundHandler):
             # Reset interpreter conversation if using it
             self.backend.interpreter.reset()
 
-    def call_llm(self, message: str, retry: bool = True) -> list[dict[str, Any]]:
+    def call_llm(self, message: str, retry: bool = True):
         """Call the LLM with the given message."""
         self.messages.append({"role": "user", "content": message})
         responses = self.backend.query(None, message, None, retry=retry)
@@ -51,7 +47,7 @@ class BaseAgent(BaseMultiRoundHandler):
             "config": self.config.to_dict(),
             "messages": self.messages,
             "send_queue": self.send_queue,
-            "interpreter_config_path": self.interpreter_config_path
+            "interpreter_config_path": self.interpreter_config_path,
         }
 
         if not self.config.checkpoint_path:
@@ -102,4 +98,3 @@ class BaseAgent(BaseMultiRoundHandler):
         except Exception as e:
             logger.error(f"Failed to load checkpoint from {checkpoint_path}: {str(e)}")
             raise ValueError(f"Could not load checkpoint: {str(e)}")
-
