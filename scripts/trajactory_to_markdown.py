@@ -1,4 +1,14 @@
-#!/usr/bin/env python3
+"""Convert trajactory JSON files to markdown format.
+Usage:
+To convert a single JSON file:
+```bash
+    python3 utils/trajactory_to_markdown.py --input <input_json_file> --output <output_markdown_file>
+```
+To convert all JSON files in a directory:
+```bash
+    python3 utils/trajactory_to_markdown.py --input <input_directory> --output <output_directory> --batch
+```
+"""
 import json
 import argparse
 import os
@@ -8,7 +18,7 @@ import sys
 
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
-from logger import logger
+from logger import logger  # noqa: E402
 
 
 def escape_backticks(text):
@@ -66,7 +76,9 @@ def trajactory_to_markdown(json_file_path, output_file_path=None):
             markdown_lines.append(f"**Summary:**\n\n{escape_backticks(task.get('summary', ''))}\n\n")
 
         if task.get("reference_instructions", ""):
-            markdown_lines.append(f"**Reference Instructions:**\n\n{escape_backticks(task.get('reference_instructions', ''))}\n\n")
+            markdown_lines.append(
+                f"**Reference Instructions:**\n\n{escape_backticks(task.get('reference_instructions', ''))}\n\n"
+            )
 
     # 2. Model Information section
     markdown_lines.append("## 2. Model Information\n\n")
@@ -111,18 +123,18 @@ def trajactory_to_markdown(json_file_path, output_file_path=None):
             if isinstance(entry["all_messages"], dict):
                 # Handle dictionary format (user agent messages)
                 markdown_lines.append("**All Messages:**\n\n")
-                
+
                 if "thought" in entry["all_messages"]:
                     markdown_lines.append("**Thought:**\n\n")
                     markdown_lines.append(f"{escape_backticks(entry['all_messages']['thought'])}\n\n")
-                
+
                 if "user_response" in entry["all_messages"]:
                     markdown_lines.append("**User Response:**\n\n")
                     markdown_lines.append(f"> {escape_backticks(entry['all_messages']['user_response'])}\n\n")
-                
+
                 if "end" in entry["all_messages"]:
                     markdown_lines.append(f"**End:** {entry['all_messages']['end']}\n\n")
-                
+
                 if "gatekeeper_response" in entry["all_messages"]:
                     gatekeeper = entry["all_messages"]["gatekeeper_response"]
                     if gatekeeper is not None:  # Check if gatekeeper response exists
@@ -132,48 +144,49 @@ def trajactory_to_markdown(json_file_path, output_file_path=None):
                         if "contradictory" in gatekeeper:
                             markdown_lines.append(f"**Contradictory:** {gatekeeper['contradictory']}\n\n")
                         if "follow_up_instruction" in gatekeeper and gatekeeper["follow_up_instruction"]:
-                            markdown_lines.append(f"**Follow-up Instruction:** {escape_backticks(gatekeeper['follow_up_instruction'])}\n\n")
-            
+                            markdown_lines.append(
+                                f"**Follow-up Instruction:** {escape_backticks(gatekeeper['follow_up_instruction'])}\n\n"  # noqa: E501
+                            )
+
             elif isinstance(entry["all_messages"], list):
                 # Handle list format (assistant agent messages)
                 markdown_lines.append("**All Messages:**\n\n")
                 for message in entry["all_messages"]:
                     if "role" in message:
                         markdown_lines.append(f"**Role:** {message['role']}  \n")
-                    
+
                     if "type" in message:
                         markdown_lines.append(f"**Type:** {message['type']}  \n")
-                    
+
                     if "format" in message:
                         markdown_lines.append(f"**Format:** {message['format']}  \n")
-                    
+
                     if "content" in message:
                         content = message["content"]
                         content_type = message.get("type", "")
-                        
+
                         # Special handling for response tags
                         if "<response>" in content and "</response>" in content:
                             pattern = r"<response>(.*?)</response>"
                             matches = re.findall(pattern, content, re.DOTALL)
-                            
+
                             for match in matches:
-                                quoted = "\n".join(
-                                    f"> {line}" if line.strip() else ">"
-                                    for line in match.splitlines()
-                                )
+                                quoted = "\n".join(f"> {line}" if line.strip() else ">" for line in match.splitlines())
                                 original = f"<response>{match}</response>"
                                 replacement = f"**\\<response\\>**\n\n{quoted}\n\n**\\</response\\>**"
                                 content = content.replace(original, replacement)
-                        
+
                         # Apply appropriate formatting based on content type
                         if content_type == "code":
                             code_format = message.get("format", "")
-                            markdown_lines.append(f"**Content:**\n\n```{code_format}\n{escape_backticks(content)}\n```\n\n")
+                            markdown_lines.append(
+                                f"**Content:**\n\n```{code_format}\n{escape_backticks(content)}\n```\n\n"
+                            )
                         elif content_type == "console":
                             markdown_lines.append(f"**Content:**\n\n```\n{escape_backticks(content)}\n```\n\n")
                         else:
                             markdown_lines.append(f"**Content:**\n\n{escape_backticks(content)}\n\n")
-                    
+
                     markdown_lines.append("\n")
 
     # Join all lines to create the markdown content

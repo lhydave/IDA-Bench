@@ -10,7 +10,7 @@ configure_global_logger(log_file="kaggle_crawler.log")
 from crawler.kaggle_crawler import KaggleCrawler  # noqa: E402
 from data_manager import NotebookManager, DatasetManager  # noqa: E402
 from crawler.notebook_handler import update_all_code_info  # noqa: E402
-from crawler.utils import is_all_import_supported  # noqa: E402
+from crawler.utils import is_all_import_supported  # noqa: E402, F401
 
 
 async def main():
