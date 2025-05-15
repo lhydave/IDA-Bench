@@ -1,6 +1,6 @@
 ### `preprocessing_notebook` Module
 
-Transforms a raw notebook directory into benchmark artefacts via an automated pipeline:
+Transforms a raw notebook directory into benchmark artifacts via an automated pipeline:
 
 1. **Notebook → Markdown**  
    Convert the source notebook to Markdown → `full_notebook_markdown`.
