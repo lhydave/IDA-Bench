@@ -1,6 +1,0 @@
-benchmark_*/** filter=lfs diff=lfs merge=lfs -text
-preprocessing_notebook/preprocess_data/** filter=lfs diff=lfs merge=lfs -text
-*.csv filter=lfs diff=lfs merge=lfs -text
-*.ipynb filter=lfs diff=lfs merge=lfs -text
-*.json filter=lfs diff=lfs merge=lfs -text
-/*.ipynb !text -filter -merge -diff
