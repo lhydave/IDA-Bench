@@ -9,12 +9,7 @@ import datetime
 from typing import Literal
 from llms import agent_dict
 from llms.llm_interact import LLMConfig, BaseMultiRoundHandler
-
-# TODO from lihy
-# To handle different agent framework, you need to define an abstract agent class, with LLMInteractor as an instance.
-# In the below code, we can see that for assistant agent, we only use its .call_llm() method and its
-# system_prompt, so you need to define a protocol for the agent class, and let LLMInteractor implement it.
-# This will help us to decouple the agent framework from the environment. See llm_interact.py for more details.
+import re
 
 
 @dataclass
@@ -540,6 +535,15 @@ def user_init_prompt2(
 #         logger.info(f"Turn {number_of_turns} completed")
 
 
+def extract_response_tags(text: str) -> str | None:
+    """Extract content between <response> and </response> tags."""
+    pattern = r"<response>(.*?)</response>"
+    match = re.search(pattern, text, re.DOTALL)
+    if match:
+        return match.group(1).strip()
+    return None
+
+
 def interact_version_taubench(
     env: Environment,
     user_agent: BaseMultiRoundHandler,
@@ -615,6 +619,14 @@ def interact_version_taubench(
 
         # Extract last assistant message
         assistant_message = assistant_responses[-1]["content"]  # type: ignore
+
+        # Parse response if it contains response tags
+        parsed_response = extract_response_tags(assistant_message)
+        if parsed_response:
+            logger.debug(f"Parsed response from tags: {parsed_response}")
+            env.conversation_history[-1]["parsed_response"] = parsed_response
+            env._save_checkpoint()
+
         number_of_turns += 1
         logger.info(f"Turn {number_of_turns} completed")
 
