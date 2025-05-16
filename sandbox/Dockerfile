@@ -14,12 +14,6 @@ COPY uv.lock /app/uv.lock
 WORKDIR /app
 RUN uv sync --frozen
 
-# # Install Python dependencies
-# RUN uv pip install pandas psutil open-interpreter backoff funcy dataclasses-json --system
-# # Data science packages
-# # TODO: specify data science packages
-# RUN uv pip install numpy matplotlib seaborn scikit-learn statsmodels scipy plotly jupyterlab ipython --system
-
 # Create app directory where code will run
 WORKDIR /app
 

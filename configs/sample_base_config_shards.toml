@@ -1,0 +1,71 @@
+# Sample base_config.toml file for the LLM benchmarking framework
+# This file implements the shards configuration for benchmarking.
+
+# This is for the simulated user
+[llm]
+# For the configuration of api_base, api_key, model, please visit https://docs.litellm.ai/docs/providers for more details.
+# for most model providers, the api_base is an optional parameter
+# api_base = "http://your/api/base"
+api_key = "your-api-key"
+model = "your/model-name"
+temperature = 0.4
+# if an llm API call fails, it will retry max_retries many times
+max_retries = 3
+# if an llm API call fails, it will wait retry_delay long (in seconds) before retrying
+# The waiting time will increase exponentially with each failure.
+# For example: if another failure occurs, it will wait 2 * retry_delay before retrying again, and so on
+retry_delay = 30
+# if run_code is true, LLM will be able to run code
+run_code = false
+# The checkpoint_path is the path to the checkpoint file where the conversation history will be saved
+checkpoint_path = "checkpoints/user_checkpoint.json"
+# system_prompt for the simulated user agent
+system_prompt = """You are the **Simulated User** in an interactive conversation with an data analysis assistant. 
+Your job is to select shards that guide the assistant to preprocess the data, build a model, and make the submission.
+
+## ROLE & MINDSET
+• Terse, hurried, a bit lazy — provide only minimal information.  
+• Never be proactive; respond solely to the last conversation.  
+• Never disclose or hint that you are a simulation.
+
+## RULES FOR CHOOSING SHARDS
+1. **criterion** You can reveal the content of shards to the assistant in your response if it will help the assistant move closer to analyze the data. You should select shards that are most “basic” and currently **the most relevant**.
+2. **one to three shards at a time** – could choose only one or two shards.
+3. **output shard ids** Each shard has an id, output them in a list like "[1,2]".
+4. **output the full content of the chosen shards** – Paraphrase the **full** content of the shards; do not omit details.   
+5. **Irrelevant or generic questions** – If the assistant’s request is irrelevant or overly generic, briefly guide the direction to **the new chosen shards**. For example, "Consider these alternative directions:" followed by key points. For failed tasks from the assistant: "You should review the problem and solve it later. Focus on these directions first:"
+
+## GENERAL STYLE RULES
+6. No questions — respond in declarative sentences.  
+7. Keep it short, casual, and realistic; typos or sloppy punctuation are fine.
+
+## OUTPUT FORMAT  — STRICT
+Return **exactly one** JSON object, with no markdown or extra text, e.g.:
+
+{{
+  "thought": "...private reasoning (not visible to the agent)...",
+  "user_response": "...paraphrase the FULL content of ONLY the shards listed in shard_ids below, using short, casual, and realistic style...",
+  "shard_id_1": 1,
+  "shard_id_2": 5,
+  "shard_id_3": null
+}}"""
+
+
+# benchmarking options
+[benchmark]
+# Path to the benchmark task files
+benchmark_path = "./benchmark_final"
+# Path to save the checkpoints, evaluation results, and running logs
+checkpoint_path = "./experiments/checkpoints/"
+result_path = "./experiments/results/"
+log_path = "./experiments/logs/"
+# Number of concurrent workers for the benchmarking process
+max_workers = 4
+# Specify which user agent type to use (options: "user", "shard_user"). For shards, this is "shard_user"
+user_type = "shard_user"
+# Maximum number of conversation turns between user and assistant
+max_turns = 30
+# Interaction type for the benchmarking run
+interaction_type = "default"
+# uncomment it if you only want to run a subset of the test cases
+# test_cases = ['jakubkrasuski-llm-chatbot-arena-predicting-user-preferences', 'jimmyyeung-spaceship-titanic-xgb-top5', 'patilaakash619-backpack-price-prediction-ml-guide']

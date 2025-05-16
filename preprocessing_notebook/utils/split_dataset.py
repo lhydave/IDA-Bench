@@ -3,6 +3,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from logger import logger
 
+
 # ──────────────────────────────────────────────────────────────────────────────
 # Utility: robust CSV reader that probes several encodings
 # ──────────────────────────────────────────────────────────────────────────────
@@ -19,7 +20,7 @@ def read_csv_with_encoding(file_path: Path) -> pd.DataFrame:
     Raises:
         ValueError: If the file cannot be read with any of the attempted encodings.
     """
-    encodings = ['utf-8', 'latin1', 'iso-8859-1', 'cp1252']
+    encodings = ["utf-8", "latin1", "iso-8859-1", "cp1252"]
     for encoding in encodings:
         try:
             logger.info(f"Attempting to read {file_path.name} with {encoding} encoding")
@@ -27,7 +28,7 @@ def read_csv_with_encoding(file_path: Path) -> pd.DataFrame:
 
             # Coerce columns with >50% numeric values to numeric dtype
             for col in df.columns:
-                numeric_series = pd.to_numeric(df[col], errors='coerce')
+                numeric_series = pd.to_numeric(df[col], errors="coerce")
                 if numeric_series.notna().mean() > 0.5:
                     df[col] = numeric_series
 
@@ -40,16 +41,13 @@ def read_csv_with_encoding(file_path: Path) -> pd.DataFrame:
 
     raise ValueError(f"Could not read {file_path.name} with encodings {encodings}")
 
+
 # ──────────────────────────────────────────────────────────────────────────────
 # Main: split each CSV into train / test + create *_features file
 # ──────────────────────────────────────────────────────────────────────────────
 def split_dataset(
-    dataset_path: str,
-    new_dir: str,
-    response_column_names: list[str],
-    test_size: float = 0.3,
-    random_state: int = 42
-) -> list[str]:
+    dataset_path: str, new_dir: str, response_column_names: list[str], test_size: float = 0.3, random_state: int = 42
+) -> list[str] | None:
     """
     Iterate through all CSV files in `dataset_path` and create *_train.csv,
     *_test.csv, and *_test_features.csv inside `new_dir`.
@@ -61,14 +59,14 @@ def split_dataset(
         test_size (float): Proportion of data to use for testing
         random_state (int): Random seed for reproducibility
     """
-    dataset_path = Path(dataset_path)
-    new_dir = Path(new_dir)
-    new_dir.mkdir(parents=True, exist_ok=True)
+    dataset_path = Path(dataset_path)  # type: ignore
+    new_dir = Path(new_dir)  # type: ignore
+    new_dir.mkdir(parents=True, exist_ok=True)  # type: ignore
 
-    if not dataset_path.exists():
+    if not dataset_path.exists():  # type: ignore
         raise FileNotFoundError(f"Dataset directory not found: {dataset_path}")
 
-    csv_files = list(dataset_path.glob("*.csv"))
+    csv_files = list(dataset_path.glob("*.csv"))  # type: ignore
     if not csv_files:
         raise ValueError(f"No CSV files found in {dataset_path}")
 
@@ -82,8 +80,8 @@ def split_dataset(
                 continue
 
             base_name = file_path.stem
-            train_path = new_dir / f"{base_name}_train.csv"
-            test_path = new_dir / f"{base_name}_test.csv"
+            train_path = new_dir / f"{base_name}_train.csv"  # type: ignore
+            test_path = new_dir / f"{base_name}_test.csv"  # type: ignore
 
             # # Avoid overwriting if splits already exist
             # if train_path.exists() and test_path.exists():
@@ -94,11 +92,7 @@ def split_dataset(
             df = read_csv_with_encoding(file_path)
 
             # Split
-            train_df, test_df = train_test_split(
-                df,
-                test_size=test_size,
-                random_state=random_state
-            )
+            train_df, test_df = train_test_split(df, test_size=test_size, random_state=random_state)
 
             # Drop NaN values and handle ID column
             test_df = test_df.dropna(subset=response_column_names)
@@ -118,14 +112,11 @@ def split_dataset(
         except Exception as e:
             logger.error(f"Failed processing {file_path.name}: {e}")
 
+
 # ──────────────────────────────────────────────────────────────────────────────
 # Helper: drop response column from test set to yield *_features.csv
 # ──────────────────────────────────────────────────────────────────────────────
-def drop_response_column(
-    dataset_path: str,
-    new_dir: str,
-    response_column_names: list[str]
-) -> str:
+def drop_response_column(dataset_path: str, new_dir: str, response_column_names: list[str]) -> str:
     """
     Create <original>_features.csv with the response columns removed.
 
@@ -134,25 +125,23 @@ def drop_response_column(
         new_dir (str): Directory to save the features file
         response_column_names (list[str]): List of column names to be removed
     """
-    dataset_path = Path(dataset_path)
-    new_dir = Path(new_dir)
-    new_dir.mkdir(parents=True, exist_ok=True)
+    dataset_path = Path(dataset_path)  # type: ignore
+    new_dir = Path(new_dir)  # type: ignore
+    new_dir.mkdir(parents=True, exist_ok=True)  # type: ignore
 
-    if not dataset_path.exists():
+    if not dataset_path.exists():  # type: ignore
         raise FileNotFoundError(f"Dataset file not found: {dataset_path}")
 
-    df = read_csv_with_encoding(dataset_path)
+    df = read_csv_with_encoding(dataset_path)  # type: ignore
 
     # Check if all response columns exist
     missing_columns = [col for col in response_column_names if col not in df.columns]
     if missing_columns:
-        raise ValueError(
-            f"Columns {missing_columns} not found in {dataset_path.name}"
-        )
+        raise ValueError(f"Columns {missing_columns} not found in {dataset_path.name}")  # type: ignore
 
     # Drop all response columns
     df_features = df.drop(columns=response_column_names)
-    output_path = new_dir / f"{dataset_path.stem}_features{dataset_path.suffix}"
+    output_path = new_dir / f"{dataset_path.stem}_features{dataset_path.suffix}"  # type: ignore
     df_features.to_csv(output_path, index=False)
     logger.info(f"Wrote feature file {output_path.name} (dropped {len(response_column_names)} response columns)")
     return output_path

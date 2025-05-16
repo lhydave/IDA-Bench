@@ -1,0 +1,115 @@
+# Sample base_config.toml file for the LLM benchmarking framework
+# This file implements the default configuration for benchmarking.
+
+# This is for the simulated user
+[llm]
+# For the configuration of api_base, api_key, model, please visit https://docs.litellm.ai/docs/providers for more details.
+# for most model providers, the api_base is an optional parameter
+# api_base = "http://your/api/base"
+api_key = "your-api-key"
+model = "your/model-name"
+temperature = 0.4
+# if an llm API call fails, it will retry max_retries many times
+max_retries = 3
+# if an llm API call fails, it will wait retry_delay long (in seconds) before retrying
+# The waiting time will increase exponentially with each failure.
+# For example: if another failure occurs, it will wait 2 * retry_delay before retrying again, and so on
+retry_delay = 30
+# if run_code is true, LLM will be able to run code
+run_code = false
+# The checkpoint_path is the path to the checkpoint file where the conversation history will be saved
+checkpoint_path = "checkpoints/user_checkpoint.json"
+# system_prompt for the simulated user agent
+system_prompt = """You are a user interacting with a data analysis agent.
+
+{project_context}
+
+Rules:
+- **Do not** ask the agent to generate data visualizations.
+- Begin with general data analysis procedures. Only use **your knowledge** when necessary.
+- Provide detailed instructions only when the agent asks for guidance or does something that contradicts **your knowledge**. Guide the agent to align their analysis with **your knowledge**.
+- Do not hallucinate information or **knowledge** that wasn't provided.
+- Communicate information concisely in your own words. Avoid copying directly from **your knowledge**. Use the first perspective to convey **your knowledge**.
+- When the final goal is achieved, simply respond with '##ALL_TASKS_COMPLETED##' to end the conversation.
+- For each response, first write a "Thought" about your next step (this won't be sent to the agent). Then write a "User Response" (this will be sent to the agent). Keep your tone conversational, natural, and short.
+- Follow this output format consistently.
+
+Format:
+
+Thought:
+<your reasoning>
+
+User Response:
+<your message to the agent>"""
+
+# This is for the gatekeeper agent
+[gatekeeper]
+# For the configuration of api_base, api_key, model, please visit https://docs.litellm.ai/docs/providers for more details.
+# for most model providers, the api_base is an optional parameter
+# api_base = "http://your/api/base"
+api_key = "your-api-key"
+model = "your/model-name"
+temperature = 0.4
+# if an llm API call fails, it will retry max_retries many times
+max_retries = 3
+# if an llm API call fails, it will wait retry_delay long (in seconds) before retrying
+# The waiting time will increase exponentially with each failure.
+# For example: if another failure occurs, it will wait 2 * retry_delay before retrying again, and so on
+retry_delay = 30
+# if run_code is true, LLM will be able to run code
+run_code = false
+# The checkpoint_path is the path to the checkpoint file where the conversation history will be saved
+checkpoint_path = "checkpoints/gatekeeper_checkpoint.json"
+# system_prompt for the gatekeeper agent
+system_prompt = """You are an instruction gatekeeper for a data-analysis agent.
+
+**TASK**
+Evaluate whether a *user instruction* contradicts the provided *reference instructions*.
+
+**THOUGHT
+1. Compare the *user instruction* and the *reference instructions* step-by-step.
+2. Decide if they are contradictory.
+3. If contradictory, draft a follow-up instruction that steers the user back toward the reference instructions, matching the user’s tone.
+
+**OUTPUT FORMAT — VISIBLE TO USER**
+Return *only* the following JSON object (no additional text):
+
+{{
+  "thought": <the reasoning process of the gatekeeper>
+  "contradictory": <true|false>,
+  "follow_up_instruction": <null|string>
+}}
+
+**DECISION RULES**
+• `contradictory` = false when the user instruction aligns with, or merely restates, the reference instructions.  
+• `contradictory` = false when the user instruction may motivate the choice of feature engineering or hyperparameters in the reference instructions.
+• `contradictory` = true when the user instruction conflicts with the reference instructions.
+
+**FOLLOW_UP_INSTRUCTION (only when contradictory = true)**
+• Preserve the user’s original tone and style.  
+• Give a detailed instruction that realigns with the reference instructions.
+• Do not leak other information in the reference instructions.
+
+### Reference instructions
+
+{reference_instructions}
+"""
+
+# benchmarking options
+[benchmark]
+# Path to the benchmark task files
+benchmark_path = "./benchmark_final"
+# Path to save the checkpoints, evaluation results, and running logs
+checkpoint_path = "./experiments/checkpoints/"
+result_path = "./experiments/results/"
+log_path = "./experiments/logs/"
+# Number of concurrent workers for the benchmarking process
+max_workers = 4
+# Specify which user agent type to use (options: "user", "shard_user"), the default is "user"
+user_type = "user"
+# Maximum number of conversation turns between user and assistant
+max_turns = 30
+# Interaction type for the benchmarking run
+interaction_type = "default"
+# uncomment it if you only want to run a subset of the test cases
+# test_cases = ['jakubkrasuski-llm-chatbot-arena-predicting-user-preferences', 'jimmyyeung-spaceship-titanic-xgb-top5', 'patilaakash619-backpack-price-prediction-ml-guide']

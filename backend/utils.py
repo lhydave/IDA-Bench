@@ -3,15 +3,12 @@ from dataclasses import dataclass
 import jsonschema
 from dataclasses_json import DataClassJsonMixin
 import backoff
-import logging
+from logger import logger
 from collections.abc import Callable
 
 PromptType = str | dict | list
 FunctionCallType = dict
 OutputType = str | FunctionCallType
-
-
-logger = logging.getLogger("aide")
 
 
 @backoff.on_predicate(

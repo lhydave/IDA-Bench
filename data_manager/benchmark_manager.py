@@ -180,7 +180,6 @@ class BenchmarkManager:
             benchmark_id: ID of the benchmark
             instructions: String or list of strings containing instructions for each round
         """
-        # TODO: specify the format of instructions and modify this function accordingly
         # Create directory for benchmark data if it doesn't exist
         benchmark_dir = self._get_benchmark_dir(benchmark_id)
         os.makedirs(benchmark_dir, exist_ok=True)
@@ -348,7 +347,6 @@ class BenchmarkManager:
             benchmark_id: ID of the benchmark
             ground_truths: Ground truth data for evaluation
         """
-        # TODO: specify the format of ground truths and modify this function accordingly
         # Create directory for benchmark data if it doesn't exist
         benchmark_dir = self._get_benchmark_dir(benchmark_id)
         os.makedirs(benchmark_dir, exist_ok=True)
@@ -423,7 +421,7 @@ class BenchmarkManager:
         Returns:
             Instruction string or None if not found
         """
-        # TODO: specify the format of instructions and modify this function accordingly
+        # NOTE: currently not used
         pass
 
     def get_ground_truth(self, benchmark_id: str) -> Any:
@@ -436,7 +434,7 @@ class BenchmarkManager:
         Returns:
             Ground truth data or None if not found
         """
-        # TODO: specify the format of ground truths and modify this function accordingly
+        # NOTE: currently not used
         pass
 
     def get_datasets(self, benchmark_id: str) -> list[str]:

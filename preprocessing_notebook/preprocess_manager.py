@@ -16,34 +16,41 @@ from preprocessing_notebook.utils.copy_dict_items import copy_dict_items
 
 from logger import logger, configure_global_logger
 import tomllib
-from preprocessing_notebook.utils.parse_response import parse_markdown_content, parse_main_result, parse_instruction_and_knowledge, parse_reconstructed_code, parse_evaluation_metrics
+from preprocessing_notebook.utils.parse_response import (
+    parse_markdown_content,
+    parse_main_result,
+    parse_instruction_and_knowledge,
+    parse_reconstructed_code,
+    parse_evaluation_metrics,
+)
 import json
+
 configure_global_logger(log_file="preprocess.log")
-
-
 
 
 def extract_notebook_name(full_notebook_path: str) -> str:
     """
     Extract the notebook name without extension from a full path.
-    
+
     Args:
         full_notebook_path (str): Full path to the notebook file
-        
+
     Returns:
         str: Notebook name without the .ipynb extension
     """
     # Get the filename from the full path
     notebook_filename = os.path.basename(full_notebook_path)
-    
+
     # Remove the extension
     notebook_name = os.path.splitext(notebook_filename)[0]
-    
+
     return notebook_name
 
 
 class PreprocessManager:
-    def __init__(self, full_notebook_path: str, data_dir: str, preprocess_version: str = "toSubmit", replace: bool = True):
+    def __init__(
+        self, full_notebook_path: str, data_dir: str, preprocess_version: str = "toSubmit", replace: bool = True
+    ):
         # full_notebook_dir: path to the directory containing the full notebook
         # data_dir: directory containing the data
         self.full_notebook_path = full_notebook_path
@@ -60,19 +67,19 @@ class PreprocessManager:
         if preprocess_version == "selfEval":
             self.minimizer_prompt_path = "preprocessing_notebook/prompts/minimize_nb_selfEval.md"
         elif preprocess_version == "toSubmit":
-            self.minimizer_prompt_path = "preprocessing_notebook/prompts/minimize_nb_toSubmit.md"   
+            self.minimizer_prompt_path = "preprocessing_notebook/prompts/minimize_nb_toSubmit.md"
         else:
             raise ValueError(f"Invalid preprocess version: {preprocess_version}")
 
         self.narrator_prompt_path = "preprocessing_notebook/prompts/notebook_narration.md"
         self.reconstructor_prompt_path = "preprocessing_notebook/prompts/reconstruct.md"
-        
+
         # data paths
         self.data_dir = data_dir
 
         self.new_data_dir = os.path.join(self.base_dir, "dataset")
         self.baseline_submission_path = os.path.join(self.new_data_dir, "baseline_submission.csv")
-        
+
         ### paths for minimizing notebook
         # path to the full notebook markdown
         self.full_markdown_path = os.path.join(self.base_dir, "full_markdown.md")
@@ -115,33 +122,32 @@ class PreprocessManager:
         # self.minimized_notebook_py_dir = os.path.join(self.base_dir, "min_nb")
         # self.minimized_notebook_py_path = os.path.join(self.minimized_notebook_py_dir, f"{self.notebook_name}.py")
 
-
     def _load_config(self, config_path: str, label: str) -> dict:
         with open(config_path, "rb") as f:
             all_config = tomllib.load(f)
         return all_config[label]
-    
+
     def _load_data_paths(self):
         data_dir = Path(self.data_dir)
         csv_files = list(data_dir.glob("*.csv"))
-        
+
         if not csv_files:
             logger.info(f"No CSV files found in {self.data_dir}")
             self.train_path = None
             self.test_path = None
             self.test_features_path = None
             return
-            
+
         # Get the first CSV file that isn't a split
-        base_files = [f for f in csv_files if not any(tag in f.stem for tag in ('_train', '_test', '_features'))]
-        
+        base_files = [f for f in csv_files if not any(tag in f.stem for tag in ("_train", "_test", "_features"))]
+
         if not base_files:
             logger.info("No base CSV files found (only split files present)")
             self.train_path = None
             self.test_path = None
             self.test_features_path = None
             return
-            
+
         base_name = base_files[0].stem
         self.train_path = Path(self.new_data_dir) / f"{base_name}_train.csv"
         self.test_path = Path(self.new_data_dir) / f"{base_name}_test.csv"
@@ -154,7 +160,7 @@ class PreprocessManager:
         self.test_features_path = Path(self.new_data_dir) / "test.csv"
         self.response_gt_path = Path(self.new_data_dir) / "groundtruth_df.csv"
 
-    def copy_data(self, from_dir: str = None, to_dir: str = None):
+    def copy_data(self, from_dir: str | None = None, to_dir: str | None = None):
         if from_dir is None:
             from_dir = self.data_dir
         if to_dir is None:
@@ -162,236 +168,287 @@ class PreprocessManager:
 
         copy_directory(from_dir, to_dir)
 
-
-    def convert_full_notebook_to_markdown(self, notebook_path: str = None, output_path: str = None):
-       
+    def convert_full_notebook_to_markdown(self, notebook_path: str | None = None, output_path: str | None = None):
         if notebook_path is None:
             notebook_path = self.full_notebook_path
-        
+
         if output_path is None:
             output_path = self.full_markdown_path
 
         convert_notebook_to_markdown(notebook_path, output_path)
         logger.info(f"Converted {self.notebook_name}.ipynb to {self.notebook_name}.md")
 
-    def minimize_notebook(self, prompt_path: str = None, full_markdown_path: str = None, 
-                          output_response_path: str = None, config: dict = None):
-        
+    def minimize_notebook(
+        self,
+        prompt_path: str | None = None,
+        full_markdown_path: str | None = None,
+        output_response_path: str | None = None,
+        config: dict | None = None,
+    ):
         if prompt_path is None:
             prompt_path = self.minimizer_prompt_path
-            
+
         if full_markdown_path is None:
             full_markdown_path = self.full_markdown_path
-            
+
         if output_response_path is None:
             output_response_path = self.minimizer_response_path
-            
+
         if config is None:
             config = self._load_config(self.config_path, self.minimizer_config_label)
-            
+
         minimize_notebook(prompt_path, full_markdown_path, output_response_path, config)
 
         logger.info(f"Minimized {self.notebook_name}.md and saved full response to {output_response_path}")
 
-    def extract_minimized_markdown(self, minimizer_response_path: str = None, 
-                                   minimized_markdown_path: str = None):
+    def extract_minimized_markdown(
+        self, minimizer_response_path: str | None = None, minimized_markdown_path: str | None = None
+    ):
         if minimizer_response_path is None:
             minimizer_response_path = self.minimizer_response_path
-            
+
         if minimized_markdown_path is None:
             minimized_markdown_path = self.minimized_markdown_path
 
         parse_markdown_content(minimizer_response_path, minimized_markdown_path)
         logger.info(f"Parsed minimized notebook from full response and saved to {minimized_markdown_path}")
-            
-            
 
-    def extract_numerical_result(self, minimizer_response_path: str = None, 
-                                 metric_info_path: str = None):
+    def extract_numerical_result(self, minimizer_response_path: str | None = None, metric_info_path: str | None = None):
         if minimizer_response_path is None:
             minimizer_response_path = self.minimizer_response_path
-            
+
         if metric_info_path is None:
             metric_info_path = self.metric_info_path
-            
+
         parse_main_result(minimizer_response_path, metric_info_path)
         logger.info(f"Parsed numerical result from minimizing response and saved to {metric_info_path}")
-            
-      
 
-    def convert_markdown_to_python(self, minimized_markdown_path: str = None, 
-                                   minimized_py_path: str = None):
-        
+    def convert_markdown_to_python(
+        self, minimized_markdown_path: str | None = None, minimized_py_path: str | None = None
+    ):
         if minimized_markdown_path is None:
             minimized_markdown_path = self.minimized_markdown_path
-            
+
         if minimized_py_path is None:
             minimized_py_path = self.minimized_notebook_py_path
-            
+
         md_to_py(minimized_markdown_path, minimized_py_path)
         logger.info(f"Converted minimized {self.notebook_name} markdown file to python file")
 
     ######################################################### Data handling starts here
 
-    def update_data_dir_in_pyfile(self, pyfile: str = None, new_prefix: str = None, outfile: str = None):
+    def update_data_dir_in_pyfile(
+        self, pyfile: str | None = None, new_prefix: str | None = None, outfile: str | None = None
+    ):
         if pyfile is None:
             pyfile = self.minimized_notebook_py_path
-            
+
         if new_prefix is None:
             new_prefix = self.new_data_dir
-            
+
         set_data_dir(pyfile, new_prefix, outfile=outfile)
         logger.info(f"Set data directories in minimized notebook python file to {self.new_data_dir}")
 
-    def split_dataset(self, dataset_path: str = None, new_dir: str = None, response_column_name: str = None, test_size: float = 0.3, random_state: int = 42):
+    def split_dataset(
+        self,
+        dataset_path: str | None = None,
+        new_dir: str | None = None,
+        response_column_name: str | None = None,
+        test_size: float = 0.3,
+        random_state: int = 42,
+    ):
         if dataset_path is None:
             dataset_path = self.data_dir
-        
+
+        response_column_names = []
         if response_column_name is None:
-            with open(self.metric_info_path, 'r') as f:
+            with open(self.metric_info_path) as f:
                 metric_info = json.load(f)
-            response_column_name = metric_info['response_columns']
-        
+            response_column_names = metric_info["response_columns"]
+        else:
+            response_column_names = [response_column_name]
+
         if new_dir is None:
             new_dir = self.new_data_dir
-            
-        self.train_path, self.test_path, self.test_features_path = split_dataset(dataset_path, new_dir, response_column_name, test_size, random_state)
-        logger.info(f"Split dataset into train and test sets")
+
+        ret = split_dataset(dataset_path, new_dir, response_column_names, test_size, random_state)
+        if ret is None:
+            raise ValueError("Failed to split dataset. Please check the input parameters.")
+        self.train_path, self.test_path, self.test_features_path = ret
+        logger.info("Split dataset into train and test sets")
 
     ######################################################### Reconstruction starts here
 
-    def reconstruct_minimized_notebook(self, prompt_path: str = None, minimized_notebook_py_path: str = None, metric_info_path: str = None, data_dir: str = None, submission_path: str = None, reconstructing_response_path: str = None, config: dict = None):
-
+    def reconstruct_minimized_notebook(
+        self,
+        prompt_path: str | None = None,
+        minimized_notebook_py_path: str | None = None,
+        metric_info_path: str | None = None,
+        data_dir: str | None = None,
+        submission_path: str | None = None,
+        reconstructing_response_path: str | None = None,
+        config: dict | None = None,
+    ):
         if prompt_path is None:
             prompt_path = self.reconstructor_prompt_path
 
         if minimized_notebook_py_path is None:
             minimized_notebook_py_path = self.minimized_notebook_py_path
-            
+
         if metric_info_path is None:
-            metric_info_path = self.metric_info_path   
+            metric_info_path = self.metric_info_path
 
         if submission_path is None:
             submission_path = self.baseline_submission_path
 
         if data_dir is None:
             data_dir = self.new_data_dir
-            
+
         if reconstructing_response_path is None:
             reconstructing_response_path = self.reconstructing_response_path
 
         if config is None:
             config = self._load_config(self.config_path, self.reconstructor_config_label)
 
-        reconstruct(prompt_path, minimized_notebook_py_path, metric_info_path, data_dir, submission_path, reconstructing_response_path, config)
-        logger.info(f"Reconstructed evaluation response from minimized notebook python file")
-        
-    def extract_reconstructed_code(self, reconstructing_response_path: str = None, output_path: str = None, replace: bool = None):
+        reconstruct(
+            prompt_path,
+            minimized_notebook_py_path,
+            metric_info_path,
+            data_dir,
+            submission_path,
+            reconstructing_response_path,
+            config,
+        )
+        logger.info("Reconstructed evaluation response from minimized notebook python file")
+
+    def extract_reconstructed_code(
+        self,
+        reconstructing_response_path: str | None = None,
+        output_path: str | None = None,
+        replace: bool | None = None,
+    ):
         if reconstructing_response_path is None:
             reconstructing_response_path = self.reconstructing_response_path
-            
+
         if output_path is None:
             output_path = self.reconstructed_code_path
-        
+
         if replace is None:
             replace = self.replace
-        
+
         # Check if output file exists and we don't want to replace it
         if not replace and os.path.exists(output_path):
             logger.info(f"Skipping extraction as {output_path} already exists and replace=False")
             return
-            
+
         parse_reconstructed_code(reconstructing_response_path, output_path)
         logger.info(f"Parsed reconstructed code from reconstruction response and saved to {output_path}")
-        
-    def extract_evaluation_metrics(self, response_path: str = None, output_path: str = None):
+
+    def extract_evaluation_metrics(self, response_path: str | None = None, output_path: str | None = None):
         if response_path is None:
             if self.preprocess_version == "selfEval":
                 response_path = self.reconstructing_response_path
             elif self.preprocess_version == "toSubmit":
                 response_path = self.minimizer_response_path
-            
+        if response_path is None:
+            raise ValueError("response_path is None. Please provide a valid path.")
         if output_path is None:
             output_path = self.evaluation_metrics_path
-            
+
         parse_evaluation_metrics(response_path, output_path)
         logger.info(f"Parsed evaluation metrics from reconstruction response and saved to {output_path}")
 
-
-
     ######################################################### Run python notebook and evaluation
-        
-    def run_python_notebook(self, file_path: str = None, execution_results_path: str = None):
-        
+
+    def run_python_notebook(self, file_path: str | None = None, execution_results_path: str | None = None):
         if file_path is None:
             if self.preprocess_version == "selfEval":
                 file_path = self.reconstructed_code_path
             elif self.preprocess_version == "toSubmit":
                 file_path = self.minimized_notebook_py_path
+        if file_path is None:
+            raise ValueError("file_path is None. Please provide a valid path.")
 
         if execution_results_path is None:
             execution_results_path = self.execution_results_path
-            
+
         results = run_python_file(file_path, execution_results_path)
         logger.info(f"Executed Python file: {file_path}")
         return results
-    
-    def run_evaluation(self, eval_script_path: str = None, y_test_path: str = None, y_pred_path: str = None, output_json_path: str = None):
+
+    def run_evaluation(
+        self,
+        eval_script_path: str | None = None,
+        y_test_path: str | None = None,
+        y_pred_path: str | None = None,
+        output_json_path: str | None = None,
+    ):
         if eval_script_path is None:
             eval_script_path = self.evaluation_metrics_path
 
         if y_test_path is None:
             if self.preprocess_version == "selfEval":
-                if not hasattr(self, 'test_path'):
+                if not hasattr(self, "test_path"):
                     self._load_data_paths()
-                y_test_path = self.test_path
+                y_test_path = self.test_path  # type: ignore
 
             elif self.preprocess_version == "toSubmit":
-                y_test_path = self.response_gt_path
+                y_test_path = self.response_gt_path  # type: ignore
+
+        if y_test_path is None:
+            raise ValueError("y_test_path is None. Please provide a valid path.")
 
         if y_pred_path is None:
             y_pred_path = self.baseline_submission_path
 
         if output_json_path is None:
             output_json_path = self.numeric_baseline_path
-            
-        run_evaluation(eval_script_path, y_test_path, y_pred_path, output_json_path)
-        logger.info(f"Evaluated reconstructed code")
 
-    def copy_dict_items(self, source_json_path: str = None, target_json_path: str = None, keys_to_copy: list = None):
+        run_evaluation(eval_script_path, y_test_path, y_pred_path, output_json_path)
+        logger.info("Evaluated reconstructed code")
+
+    def copy_dict_items(
+        self, source_json_path: str | None = None, target_json_path: str | None = None, keys_to_copy: list | None = None
+    ):
         if source_json_path is None:
             source_json_path = self.metric_info_path
-            
+
         if target_json_path is None:
-            target_json_path = self.numeric_baseline_path   
-            
+            target_json_path = self.numeric_baseline_path
+
         copy_dict_items(source_json_path, target_json_path)
         logger.info(f"Copied {keys_to_copy} from {source_json_path} to {target_json_path}")
-            
 
     ######################################################### Further reconstruct data for benchmark agents
-    def reconstruct_dataset(self, input_dir: str = None, output_dir: str = None, column_names: list = None):
+    def reconstruct_dataset(
+        self, input_dir: str | None = None, output_dir: str | None = None, column_names: list | None = None
+    ):
         if input_dir is None:
             input_dir = self.new_data_dir
-            
+
         if output_dir is None:
             output_dir = self.new_data_dir
 
         if column_names is None:
-            with open(self.metric_info_path, 'r') as f:
+            with open(self.metric_info_path) as f:
                 metric_info = json.load(f)
-            column_names = metric_info['response_columns']
-                
+            column_names = metric_info["response_columns"]
+
         reconstruct_dataset(input_dir, output_dir, column_names)
         logger.info(f"Reconstructed dataset from {input_dir} to {output_dir}")
-    
+
     ######################################################### Narration starts here
-    
-    def narration(self, prompt_path: str = None, notebook_path: str = None, output_path: str = None, config: dict = None):
-       
+
+    def narration(
+        self,
+        prompt_path: str | None = None,
+        notebook_path: str | None = None,
+        output_path: str | None = None,
+        config: dict | None = None,
+    ):
         if prompt_path is None:
             prompt_path = self.narrator_prompt_path
-            
+
         if notebook_path is None:
             notebook_path = self.minimized_markdown_path
 
@@ -400,25 +457,30 @@ class PreprocessManager:
 
         if config is None:
             config = self._load_config(self.config_path, self.narrator_config_label)
-            
+
         notebook_narration(prompt_path, notebook_path, output_path, config)
         logger.info(f"Collected narration response from {self.notebook_name}.md")
-    
-    def extract_instructions_and_knowledge(self, narration_response_path: str = None, instructions_path: str = None, knowledge_path: str = None):
 
+    def extract_instructions_and_knowledge(
+        self,
+        narration_response_path: str | None = None,
+        instructions_path: str | None = None,
+        knowledge_path: str | None = None,
+    ):
         if narration_response_path is None:
             narration_response_path = self.narration_response_path
-            
+
         if instructions_path is None:
             instructions_path = self.instructions_path
-            
+
         if knowledge_path is None:
             knowledge_path = self.knowledge_path
-            
+
         parse_instruction_and_knowledge(narration_response_path, instructions_path, knowledge_path)
-        logger.info(f"Parsed instructions and knowledge from narration response and saved to {instructions_path} and {knowledge_path}")
-            
-    
+        logger.info(
+            f"Parsed instructions and knowledge from narration response and saved to {instructions_path} and {knowledge_path}"  # noqa: E501
+        )
+
     def run(self):
         if self.preprocess_version == "selfEval":
             self.run_selfEval()
@@ -456,7 +518,7 @@ class PreprocessManager:
 
         ### narration
         self.narration()
-        self.extract_instructions_and_knowledge()       
+        self.extract_instructions_and_knowledge()
 
     def run_toSubmit(self):
         ### set and copy data
@@ -481,11 +543,3 @@ class PreprocessManager:
         ### narration
         self.narration()
         self.extract_instructions_and_knowledge()
-        
-    
-
-
-
-
-
-    

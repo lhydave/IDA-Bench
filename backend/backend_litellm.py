@@ -50,7 +50,6 @@ class LiteLLMBackend:
         # Make API call with backoff for handling rate limits
         for attempt in range(self.config.max_retries):
             try:
-                # TODO: prompt caching has bugs, so we disable it for now
                 logger.debug(f"Trying to call LLM API with model: {self.config.model}")
                 response = litellm.completion(
                             messages=messages, # type: ignore

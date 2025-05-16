@@ -47,8 +47,8 @@ Follow every rule in the accompanying system prompt.""",  # noqa: E501
 final_turn_prompt = """Please wrap up all the results. Make the final Training & Submission. You should carefully review **all previous findings**, then make **the best preprocessing**, **the best feature engineering**, and **the best modeling choice**. Then submit."""  # noqa: E501
 
 
-class User2(AgentClass):
-    """User2 class that generates user turns for the shard-based dialogue."""
+class ShardUser(AgentClass):
+    """ShardUser class that generates user turns for the shard-based dialogue."""
 
     def __init__(self, config: LLMConfig):
         """Initialize the gatekeeper with configuration.
@@ -61,7 +61,7 @@ class User2(AgentClass):
             self._system_prompt = config.system_prompt
         else:
             self._system_prompt = None
-        logger.info(f"Initialized User2 with model: {config.model}, temperature: {config.temperature}")
+        logger.info(f"Initialized ShardUser with model: {config.model}, temperature: {config.temperature}")
         self.backend = LiteLLMBackend(config)
         self.system_message = [
             {
@@ -130,7 +130,7 @@ class User2(AgentClass):
             last_conversation = self.format_last_conversation()
             # Format the prompt with shards and last conversation
             formatted_prompt = self.format_prompt_with_shards(last_conversation, self.shards)
-            logger.debug(f"User2 formatted prompt: {formatted_prompt}")
+            logger.debug(f"Using ShardUser formatted prompt: {formatted_prompt}")
             response = self.backend.query(
                 self.system_message, formatted_prompt, None, func_spec=user_turn_spec, retry=retry
             )

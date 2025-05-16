@@ -62,14 +62,12 @@ class EnvironmentConfig:
     user_llm_config: LLMConfig
     assistant_llm_config: LLMConfig
     gatekeeper_llm_config: LLMConfig | None
-    assistant_agent_type: Literal["base-agent", "aide"]  # TODO: check supported agent types
-    user_agent_type: Literal["user", "user2"]
+    assistant_agent_type: Literal["base-agent"]  # only support base-agent for now
+    user_agent_type: Literal["user", "shard_user"]
     interpreter_config_path: str
     # user_prompt_template: str
     # assistant_prompt_template: str
     max_turns: int = 20
-    # user_retry_prompt_template: str | None = None  # NOTE: this is optional, only used in version 1
-    # user_continue_prompt_template: str | None = None  # NOTE: this is optional, only used in version 2
     checkpoint_path: str | None = None
 
     @classmethod
@@ -237,35 +235,6 @@ class Environment:
             logger.error(f"Failed to save checkpoint: {str(e)}")
             print(f"Failed to save checkpoint: {str(e)}")
 
-    def _is_task_completed(self, task: Task, assistant_message: str) -> bool:
-        """Check if the task is completed based on the assistant's message."""
-        # HACK: Some criteria are not easy to check, so we just assume the task is completed. Revisit this later.
-        logger.debug(f"Task {task.id} completion check - always returning True (HACK)")
-        return True
-
-    def _print_final_report(
-        self,
-    ):
-        # NOTE: this is a hack to print the final report, only used in version 1,
-        # as the tasks in version 2 are not predefined.
-        """Print a final report of all tasks and their completion status."""
-        logger.info("Generating final report")
-        print("\n=== FINAL REPORT ===\n")
-
-        completed_tasks = sum(1 for task in self.tasks if task.completed)
-        logger.info(f"Completed {completed_tasks} out of {len(self.tasks)} tasks")
-        print(f"Completed {completed_tasks} out of {len(self.tasks)} tasks.\n")
-
-        for task in self.tasks:
-            status = "COMPLETED" if task.completed else "INCOMPLETE"
-            logger.debug(f"Task {task.id}: {status}")
-            print(f"Task {task.id}: {status}")
-            print(f"Description: {task.description}")
-            if task.completed and task.summary:
-                print(f"Summary: {task.summary}")
-            print()
-
-
 def user_init_prompt(env: Environment) -> str:
     """Format the prompt for the user agent."""
     # Fill in the user prompt template
@@ -277,263 +246,9 @@ To get started, could you please provide a bit of background information:
 	3.	What is the first step of your analysis?"""
 
 
-def user_init_prompt2(
-    env: Environment,
-) -> str:
+def user_init_prompt2(env: Environment) -> str:
     """Format the prompt for the user agent."""
     return """Load data and make necessary preprocessing. If possible, try fitting a baseline model with as simple method as possible. If failed, simply provide potential plans for data analysis."""  # noqa: E501
-
-
-# def interact_version1(env: Environment, user_agent: BaseMultiRoundHandler, assistant_agent: BaseMultiRoundHandler):
-#     """Run the environment until all tasks are completed or max turns is reached."""
-#     logger.info("Starting interaction using version1 strategy")
-
-#     # NOTE: version 1: Here we have several predefined tasks, where each task is already a "subtask".
-#     # Here we just let the user_agent to redescribe the task, and then the assistant_agent will complete the task.
-#     # If the task is completed, we will continue to the next task;
-#     # else, we will stay in the current task and continue to the next turn.
-#     def format_user_prompt(env: Environment, current_task: Task) -> str:
-#         """Format the prompt for the user agent."""
-
-#         # Format the task list with completion status
-#         task_list = "\n".join(
-#             [f"- [{'X' if task.completed else ' '}] Task {task.id}: {task.description}" for task in env.tasks]
-#         )
-
-#         # Format the current task details
-#         current_task_details = (
-#             f"CURRENT TASK: {current_task.description}\n\nSuccess criteria: {current_task.success_criteria}"
-#         )
-
-#         # Fill in the user prompt template
-#         return env.config.user_prompt_template.format(task_list=task_list, current_task=current_task_details)
-
-#     def format_user_retry_prompt(env: Environment, current_task: Task, assistant_summaries: list[str]) -> str:
-#         """Format the prompt for the user agent."""
-
-#         # Format the task list with completion status
-#         task_list = "\n".join(
-#             [f"- [{'X' if task.completed else ' '}] Task {task.id}: {task.description}" for task in env.tasks]
-#         )
-
-#         # Format the current task details
-#         current_task_details = (
-#             f"CURRENT TASK: {current_task.description}\n\nSuccess criteria: {current_task.success_criteria}"
-#         )
-
-#         # Format the assistant summaries
-#         assistant_summary = "\n".join(
-#             [f"Assistant Operation {i + 1}: {summary}" for i, summary in enumerate(assistant_summaries)]
-#         )
-#         if not env.config.user_retry_prompt_template:
-#             raise ValueError("user_retry_prompt_template is not defined")
-#         return env.config.user_retry_prompt_template.format(
-#             task_list=task_list, current_task=current_task_details, assistant_summary=assistant_summary
-#         )
-
-#     turn_count = 0
-#     while env.current_task_idx < len(env.tasks):
-#         # Get current task
-#         current_task = env.tasks[env.current_task_idx]
-#         retry_attempts = 0  # NOTE: this is the number of retries for the current task
-#         logger.info(f"Starting Task {current_task.id}: {current_task.description}")
-#         print(f"\n--- TASK {current_task.id}: {current_task.description} ---\n")
-#         env.conversation_history.append({"current_task_idx": env.current_task_idx})
-
-#         # Generate user message based on task and conversation history
-#         logger.debug("Generating user prompt")
-#         user_prompt = format_user_prompt(env, current_task)
-
-#         logger.debug(f"Calling user agent with prompt length: {len(user_prompt)}")
-#         user_response = user_agent.call_llm(user_prompt)
-#         user_message = "\n".join([msg["content"] for msg in user_response])
-#         logger.debug(f"User message generated, length: {len(user_message)}")
-
-#         env.conversation_history.append(
-#             {"role": "user agent", "prompt_received": user_prompt, "all_messages": deepcopy(user_response)}
-#         )
-#         env._save_checkpoint()
-
-#         # Generate assistant response
-#         logger.debug("Calling assistant agent with user message")
-#         assistant_response = assistant_agent.call_llm(user_message)
-#         assistant_message = (
-#             assistant_response[-1]["content"] if isinstance(assistant_response[-1], dict) else assistant_response[-1]
-#         )
-#         logger.debug(f"Assistant response generated, length: {len(assistant_message)}")
-
-#         env.conversation_history.append(
-#             {"role": "assistant agent", "prompt_received": user_message, "all_messages": deepcopy(assistant_response)}
-#         )
-#         env._save_checkpoint()
-
-#         turn_count += 1
-#         logger.debug(f"Turn {turn_count} completed")
-
-#         # Check if completed, if so, move to the next task,
-#         # else, stay in the current task and continue to the next turn.
-#         assistant_summaries = []
-
-#         while turn_count < env.config.max_turns:
-#             # summarize the assistant's operation in the current turn
-#             logger.debug("Generating summary of assistant's operation")
-#             summary_prompt = f"Please provide a brief summary of what you did in response to the user's message:\
-#                   {user_message}.\
-#                   The summary should not contain any new code, just the summary of what you did."
-#             summary_response = assistant_agent.call_llm(summary_prompt)
-#             summary = "\n".join([msg["content"] for msg in summary_response])
-#             assistant_summaries.append(summary)
-#             logger.debug(f"Summary generated, length: {len(summary)}")
-
-#             env.conversation_history.append(
-#                 {
-#                     "role": "assistant agent",
-#                     "prompt_received_for_summary": summary_prompt,
-#                     "all_messages": deepcopy(summary_response),
-#                 }
-#             )
-#             env._save_checkpoint()
-
-#             if env._is_task_completed(current_task, assistant_message):
-#                 # Mark task as completed
-#                 current_task.completed = True
-#                 current_task.summary = summary
-#                 env.current_task_idx += 1
-
-#                 logger.info(f"Task {current_task.id} completed")
-#                 print("\n--- TASK COMPLETED ---\n")
-#                 print(f"SUMMARY: {summary}\n")
-
-#                 break
-#             else:
-#                 logger.info(
-#                     f"Task {current_task.id} not completed, \
-#                         retrying (Attempt {retry_attempts + 1}/{env.config.max_turns})"
-#                 )
-#                 print(f"TASK NOT COMPLETED, RETRYING... (Attempt {retry_attempts + 1}/{env.config.max_turns})")
-
-#                 logger.debug("Generating retry user prompt")
-#                 user_prompt = format_user_retry_prompt(env, current_task, assistant_summaries)
-
-#                 logger.debug("Calling user agent with retry prompt")
-#                 user_response = user_agent.call_llm(user_prompt)
-#                 user_message = "\n".join([msg["content"] for msg in user_response])
-#                 logger.debug(f"User retry message generated, length: {len(user_message)}")
-
-#                 env.conversation_history.append(
-#                     {"role": "user agent", "prompt_received": user_prompt, "all_messages": deepcopy(user_response)}
-#                 )
-#                 env._save_checkpoint()
-
-#                 # Generate assistant response
-#                 logger.debug("Calling assistant agent with retry user message")
-#                 assistant_response = assistant_agent.call_llm(user_message)
-#                 assistant_message = (
-#                     assistant_response[-1]["content"]
-#                     if isinstance(assistant_response[-1], dict)
-#                     else assistant_response[-1]
-#                 )
-#                 logger.debug(f"Assistant retry response generated, length: {len(assistant_message)}")
-
-#                 env.conversation_history.append(
-#                     {
-#                         "role": "assistant agent",
-#                         "prompt_received": user_message,
-#                         "all_messages": deepcopy(assistant_response),
-#                     }
-#                 )
-#                 env._save_checkpoint()
-#                 retry_attempts += 1
-#                 turn_count += 1
-#                 logger.debug(f"Retry turn {turn_count} completed")
-
-#     logger.info("Interaction completed, generating final report")
-#     env._print_final_report()
-#     logger.info("Environment run completed")
-
-
-# def interact_version2(env: Environment, user_agent: BaseMultiRoundHandler, assistant_agent: BaseMultiRoundHandler):
-#     """Run the environment until all tasks are completed or max turns is reached."""
-#     logger.info("Starting interaction using version2 strategy")
-
-#     # NOTE: version 2: Here we have a single task, and the assistant will complete the task in a loop.
-#     def format_user_initial_prompt(env: Environment) -> str:
-#         """Format the prompt for the user agent."""
-
-#         # Format the task list with completion status
-#         task_list = "\n".join(
-#             [f"- [{'X' if task.completed else ' '}] Task {task.id}: {task.description}" for task in env.tasks]
-#         )
-
-#         # Fill in the user prompt template
-#         return env.config.user_prompt_template.format(
-#             task_list=task_list,
-#         )
-
-#     def format_user_continue_prompt(env: Environment, assistant_summary: str) -> str:
-#         """Format the prompt for the user agent."""
-#         if not env.config.user_continue_prompt_template:
-#             raise ValueError("user_continue_prompt_template is not defined")
-#         return env.config.user_continue_prompt_template.format(assistant_summary=assistant_summary)
-
-#     number_of_turns = 0
-#     assistant_summary = ""
-#     logger.info(f"Starting task loop with max turns: {env.config.max_turns}")
-#     while number_of_turns < env.config.max_turns:
-#         logger.debug(f"Starting turn {number_of_turns + 1}")
-#         # Generate user message based on task and conversation history
-#         if number_of_turns == 0:
-#             user_prompt = format_user_initial_prompt(env)
-#         else:
-#             user_prompt = format_user_continue_prompt(env, assistant_summary)
-#         logger.debug(f"User prompt generated, length: {len(user_prompt)}")
-
-#         user_response = user_agent.call_llm(user_prompt)
-#         user_message = "\n".join([msg["content"] for msg in user_response])
-#         logger.debug(f"User message generated, length: {len(user_message)}")
-
-#         env.conversation_history.append(
-#             {"role": "user agent", "prompt_received": user_prompt, "all_messages": deepcopy(user_response)}
-#         )
-#         env._save_checkpoint()
-
-#         logger.debug("User message details for debugging:")
-
-#         if "##ALL_TASKS_COMPLETED##" in user_message:
-#             logger.info("All tasks completion marker detected, exiting loop")
-#             break
-
-#         # Generate assistant response
-#         logger.debug("Calling assistant agent with user message")
-#         assistant_response = assistant_agent.call_llm(user_message)
-#         logger.debug(f"Assistant response generated with {len(assistant_response)} messages")
-
-#         env.conversation_history.append(
-#             {"role": "assistant agent", "prompt_received": user_message, "all_messages": deepcopy(assistant_response)}
-#         )
-#         env._save_checkpoint()
-
-#         # Generate summary
-#         logger.debug("Generating summary of assistant's operation")
-#         summary_prompt = f"Please provide a brief summary of what you did to complete the task: {user_message}.\
-#               The summary should not contain any new code, just the summary of what you did."
-#         summary_response = assistant_agent.call_llm(summary_prompt)
-#         summary = "\n".join([msg["content"] for msg in summary_response])
-#         logger.debug(f"Summary generated, length: {len(summary)}")
-
-#         env.conversation_history.append(
-#             {
-#                 "role": "assistant agent",
-#                 "prompt_received_for_summary": summary_prompt,
-#                 "all_messages": deepcopy(summary_response),
-#             }
-#         )
-#         env._save_checkpoint()
-
-#         assistant_summary = summary  # update the assistant summary
-#         number_of_turns += 1
-#         logger.info(f"Turn {number_of_turns} completed")
-
 
 def extract_response_tags(text: str) -> str | None:
     """Extract content between <response> and </response> tags."""
@@ -543,20 +258,19 @@ def extract_response_tags(text: str) -> str | None:
         return match.group(1).strip()
     return None
 
-
-def interact_version_taubench(
+def interact_default(
     env: Environment,
     user_agent: BaseMultiRoundHandler,
     assistant_agent: BaseMultiRoundHandler,
 ):
     """Run the environment until all tasks are completed or max turns is reached."""
-    logger.info("Starting interaction using taubench strategy")
+    logger.info("Starting interaction using default strategy")
     number_of_turns = 0
     logger.info(f"Starting task loop with max turns: {env.config.max_turns}")
     assistant_message = None
     end_flag = False
 
-    if env.config.user_agent_type == "user2":
+    if env.config.user_agent_type == "shard_user":
         user_initial_prompt = user_init_prompt2(env)
         env.conversation_history.append(
             {"role": "user agent", "prompt_received": None, "all_messages": user_initial_prompt}
@@ -635,23 +349,21 @@ def interact_version_taubench(
             break
 
 
-INTERACT_VERSIONS = {
-    # "version1": interact_version1,
-    # "version2": interact_version2,
-    "taubench": interact_version_taubench,
+INTERACT_TYPES = {
+    "default": interact_default,
 }
 
 
-def run(env: Environment, version_name: str = "version1"):
+def run(env: Environment, interaction_type: str = "default"):
     """Run the environment until all tasks are completed or max turns is reached."""
-    logger.info(f"Starting environment run with version: {version_name}")
+    logger.info(f"Starting environment run with interaction type: {interaction_type}")
     # Create LLM interactors for both agents
 
     try:
-        runner = INTERACT_VERSIONS[version_name]
-        logger.debug(f"Selected interaction version: {version_name}")
+        runner = INTERACT_TYPES[interaction_type]
+        logger.debug(f"Selected interaction type: {interaction_type}")
     except Exception as e:
-        logger.error(f"Invalid version name '{version_name}': {e}")
+        logger.error(f"Invalid interaction type '{interaction_type}': {e}")
         print(f"setting not defined, the message is {e}")
         raise ValueError(f"Setting not defined: {e}")
 

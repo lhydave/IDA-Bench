@@ -42,7 +42,7 @@ def setup_environment(test_case_id: str) -> dict[str, Any]:
         logger.info("Loaded base configuration")
 
         # Load interpreter configuration if needed
-        # TODO: If you implement other agent frameworks, you may need to load different configs
+        # NOTE: If you implement other agent frameworks, you may need to load different configs
         interpreter_config_path = "/app/configs/interpreter_config.toml"
         if os.path.exists(interpreter_config_path):
             interpreter_config = load_config(interpreter_config_path)
@@ -88,9 +88,9 @@ def setup_task(test_case_id: str, env_config: dict[str, Any]) -> list[dict[str, 
     user_type = env_config["base_config"]["benchmark"].get("user_type", "user")
 
     # Select the appropriate instruction file based on user_type
-    if user_type == "user2":
+    if user_type == "shard_user":
         instructions_file = "/app/instructions/shards.md"
-        logger.info(f"Using user2 instructions file: {instructions_file}")
+        logger.info(f"Using shard_user instructions file: {instructions_file}")
     else:  # Default to "user" with reference_insights
         instructions_file = "/app/instructions/reference_insights.md"
         logger.info(f"Using standard user instructions file: {instructions_file}")
@@ -170,9 +170,9 @@ def run_interaction(env_config: dict[str, Any], tasks: list[dict[str, Any]]):
         logger.info(f"Using user_type: {user_type}")
 
         # Configure gatekeeper based on user_type
-        if user_type == "user2":
+        if user_type == "shard_user":
             gatekeeper_llm_config = None
-            logger.info("Using user2 mode - gatekeeper disabled")
+            logger.info("Using shard_user mode - gatekeeper disabled")
         else:  # Default to "user" with gatekeeper
             gatekeeper_llm_config = LLMConfig(
                 api_key=env_config["base_config"]["gatekeeper"]["api_key"],
@@ -211,13 +211,13 @@ def run_interaction(env_config: dict[str, Any], tasks: list[dict[str, Any]]):
         environment = Environment(env_configuration, task_objects)
 
         # Run interaction based on the structure of tasks
-        # Get version_name from benchmark config, default to "taubench" if not specified
-        version_name = env_config["base_config"]["benchmark"].get("version_name", "taubench")
-        logger.info(f"Using benchmark version: {version_name}")
+        # Get interaction_type from benchmark config, default to "default" if not specified
+        interaction_type = env_config["base_config"]["benchmark"].get("interaction_type", "default")
+        logger.info(f"Using benchmark interaction type: {interaction_type}")
 
         from llm_interact_env import run
 
-        run(environment, version_name=version_name)
+        run(environment, interaction_type=interaction_type)
 
         # Interaction completed
         logger.info("Interaction completed successfully")

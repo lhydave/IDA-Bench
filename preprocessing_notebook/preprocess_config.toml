@@ -1,24 +1,46 @@
+# This is the LLM configuration file for the preprocessing notebook.
+
+# configuration for minimizer
 [minimizer]
-api_base ="http://localhost:41251"
-api_key = "test-123"
-model = "litellm_proxy/claude-3-7-sonnet"
-temperature = 0.1
+# For the configuration of api_base, api_key, model, please visit https://docs.litellm.ai/docs/providers for more details.
+# for most model providers, the api_base is an optional parameter
+# api_base = "http://your/api/base"
+api_key = "your-api-key"
+model = "your/model-name"
+temperature = 0.4
+# if an llm API call fails, it will retry max_retries many times
 max_retries = 3
-retry_delay = 2
+# if an llm API call fails, it will wait retry_delay long (in seconds) before retrying
+# The waiting time will increase exponentially with each failure.
+# For example: if another failure occurs, it will wait 2 * retry_delay before retrying again, and so on
+retry_delay = 30
 
-
+# configuration for narrator
 [narrator]
-api_base ="http://localhost:41251"
-api_key = "test-123"
-model = "litellm_proxy/claude-3-7-sonnet"
-temperature = 0.1
+# For the configuration of api_base, api_key, model, please visit https://docs.litellm.ai/docs/providers for more details.
+# for most model providers, the api_base is an optional parameter
+# api_base = "http://your/api/base"
+api_key = "your-api-key"
+model = "your/model-name"
+temperature = 0.4
+# if an llm API call fails, it will retry max_retries many times
 max_retries = 3
-retry_delay = 2
+# if an llm API call fails, it will wait retry_delay long (in seconds) before retrying
+# The waiting time will increase exponentially with each failure.
+# For example: if another failure occurs, it will wait 2 * retry_delay before retrying again, and so on
+retry_delay = 30
 
+# configuration for reconstructor
 [reconstructor]
-api_base ="http://localhost:41251"
-api_key = "test-123"
-model = "litellm_proxy/claude-3-7-sonnet"
-temperature = 0.1
+# For the configuration of api_base, api_key, model, please visit https://docs.litellm.ai/docs/providers for more details.
+# for most model providers, the api_base is an optional parameter
+# api_base = "http://your/api/base"
+api_key = "your-api-key"
+model = "your/model-name"
+temperature = 0.4
+# if an llm API call fails, it will retry max_retries many times
 max_retries = 3
-retry_delay = 2
+# if an llm API call fails, it will wait retry_delay long (in seconds) before retrying
+# The waiting time will increase exponentially with each failure.
+# For example: if another failure occurs, it will wait 2 * retry_delay before retrying again, and so on
+retry_delay = 30

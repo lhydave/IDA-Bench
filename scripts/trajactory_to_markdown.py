@@ -1,24 +1,9 @@
-"""Convert trajactory JSON files to markdown format.
-Usage:
-To convert a single JSON file:
-```bash
-    python3 utils/trajactory_to_markdown.py --input <input_json_file> --output <output_markdown_file>
-```
-To convert all JSON files in a directory:
-```bash
-    python3 utils/trajactory_to_markdown.py --input <input_directory> --output <output_directory> --batch
-```
-"""
 import json
 import argparse
 import os
 from datetime import datetime
 import re
-import sys
-
-parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(parent_dir)
-from logger import logger  # noqa: E402
+from logger import logger
 
 
 def escape_backticks(text):

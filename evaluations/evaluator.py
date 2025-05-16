@@ -7,10 +7,6 @@ from datetime import datetime
 from data_manager.benchmark_manager import BenchmarkManager
 from logger import logger
 
-# TODO from lihy: this is a purely fake evaluator, but shows how to write an evaluator
-# please implement a real evaluator
-
-
 def load_checkpoint(checkpoint_file: str) -> dict[str, Any]:
     """
     Load agent interaction checkpoint.
@@ -172,7 +168,7 @@ def calculate_interaction_time(checkpoint_data: dict[str, Any]) -> float | None:
 
 def evaluate_agent_performance(
     checkpoint_file: str, result_file: str, benchmark_id: str, benchmark_manager: BenchmarkManager, submission_path: str
-) -> dict[str, Any]:  # TODO: Implement!!!!!!!
+) -> dict[str, Any]:
     """
     Evaluate agent performance based on interaction logs.
 
@@ -214,15 +210,6 @@ def evaluate_agent_performance(
         # Extract and analyze code snippets and computer outputs
         code_snippets, computer_outputs = extract_code_snippets(conversation_history)
         evaluation["metrics"]["code_snippets_count"] = len(code_snippets)
-
-        # Count total code executions
-        total_code_executions = 0
-        for message in conversation_history:
-            if message.get("role") == "assistant agent" and "all_messages" in message:
-                for msg_detail in message["all_messages"]:
-                    if isinstance(msg_detail, dict) and msg_detail.get("type") == "code":
-                        total_code_executions += 1
-        evaluation["metrics"]["total_code_executions"] = total_code_executions
 
         # Analyze code operations and errors
         code_operations = count_code_operations(code_snippets, computer_outputs)

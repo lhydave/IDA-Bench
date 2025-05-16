@@ -1,7 +1,7 @@
 [project]
-name = "datascibench"
+name = "IDA-Bench"
 version = "0.1.0"
-description = "Add your description here"
+description = "Benchmark for Evaluating LLMs on Interactive Guided Data Analysis"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
@@ -74,7 +74,3 @@ select = ["F", "E", "W", "UP", "C901"]
 
 [tool.ruff.analyze]
 exclude = ["archived"]
-
-[[tool.uv.index]]
-url = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple"
-default = true

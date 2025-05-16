@@ -73,7 +73,7 @@ def main():
         benchmark_manager.add_benchmark_record(benchmark_id_2, benchmark_info_2)
         logger.info(f"Added {len(benchmark_manager.benchmark_ids)} benchmarks")
 
-        # Step 3: Store instructions for benchmarks # TODO: this should be replaced with a real one
+        # Step 3: Store instructions for benchmarks
         logger.info("Adding benchmark instructions...")
 
         # Single instruction for the first benchmark
@@ -112,7 +112,7 @@ Evaluate your model using the provided test dataset and metrics.
         ]
         benchmark_manager.store_instruction(benchmark_id_2, instruction_2_rounds)
 
-        # Step 4: Store ground truth for benchmarks # TODO: this should be replaced with a real one
+        # Step 4: Store ground truth for benchmarks
         logger.info("Adding ground truth data...")
 
         # Ground truth for the first benchmark

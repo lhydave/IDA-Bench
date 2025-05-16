@@ -11,94 +11,25 @@ wheels/
 
 # Virtual environments
 .venv
-
 .$*
 
-# latex generated files
-*.aux
-paper/*.log
-*.out
-neurips_*.pdf
-*.xdv
-*.synctex.gz
-*.fls
-*.fdb_latexmk
-*.blg
-*.synctex(busy)
+# log files
+*.log
 
-.DS_Store
-_minted-neurips_2025/
-*.pygtex
-
-
-# kaggle all notebooks
+# used for examples
 test_data
 
-# # Datasets
-# *.csv
+# generated files
+preprocessing_notebook/preprocess_data/
 
-# *.json
-# !walmart_data/*.json
-# *.log
+# benchmark data
+benchmark_final/
 
-# !preprocessing_notebook/*.json
-# !preprocessing_notebook/*.csv
-# !preprocessing_notebook/*.ipynb
-# !preprocessing_notebook/*.md
+# experiment output
+experiments/
 
-# !preprocessing_notebook/preprocess_data/
-# !preprocessing_notebook/preprocess_data/**/*.json
-# !preprocessing_notebook/preprocess_data/**/*.csv
-# !preprocessing_notebook/preprocess_data/**/*.ipynb
-# !preprocessing_notebook/preprocess_data/**/*.md
-
-# !benchmark_data/*.json
-# !benchmark_data/*.csv
-# !benchmark_data/*.ipynb
-# !benchmark_data/*.md
-
-# !benchmark_data_toSubmit/*.json
-# !benchmark_data_toSubmit/*.csv
-# !benchmark_data_toSubmit/*.ipynb
-# !benchmark_data_toSubmit/*.md
-
-# !benchmark_final/*.json
-# !benchmark_final/*.csv
-# !benchmark_final/*.ipynb
-# !benchmark_final/*.md
-
-# # configuration files
-# interpreter_config.toml
-# llm_config.toml
-# llm_config_user.toml
-# llm_config_agent.toml
-# llm_configs/llm_config_proxy.yaml
-# llm_configs/llm_config_proxy_haoyu.yaml
-# # checkpoints
-# checkpoints
-# !experiments/**
-
-# # generated test files
-# test/
-# test_data/
-# test_data_keep/
-# test_data_in_bench/
-# test_data_in_bench_no_gt/
-# keep_data/
-# source/
-# walmart_data/
-# mobile-price-prediction-model/trajactory_mobile_9.md
-# example/walmart/llm_test/results/*
-
-# base_config.toml
-# agent_configs/*
-# !agent_configs/sample_agent_config.toml
-# llm_configs/llm_config_proxy.yaml
-
-
-# kaggle_crawler_after_step2_create_notebookinfo.ipynb
-# kaggle_notebook_info.ipynb
-# llm_interact_tau_bench_debug_prompt.ipynb
-# system_prompt_agent.txt
-# system_prompt_user.txt
-# split_notebooks.py
+# configuration files
+configs/base_config.toml
+configs/interpreter_config.toml
+agent_configs/*
+!agent_configs/.gitkeep
