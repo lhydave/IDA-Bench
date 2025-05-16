@@ -20,7 +20,7 @@ This example demonstrates how to use the `KaggleCrawler` class to search for, pr
 
 **Usage:**
 ```bash
-python examples/kaggle_crawler_example.py
+uv run examples/kaggle_crawler_example.py
 ```
 
 ### 2. Scoring Example ([`scoring_example.py`](scoring_example.py))
@@ -39,7 +39,7 @@ This example shows how to score notebooks based on various criteria and sample t
 
 **Usage:**
 ```bash
-python examples/scoring_example.py [--skip-file SKIP_FILE] [--scoring-method SCORING_METHOD] [--sample-count SAMPLE_COUNT]
+uv run examples/scoring_example.py [--skip-file SKIP_FILE] [--scoring-method SCORING_METHOD] [--sample-count SAMPLE_COUNT]
 ```
 
 **Arguments:**
@@ -80,5 +80,5 @@ This example illustrates how to create and manage benchmarks using the `Benchmar
 
 **Usage:**
 ```bash
-python examples/benchmark_manager_example.py
+uv run examples/benchmark_manager_example.py
 ```

@@ -14,7 +14,7 @@ Creates the benchmark dataset structure from the preprocessed notebook data. It 
 
 **Usage**:
 ```bash
-python scripts/create_benchmark_data.py
+uv run scripts/create_benchmark_data.py
 ```
 
 **Notes**:
@@ -34,7 +34,7 @@ Processes instruction files to generate shards for each benchmark project.
 
 **Usage**:
 ```bash
-python scripts/shards_retriever_batch.py --config <path_to_config> --storage <path_to_storage_dir>
+uv run scripts/shards_retriever_batch.py --config <path_to_config> --storage <path_to_storage_dir>
 ```
 
 **Arguments**:
@@ -52,7 +52,7 @@ Generates reference insights from instruction files using a retriever model.
 
 **Usage**:
 ```bash
-python scripts/insight_retriever_batch.py --config <path_to_config> --storage_dir <path_to_storage_dir> [options]
+uv run scripts/insight_retriever_batch.py --config <path_to_config> --storage_dir <path_to_storage_dir> [options]
 ```
 
 **Arguments**:
@@ -100,10 +100,10 @@ Converts trajectory JSON files (containing agent interaction logs) to well-forma
 **Usage**:
 ```bash
 # Convert a single JSON file
-python scripts/trajactory_to_markdown.py --input <input_json_file> --output <output_markdown_file>
+uv run scripts/trajactory_to_markdown.py --input <input_json_file> --output <output_markdown_file>
 
 # Convert all JSON files in a directory
-python scripts/trajactory_to_markdown.py --input <input_directory> --output <output_directory> --batch
+uv run scripts/trajactory_to_markdown.py --input <input_directory> --output <output_directory> --batch
 ```
 
 **Arguments**:
@@ -122,7 +122,7 @@ Converts conversation history from JSON format to Markdown format.
 
 **Usage**:
 ```bash
-python scripts/formatter.py --input_file <path_to_json_file>
+uv run scripts/formatter.py --input_file <path_to_json_file>
 ```
 
 **Arguments**:
@@ -139,7 +139,7 @@ Filters and simplifies Jupyter Notebook files, extracting only essential content
 
 **Usage**:
 ```bash
-python scripts/filter.py <path_to_ipynb_file>
+uv run scripts/filter.py <path_to_ipynb_file>
 ```
 
 **Arguments**:
@@ -147,7 +147,7 @@ python scripts/filter.py <path_to_ipynb_file>
 
 **Alternative Usage**:
 ```bash
-python scripts/converter.py --path <path_to_ipynb_file>
+uv run scripts/converter.py --path <path_to_ipynb_file>
 ```
 
 ## converter.py
@@ -162,7 +162,7 @@ Converts Jupyter Notebooks to Markdown format using nbconvert.
 
 **Usage**:
 ```bash
-python scripts/converter.py --path <path_to_ipynb_file>
+uv run scripts/converter.py --path <path_to_ipynb_file>
 ```
 
 **Arguments**:
@@ -180,7 +180,7 @@ Copies notebook files and their associated datasets from a source to a destinati
 
 **Usage**:
 ```bash
-python scripts/copy_notebook_and_download_dataset.py
+uv run scripts/copy_notebook_and_download_dataset.py
 ```
 
 **Functions**:
