@@ -13,6 +13,8 @@ from sandbox.sandbox_run import run_docker_test
 from evaluations.evaluator import evaluate_agent_performance
 from logger import logger, configure_global_logger
 
+KAGGLE_BENCH_ID = "lhydave/ida-bench"
+
 
 def parse_args():
     """Parse command line arguments."""
@@ -41,6 +43,11 @@ def parse_args():
         "--evaluate_only",
         action="store_true",
         help="If set, skip running tests and only perform evaluation on existing results.",
+    )
+    parser.add_argument(
+        "--download_benchmark",
+        action="store_true",
+        help="If set, download benchmark datasets to the path specified in base_config.",
     )
     return parser.parse_args()
 
@@ -209,7 +216,7 @@ def single_agent_test(
         logger.debug(f"Benchmark data loaded for {test_case_id}: {benchmark_data}")
 
         # Run the test inside a Docker container
-        success = run_docker_test(  # TODO: return the test_case_id-agent_id-timestamp
+        success = run_docker_test(
             test_case_id=test_case_id,
             agent_config=agent_config,
             benchmark_manager=benchmark_manager,
@@ -446,6 +453,36 @@ def run_full_benchmark(args: argparse.Namespace, base_config: dict[str, Any], pa
     logger.info(f"Summary written to {summary_file}")
 
 
+def download_benchmark_data() -> None:
+    """
+    Download benchmark data from Kaggle to ./benchmark_final/.
+    """
+    # Import Kaggle API here to avoid unnecessary imports when not using this function
+    try:
+        from kaggle.api.kaggle_api_extended import KaggleApi
+    except ImportError:
+        logger.error("Kaggle API not installed. Please install it using 'pip install kaggle'")
+        return
+
+    try:
+        # Initialize Kaggle API
+        api = KaggleApi()
+        api.authenticate()
+
+        # Get the benchmark dataset ID
+        benchmark_dataset_id = KAGGLE_BENCH_ID
+
+        logger.info(f"Downloading benchmark data from Kaggle: {benchmark_dataset_id}")
+
+        # Download the benchmark dataset
+        api.dataset_download_files(benchmark_dataset_id, path=".", unzip=True, quiet=False)
+
+        logger.info("Benchmark data downloaded and extracted to current directory")
+
+    except Exception as e:
+        logger.error(f"Error downloading benchmark data: {str(e)}")
+
+
 def main():
     """Main entry point for running benchmarks."""
     args = parse_args()
@@ -453,9 +490,17 @@ def main():
     # Set up logging based on the command line argument
     log_level = getattr(logging, args.log_level.upper())
     log_filename = "evaluation_only.log" if args.evaluate_only else "run_benchmark.log"
+    if args.download_benchmark:
+        log_filename = "download_benchmark.log"
     configure_global_logger(level=log_level, log_file=log_filename)
     logger.info(f"Log level set to {args.log_level}")
     logger.info(f"Logging to file: {log_filename}")
+
+    if args.download_benchmark:
+        logger.info("Running in download-benchmark mode")
+        # Download directly to benchmark_final/ without loading config
+        download_benchmark_data()
+        return
 
     # Load configurations
     base_config = load_base_config(args.config_path)
