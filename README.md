@@ -41,7 +41,7 @@ uv sync
 
 ## Dataset
 
-The datasets used in IDA-Bench are sourced from 25 publicly available, high-quality Jupyter notebooks from Kaggle. [cite: 90, 99] These notebooks, and their corresponding datasets, were selected to cover a diverse range of topics, including manufacturing, business, psychology, and weather prediction. It is stored at Kaggle and can be downloaded from [here](https://www.kaggle.com/datasets/lhydave/ida-bench).
+The datasets used in IDA-Bench are sourced from 25 publicly available, high-quality Jupyter notebooks from Kaggle. These notebooks, and their corresponding datasets, were selected to cover a diverse range of topics, including manufacturing, business, psychology, and weather prediction. It is stored at Kaggle and can be downloaded from [here](https://www.kaggle.com/datasets/lhydave/ida-bench).
 
 > *NOTE: You need to have a Kaggle API to download the benchmark data.* You can follow the instructions [here](https://www.kaggle.com/docs/api) to setup your Kaggle API key.
 
