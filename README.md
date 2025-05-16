@@ -143,7 +143,7 @@ To test your own agent:
 
 ## Constructing Benchmark
 
-If you want to construct your own benchmark from Jupyter notebooks, you can use the independent scripts provided in the `scripts/` and example use cases in the `examples/` directory. These scripts are designed to help you convert Jupyter notebooks into the format used in IDA-Bench. Please refer to [README.md](scripts/README.md) for more details about the scripts and [examples/README.md](examples/README.md) for example use cases.
+If you want to construct your own benchmark from Jupyter notebooks, you can use the independent scripts provided in the [`scripts/`](scripts/) and example use cases in the [`examples/`](examples/) directory. These scripts are designed to help you convert Jupyter notebooks into the format used in IDA-Bench. Please refer to [scripts/README.md](scripts/README.md) for more details about the scripts and [examples/README.md](examples/README.md) for example use cases.
 
 ## License
 
