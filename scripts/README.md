@@ -41,6 +41,10 @@ uv run scripts/shards_retriever_batch.py --config <path_to_config> --storage <pa
 - `--config`, `-c`: Path to the LLM configuration TOML file
 - `--storage`, `-s`: Path to the storage directory containing instruction files
 
+**Configuration**:
+- Please refer to `configs/sample_construct_config_shards.toml` for a sample configuration file
+- The configuration includes LLM settings, system prompts for instruction expansion, and checkpoint settings
+
 ## insight_retriever_batch.py
 
 Generates reference insights from instruction files using a retriever model.
@@ -61,6 +65,10 @@ uv run scripts/insight_retriever_batch.py --config <path_to_config> --storage_di
 - `--target_files`: Optional specific instruction files to process
 - `--thinking_budget`: Token budget for thinking (default: 4096)
 - `--verbose`: Enable verbose output
+
+**Configuration**:
+- Please refer to `configs/sample_construct_config_retriever.toml` for a sample configuration file
+- The configuration includes LLM settings, system prompts for insight extraction, and checkpoint settings
 
 ## evaluate_run_results.ipynb
 

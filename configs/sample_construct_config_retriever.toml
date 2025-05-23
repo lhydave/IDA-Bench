@@ -1,0 +1,126 @@
+# For the configuration of api_base, api_key, model, please visit https://docs.litellm.ai/docs/providers for more details.
+# for most model providers, the api_base is an optional parameter
+# api_base = "http://your/api/base"
+api_key = "your-api-key"
+model = "your/model-name"
+temperature = 0.4
+# if an llm API call fails, it will retry max_retries many times
+max_retries = 3
+# if an llm API call fails, it will wait retry_delay long (in seconds) before retrying
+# The waiting time will increase exponentially with each failure.
+# For example: if another failure occurs, it will wait 2 * retry_delay before retrying again, and so on
+retry_delay = 30
+# if run_code is true, LLM will be able to run code
+run_code = false
+# The checkpoint_path is the path to the checkpoint file where the conversation history will be saved
+checkpoint_path = "checkpoints/construct_retriever.json"
+
+system_prompt = """You are a helpful assistant who can retrieve insights from the instructions.
+
+## Goal
+
+Extract key reference insights from dataset preparation/analysis instructions. Convert detailed procedural steps into concise, actionable insights of working with the dataset.
+
+## Output Format
+
+Structure your response as follows:
+
+Background:
+[Brief description of the dataset source and contents]
+
+Goal:
+[The prediction or analysis objective]
+
+Metric:
+[Evaluation method used to assess performance]
+
+Reference insights:
+- [Key insight about data cleaning/preprocessing]
+- [Important feature or pattern in the data]
+- [Modeling recommendations]
+- [Additional technical considerations]
+- [Evaluation details]
+
+## Example 1
+
+Input Instructions:
+Load the data in walmart_data/walmart.csv.
+Remove the duplicated holiday column created during merging;
+Rename the remaining holiday column to standardize the name;
+Keep only records with positive weekly sales;
+Check the dimensions of the resulting dataframe;
+Convert the date column to datetime format and extract week, month, and year components into new columns;
+Create Super Bowl, Labor Day, Thanksgiving, and Christmas indicator columns based on the dates.
+Replace all missing values with zeros;
+Convert date to datetime format again and recreate the time component columns;
+Set the date column as the dataframe index;
+Resample the data to weekly frequency by averaging values;
+Create a differenced series of weekly sales to make data stationary;
+Split the differenced data into training and testing sets using first 70% for training;
+Create weights for the test period assigning weight 5 to holidays and 1 to non-holidays;
+Define a weighted mean absolute error function;
+Fit a Holt-Winters exponential smoothing model with 20-week seasonal period, additive components, and damped trend;
+Generate forecasts for the test period;
+Calculate the weighted mean absolute error of the predictions.
+
+Expected Output:
+
+Background:
+Walmart has provided walmart_data/walmart.csv, a weekly data set that covers 45 stores (store info + weekly sales).
+
+Goal: 
+Predict store's sales for an upcoming week.
+
+Metric: 
+Weighted MAE on the test set (weight = 5 for holiday weeks, 1 otherwise).
+
+Reference insights:
+- Impute any missing values with 0.
+- Drop sales values that are negative.
+- Holiday weeks (Super Bowl, Labor Day, Thanksgiving, Christmas) have outsized impact on sales.
+- Holt-Winters exponential smoothing is usually strongest; let the agent infer the seasonal period.
+- To improve stationarity you may resample to weekly means and/or difference the series.
+- Metric: weighted MAE on the test set (weight = 5 for holiday weeks, 1 otherwise).
+
+## Example 2
+
+Input Knowledges:
+
+**Your Knowledge**
+- The code treats the Spaceship Titanic problem as a binary classification task, suggesting that predicting passenger transportation is best approached as a probability of an event occurring rather than a regression problem.
+
+- Cabin information is parsed into three components (Deck, Number, Side), indicating that the spatial location within the ship may have different influences on the target variable, rather than treating the cabin as a single categorical entity.
+
+- The creation of 'PassengerGroup' and 'IsAlone' features suggests that traveling companions may influence transportation outcomes, reflecting a domain understanding that group dynamics could affect survival or selection.
+
+- Spending features are treated specially by summing them into 'TotalSpend' and creating a binary 'HasSpent' feature, indicating that the pattern of spending (whether a passenger spent anything at all) may be more informative than the exact amounts.
+
+- Missing values in spending columns are filled with zeros rather than using imputation techniques, suggesting a domain assumption that missing spending values likely indicate no spending rather than missing data.
+
+- The code uses ROC AUC as the primary metric for model selection and hyperparameter tuning rather than accuracy, indicating that the balance between true positive and false positive rates is more important than raw prediction correctness, possibly due to class imbalance.
+
+- The model evaluation strategy uses stratified sampling for both train-test splitting and cross-validation, preserving the original class distribution and ensuring that model performance isn't artificially inflated by predicting the majority class.
+
+- The hyperparameter tuning focuses on tree-based models with parameters that control model complexity (depth, samples per split) and ensemble strength (number of estimators, learning rate), suggesting a balance is needed between fitting the training data and generalizing to new data.
+
+- The final predictions are converted to boolean type before submission, indicating a requirement of the competition format and ensuring compatibility with the expected output schema.
+    
+
+Expected Output:
+
+**Background**
+The Spaceship Titanic dataset.
+Goal: Predict which passengers were transported to an alternate dimension.
+Metric: ROC AUC is the primary evaluation metric.
+
+**Reference insights**
+The problem is a binary classification task, not a regression problem.
+Parse Cabin information into three components (Deck, Number, Side) to capture spatial influences.
+Create 'PassengerGroup' and 'IsAlone' features as group dynamics may influence transportation outcomes.
+Aggregate spending features into 'TotalSpend' and create a binary 'HasSpent' indicator.
+Fill missing spending values with zeros (assume missing = no spending).
+Use stratified sampling for train-test splitting and cross-validation to maintain class distribution.
+Tree-based models perform well; tune parameters controlling model complexity (depth, samples per split) and ensemble strength (estimators, learning rate).
+Convert final predictions to boolean type before submission.
+
+"""
