@@ -42,7 +42,7 @@ uv run scripts/shards_retriever_batch.py --config <path_to_config> --storage <pa
 - `--storage`, `-s`: Path to the storage directory containing instruction files
 
 **Configuration**:
-- Please refer to `configs/sample_construct_config_shards.toml` for a sample configuration file
+- Please refer to [`../configs/sample_construct_config_shards.toml`](../configs/sample_construct_config_shards.toml) for a sample configuration file
 - The configuration includes LLM settings, system prompts for instruction expansion, and checkpoint settings
 
 ## insight_retriever_batch.py
@@ -67,7 +67,7 @@ uv run scripts/insight_retriever_batch.py --config <path_to_config> --storage_di
 - `--verbose`: Enable verbose output
 
 **Configuration**:
-- Please refer to `configs/sample_construct_config_retriever.toml` for a sample configuration file
+- Please refer to [`../configs/sample_construct_config_retriever.toml`](../configs/sample_construct_config_retriever.toml) for a sample configuration file
 - The configuration includes LLM settings, system prompts for insight extraction, and checkpoint settings
 
 ## evaluate_run_results.ipynb
