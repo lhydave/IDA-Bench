@@ -2,7 +2,7 @@
 
 This folder contains various scripts for generating, processing, and evaluating benchmark tasks. Below is a description of each script and how to use it.
 
-## create_benchmark_data.py
+## [create_benchmark_data.py](create_benchmark_data.py)
 
 Creates the benchmark dataset structure from the preprocessed notebook data. It organizes the data into a standardized directory structure that can be managed by BenchmarkManager class in data_manager module.
 
@@ -22,7 +22,7 @@ uv run scripts/create_benchmark_data.py
 - Creates organized benchmark data in `benchmark_final/storage/`
 - Generates metadata in `benchmark_final/meta_info/`
 
-## shards_retriever_batch.py
+## [shards_retriever_batch.py](shards_retriever_batch.py)
 
 Processes instruction files to generate shards for each benchmark project.
 
@@ -45,7 +45,7 @@ uv run scripts/shards_retriever_batch.py --config <path_to_config> --storage <pa
 - Please refer to [`../configs/sample_construct_config_shards.toml`](../configs/sample_construct_config_shards.toml) for a sample configuration file
 - The configuration includes LLM settings, system prompts for instruction expansion, and checkpoint settings
 
-## insight_retriever_batch.py
+## [insight_retriever_batch.py](insight_retriever_batch.py)
 
 Generates reference insights from instruction files using a retriever model.
 
@@ -70,7 +70,7 @@ uv run scripts/insight_retriever_batch.py --config <path_to_config> --storage_di
 - Please refer to [`../configs/sample_construct_config_retriever.toml`](../configs/sample_construct_config_retriever.toml) for a sample configuration file
 - The configuration includes LLM settings, system prompts for insight extraction, and checkpoint settings
 
-## evaluate_run_results.ipynb
+## [evaluate_run_results.ipynb](evaluate_run_results.ipynb)
 
 A Jupyter notebook for analyzing and evaluating benchmark run results.
 
@@ -95,7 +95,7 @@ A Jupyter notebook for analyzing and evaluating benchmark run results.
 - Result files are expected to be in `experiments/results/`
 - Log files are expected to be in `experiments/logs/`
 
-## trajactory_to_markdown.py
+## [trajactory_to_markdown.py](trajactory_to_markdown.py)
 
 Converts trajectory JSON files (containing agent interaction logs) to well-formatted Markdown.
 
@@ -119,7 +119,7 @@ uv run scripts/trajactory_to_markdown.py --input <input_directory> --output <out
 - `--output`, `-o`: Path for output Markdown file or directory (optional)
 - `--batch`, `-b`: Process all JSON files in the input directory
 
-## formatter.py
+## [formatter.py](formatter.py)
 
 Converts conversation history from JSON format to Markdown format.
 
@@ -136,7 +136,7 @@ uv run scripts/formatter.py --input_file <path_to_json_file>
 **Arguments**:
 - `--input_file`: Path to the JSON file containing conversation history
 
-## filter.py
+## [filter.py](filter.py)
 
 Filters and simplifies Jupyter Notebook files, extracting only essential content.
 
@@ -158,7 +158,7 @@ uv run scripts/filter.py <path_to_ipynb_file>
 uv run scripts/converter.py --path <path_to_ipynb_file>
 ```
 
-## converter.py
+## [converter.py](converter.py)
 
 Converts Jupyter Notebooks to Markdown format using nbconvert.
 
@@ -176,7 +176,7 @@ uv run scripts/converter.py --path <path_to_ipynb_file>
 **Arguments**:
 - `--path`: Path to the Jupyter notebook file to convert
 
-## copy_notebook_and_download_dataset.py
+## [copy_notebook_and_download_dataset.py](copy_notebook_and_download_dataset.py)
 
 Copies notebook files and their associated datasets from a source to a destination directory.
 
