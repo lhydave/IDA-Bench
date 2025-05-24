@@ -66,7 +66,9 @@ Create or modify `configs/base_config.toml` to set up the benchmark environment:
 - Configure concurrent test execution via `max_workers`
 - Optionally limit testing to specific test cases using `test_cases`
 
-You can copy and modify the sample provided in [`configs/sample_base_config.toml`](configs/sample_base_config.toml).
+You can copy and modify the sample provided in [`configs/sample_base_config_default.toml`](configs/sample_base_config_default.toml).
+
+> *NOTE: If you want to test using the shard user, you can copy and modify the sample provided in [`configs/sample_base_config_shards.toml`](configs/sample_base_config_shards.toml).*
 
 #### Agent Configuration
 Prepare agent configuration files in the `agent_configs/` directory:
