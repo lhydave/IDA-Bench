@@ -1,6 +1,8 @@
 # IDA-Bench: Evaluating LLMs on Interactive Guided Data Analysis
 IDA-Bench is a benchmark for evaluating Large Language Models (LLMs) as data analysis agents in interactive, multi-round scenarios that reflect the iterative nature of real-world data analysis. Tasks are derived from Kaggle notebooks, with an LLM-simulated user providing sequential natural language instructions.
 
+[Paper link](https://arxiv.org/abs/2505.18223)
+
 ## Leaderboard
 
 | Agent             | Valid Submission (%) $\uparrow$ | Baseline Achieved (%) $\uparrow$ | Baseline Achieved/ Valid Submission (%) $\uparrow$ | Avg Time (s) | Avg Turns | Avg Code Snippets |
@@ -83,8 +85,13 @@ Each agent config should specify:
 
 Refer to [`configs/sample_agent_config.toml`](configs/sample_agent_config.toml) for the expected format.
 
-#### Framework Configuration
-If you're using the LLMInteract framework (default and only supported framework at the moment), prepare `configs/interpreter_config.toml`. You can copy the sample from [`configs/sample_interpreter_config.toml`](configs/sample_interpreter_config.toml).
+#### Agent Framework Configuration
+We currently only support `base-agent` as the agent framework. It uses a modified version of [open-interpreter](https://github.com/OpenInterpreter/open-interpreter) as the python interpreter backend. To use `base-agent`, please prepare `configs/interpreter_config.toml`. You can copy the sample from [`configs/sample_interpreter_config.toml`](configs/sample_interpreter_config.toml).
+
+> [!WARNING]
+> Our modification fixes compatibility bugs in open-interpreter when working with Gemini. However, the system still suffers from race conditions and deadlock problems that arise from the asynchronous interactions between LLMs and the IPython interpreter.
+>
+> As a consequence, ***`base-agent` occasionally gets stuck during code execution***. We are currently devoted to re-implementing a more robust and reliable LLM-Python interactor.
 
 ### 2. Start Docker Service
 
